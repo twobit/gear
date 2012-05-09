@@ -1,0 +1,15 @@
+{
+  "name": "task",
+  "version": "0.0.1",
+  "description": "Build tool",
+  "author": "stephen@hypernaut.com",
+  "dependencies": {
+    "mime": "1.2.x",
+    "async": "0.1.x"
+  },
+  "keywords": [
+    "build",
+    "task"
+  ],
+  "main": "index"
+}
