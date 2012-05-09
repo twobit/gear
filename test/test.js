@@ -1,4 +1,4 @@
-var TaskJS = require('./index');
+var TaskJS = require('../lib/task');
 
 // TaskJS Style
 var task = new TaskJS()
