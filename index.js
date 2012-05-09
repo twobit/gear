@@ -32,7 +32,12 @@ Task.prototype = {
 
     run: function() {
         async.series(this._queue, function(err, results) {
-            //console.log(err, results);
+            if (err) {
+                console.log(err);
+                return;
+            }
+
+            console.log(results);
         });
     }
 };
@@ -40,9 +45,8 @@ Task.prototype = {
 function main() {
     var task = new Task()
         .files(['index.js', 'package.json', 'foo.txt', 'bar'])
-        .inspect();
-
-    task.run();
+        .inspect()
+        .run();
 }
 
 main();

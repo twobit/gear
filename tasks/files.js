@@ -19,8 +19,12 @@ module.exports = function(filenames, done) {
     }
 
     async.map(filenames, readFile, function(err, results) {
-        if (err) {}
+        if (err) {
+            done(err);
+            return;
+        }
+
         self._data = results;
-        done();
+        done(null, 'files');
     });
 };

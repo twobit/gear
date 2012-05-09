@@ -3,5 +3,5 @@ module.exports = function(done) {
         console.log(item);
     });
 
-    done();
+    done(null, 'inspect');
 };
