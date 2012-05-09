@@ -1,25 +1,26 @@
 var async = require('async');
 
-function Task() {
+function TaskJS() {
     this._tasks = {};
     this._queue = [];
     this._data = [];
 
     this._loadFile('files', './tasks/files');
+    this._loadFile('concat', './tasks/concat');
     this._loadFile('inspect', './tasks/inspect');
 }
 
-Task.prototype = {
+TaskJS.prototype = {
     _loadFile: function(name, path) {
         var self = this;
         this._tasks[name] = require(path);
 
-        Task.prototype[name] = function() {
-            return self.task(name, Array.prototype.slice.call(arguments));
+        TaskJS.prototype[name] = function() {
+            return self._task(name, Array.prototype.slice.call(arguments));
         };
     },
 
-    task: function(name, options) {
+    _task: function(name, options) {
         var self = this;
 
         this._queue.push(function(done) {
@@ -28,6 +29,13 @@ Task.prototype = {
         });
 
         return this;
+    },
+
+    task: function() {
+        var options = Array.prototype.slice.call(arguments),
+            name = options.shift();
+
+        return this._task(name, options);
     },
 
     run: function() {
@@ -39,14 +47,11 @@ Task.prototype = {
 
             console.log(results);
         });
+    },
+
+    flow: function(workflow) {
+
     }
 };
 
-function main() {
-    var task = new Task()
-        .files(['index.js', 'package.json', 'foo.txt', 'bar'])
-        .inspect()
-        .run();
-}
-
-main();
+module.exports = TaskJS;
