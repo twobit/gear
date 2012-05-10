@@ -1,6 +1,5 @@
 var TaskJS = require('../lib/task');
 
-/*
 // TaskJS Style
 var task = new TaskJS()
     .files(['index.js', 'package.json', 'foo.txt', 'bar'])
@@ -14,7 +13,6 @@ var task2 = new TaskJS()
     .task('concat')
     .task('inspect')
     .run();
-    */
 
 // TaskJS Advanced
 var task3 = new TaskJS().flow({
@@ -23,5 +21,5 @@ var task3 = new TaskJS().flow({
     inspect_results: {requires: ['concat_files'], task: 'inspect'},
     read_files2:      {task: 'files', options: [['package.js']]},
     inspect_results2: {requires: ['read_files2'], task: 'inspect'},
-    concat_1_and_2: {requires: ['inspect_files', 'inspect_files2'], task: 'inspect'}
+    inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'inspect'}
 });
