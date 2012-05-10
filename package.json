@@ -1,7 +1,7 @@
 {
   "name": "taskjs",
   "version": "0.0.1",
-  "description": "Asynchronous task-based build system",
+  "description": "Asynchronous task-based build system.",
   "author": "stephen@hypernaut.com",
   "dependencies": {
     "mime": "1.2.x",
