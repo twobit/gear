@@ -3,15 +3,15 @@
   "version": "0.0.1",
   "description": "Asynchronous task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
-  "homepage": "http://github.com/twobit/taskjs",
-  "engines": ["node >= 0.4.0"],
+  "keywords": ["task", "build"],
+  "repository": {"type": "git", "url": "http://github.com/twobit/taskjs.git"},
+  "bugs": {"url": "http://github.com/twobit/taskjs/issues"},
+  "main": "index",
   "dependencies": {
-    "mime": "1.2.x",
-    "async": "0.1.x"
+    "async": "0.1.x",
+    "mime": "1.2.x"
   },
-  "keywords": [
-    "task",
-    "build"
-  ],
-  "main": "index"
+  "devDependencies": {
+      "mocha" : "1.0.x"
+  }
 }
