@@ -6,3 +6,10 @@ var queue = new TaskJS.Queue()
     .inspect()
     .log('\nFinished')
     .run();
+
+var queue2 = new TaskJS.Queue()
+    .task('files', ['index.js'])
+    .task('concat')
+    .task('inspect')
+    .task('log', '\nFinished 2')
+    .run();
