@@ -2,7 +2,9 @@
   "name": "taskjs",
   "version": "0.0.1",
   "description": "Asynchronous task-based build system.",
-  "author": "stephen@hypernaut.com",
+  "author": "Stephen Murphy <stephen@hypernaut.com>",
+  "homepage": "http://github.com/twobit/taskjs",
+  "engines": ["node >= 0.4.0"],
   "dependencies": {
     "mime": "1.2.x",
     "async": "0.1.x"
