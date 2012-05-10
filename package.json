@@ -1,15 +1,15 @@
 {
-  "name": "task",
+  "name": "taskjs",
   "version": "0.0.1",
-  "description": "Build tool",
+  "description": "Asynchronous task-based build system",
   "author": "stephen@hypernaut.com",
   "dependencies": {
     "mime": "1.2.x",
     "async": "0.1.x"
   },
   "keywords": [
-    "build",
-    "task"
+    "task",
+    "build"
   ],
   "main": "index"
 }
