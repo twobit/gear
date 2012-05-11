@@ -83,7 +83,7 @@ Write the last object in the object chain.
 ---------------------------------------
 
 <a name="fork" />
-### write(tasks)
+### fork(tasks)
 
 __Arguments__
 
