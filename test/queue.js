@@ -5,11 +5,14 @@ var queue = new TaskJS.Queue()
     .concat()
     .inspect()
     .log('\nFinished')
+    .write({filename: 'test1.txt'})
     .run();
 
+/*
 var queue2 = new TaskJS.Queue()
     .task('files', ['index.js'])
     .task('concat')
     .task('inspect')
     .task('log', '\nFinished 2')
     .run();
+*/
