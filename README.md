@@ -16,7 +16,7 @@ Features include:
 ### Chaining Tasks
 
 ```
-taskjs.queue()
+new taskjs.Queue()
  .files(['foo.js', 'bar.js', 'baz.js']
  .concat()
  .jsminify()
