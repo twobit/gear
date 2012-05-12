@@ -32,7 +32,7 @@ taskjs.flow({
     concatjs: {task: 'concat', requires: ['readjs']}
     jsminify: {task: 'jsminify', requires: ['concatjs']}
     inspectjs: {task: 'inspect', requires: ['concatjs', 'jsminify']}
-);
+});
 ```
 
 ## Documentation
@@ -42,6 +42,7 @@ taskjs.flow({
  * [files](#files)
  * [write](#write)
  * [fork](#fork)
+ * [flow](#flow)
  * [concat](#concat)
  * [inspect](#inspect)
  * [log](#log)
@@ -95,6 +96,23 @@ TODO
 
  ```
     .fork()
+ ```
+
+---------------------------------------
+
+<a name="fork" />
+### flow(workflow)
+
+__Arguments__
+
+ * workflow - TODO.
+
+TODO
+
+ __Example__
+
+ ```
+    .workflow()
  ```
 
 ---------------------------------------
