@@ -1,7 +1,7 @@
 var should = require('should'),
     Queue = require('../lib/task').Queue,
     fixtures = {
-        files: ['fixtures/test1.js']
+        files: ['test/fixtures/test1.js']
     };
 
 describe('Queue', function() {

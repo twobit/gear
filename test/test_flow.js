@@ -1,8 +1,8 @@
 var should = require('should'),
     Flow = require('../lib/task').Flow,
     fixtures = {
-        files: ['fixtures/test1.js'],
-        parallel_files: ['fixtures/test2.js']
+        files: ['test/fixtures/test1.js'],
+        parallel_files: ['test/fixtures/test2.js']
     };
 
 describe('Flow', function() {
