@@ -18,4 +18,6 @@ describe('flow()', function() {
             done(err);
         });
     });
+
+    it('should accept existing data');
 });
