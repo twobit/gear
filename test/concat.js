@@ -1,5 +1,4 @@
-var should = require('should'),
-    concat = require('../lib/tasks/concat').concat,
+var concat = require('../lib/tasks/concat').concat,
     fixtures = {
         objects: [{meta: {}, content: 'abc'}, {meta: {}, content: 'def'}],
         object: [{meta: {}, content: 'abc'}]

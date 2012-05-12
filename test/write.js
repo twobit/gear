@@ -1,5 +1,4 @@
-var should = require('should'),
-    path = require('path'),
+var path = require('path'),
     write = require('../lib/tasks/write').write,
     fixtures = {
         filename: 'testing/write.txt',

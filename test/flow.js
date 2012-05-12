@@ -1,5 +1,4 @@
-var should = require('should'),
-    flow = require('../lib/tasks/flow').flow,
+var flow = require('../lib/tasks/flow').flow,
     fixtures = {
         files: ['test/fixtures/test1.js'],
         parallel_files: ['test/fixtures/test2.js']

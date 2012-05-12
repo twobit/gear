@@ -1,5 +1,4 @@
-var should = require('should'),
-    Queue = require('../lib/task').Queue,
+var Queue = require('../lib/task').Queue,
     fixtures = {
         files: ['test/fixtures/test1.js']
     };
