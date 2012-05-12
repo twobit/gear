@@ -16,5 +16,17 @@ describe('Queue', function() {
                     done(err);
                 });
         });
+
+        it('should handle forks', function(done) {
+            var queue = new Queue()
+                .fork()
+                .files(fixtures.files)
+                .concat()
+                .inspect()
+                .log('Finished')
+                .run(function(err, results) {
+                    done(err);
+                });
+        });
     });
 });
