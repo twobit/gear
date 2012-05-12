@@ -1,8 +1,8 @@
 var should = require('should'),
     files = require('../../lib/tasks/files').files,
     fixtures = {
-        file: 'fixtures/test1.js',
-        missing_file: 'fixtures/missing_file.js'
+        file: '../fixtures/test1.js',
+        missing_file: '../fixtures/missing_file.js'
     };
 
 describe('files()', function() {
