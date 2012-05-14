@@ -269,11 +269,11 @@ __Example__
 // example.js
 // Example task replaces each objects content with a string.
 exports.example = function(options, objects, logger, callback) {
-    objects.map(function(item) {
+    var data = objects.map(function(item) {
         return {content: options};
     });
 
-    callback(null, objects);
+    callback(null, data);
 };
 ```
 
