@@ -236,20 +236,18 @@ __Example__
 
 __Arguments__
 
- * tasks - Object containing tasks to run. Format is:
- {Label: {task: Task, options: Options, requires: Requires}}
- where
-  1. Label - Task instance name.
-  2. Task - Task name.
-  3. Options - Task options.
-  4. Requires - List of labels that must be executed before this task runs.
+ * tasks - Object containing tasks to run.
 
 __Example__
 
 ```
+// label - Task instance name.
+// label.task - Task name.
+// label.options - Task options.
+// label.requires - List of labels that must be executed before this task runs.
 .fork({
-    output: {task: 'log', options: 'Hello, world!'}
-    output2: {task: 'log', options: 'Hello, world 2!'}
+    label_1: {task: 'log', options: 'Hello, world!'}
+    label_2: {task: 'log', options: 'Hello, world 2!', requires: ['label_1']}
 })
 ```
 
