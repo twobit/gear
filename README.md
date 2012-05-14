@@ -38,12 +38,15 @@ taskjs.queue()
 ### Complex Task Execution
 
 ```
-taskjs.queue().fork({
+taskjs.queue()
+ .files(['foo.js'])
+ .log('Complex Task')
+ .fork({
     read: {task: 'files', options: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'output']}
-}).run();
+ }).run();
 ```
 
 ## Documentation
