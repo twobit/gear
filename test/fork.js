@@ -1,5 +1,5 @@
 var taskjs = require('../lib/task'),
-    flow = require('../lib/tasks/flow').flow,
+    fork = require('../lib/tasks/fork').fork,
     fixtures = {
         files: ['test/fixtures/test1.js'],
         parallel_files: ['test/fixtures/test2.js']
@@ -7,7 +7,7 @@ var taskjs = require('../lib/task'),
 
 describe('taskjs.queue()', function() {
     it('should wrap task correctly', function() {
-        taskjs.queue().flow({
+        taskjs.queue().fork({
             read_files:      {task: 'files', params: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
@@ -18,9 +18,9 @@ describe('taskjs.queue()', function() {
     });
 });
 
-describe('flow()', function() {
-    it('should execute complex flows', function(done) {
-        flow({
+describe('fork()', function() {
+    it('should execute complex tasks', function(done) {
+        fork({
             read_files:      {task: 'files', params: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},

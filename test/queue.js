@@ -18,11 +18,10 @@ describe('Queue', function() {
 
         it('should handle forks', function(done) {
             taskjs.queue()
-                .fork()
-                .files(fixtures.files)
-                .concat()
-                .inspect()
-                .log('Finished')
+                .fork({
+                    files: {task: 'files', params: fixtures.files},
+                    log: {task: 'log', params: 'Finished', requires: ['files']}
+                })
                 .run(function(err, results) {
                     done(err);
                 });

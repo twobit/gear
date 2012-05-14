@@ -32,7 +32,7 @@ taskjs.queue()
 ### Complex Task Execution
 
 ```
-taskjs.queue().flow({
+taskjs.queue().fork({
     read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
@@ -47,7 +47,6 @@ taskjs.queue().flow({
  * [queue](#queue)
  * [Queue.task](#Queue.task)
  * [Queue.run](#Queue.run)
- * [flow](#coreflow)
  * [registry](#registry)
  * [Registry.load](#Registry.load)
 
@@ -59,7 +58,6 @@ taskjs.queue().flow({
  * [inspect](#inspect)
  * [log](#log)
  * [fork](#fork)
- * [flow](#flow)
 
 ## Core
 
@@ -112,30 +110,6 @@ __Example__
 taskjs.queue()
  .log('test')
  .run();
-```
-
----------------------------------------
-
-<a name="coreflow" />
-### flow(options)
-
-Runs a workflow.
-
-__Arguments__
-
- * options.workflow - What tasks to run.
- * options.callback - Callback on workflow completion.
- * options.registry - Registry to load tasks from.
-
-__Example__
-
-```
-taskjs.flow({workflow: {
-    read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
-    combine: {task: 'concat', requires: ['read']}
-    output: {task: 'jsminify', requires: ['combine']}
-    print: {task: 'inspect', requires: ['read', 'combine', 'output']}
-}});
 ```
 
 ---------------------------------------
@@ -264,23 +238,6 @@ __Example__
 
 ```
 .fork()
-```
-
----------------------------------------
-
-<a name="flow" />
-### flow(workflow)
-
-__Arguments__
-
- * workflow - TODO.
-
-TODO
-
-__Example__
-
-```
-.workflow()
 ```
 
 ## Custom Tasks
