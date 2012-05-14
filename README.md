@@ -48,7 +48,7 @@ taskjs.flow({workflow: {
  * [Queue.task](#Queue.task)
  * [Queue.run](#Queue.run)
  * [flow](#coreflow)
- * [Registry](#Registry)
+ * [registry](#registry)
  * [Registry.load](#Registry.load)
 
 ### Tasks
@@ -125,7 +125,7 @@ __Arguments__
 
  * options.workflow - What tasks to run.
  * options.callback - Callback on workflow completion.
- * registry - Registry to load tasks from.
+ * options.registry - Registry to load tasks from.
 
 __Example__
 
@@ -140,28 +140,34 @@ taskjs.flow({workflow: {
 
 ---------------------------------------
 
-<a name="Registry" />
-### Registry()
+<a name="registry" />
+### registry()
 
 Creates a new registry.
 
 __Example__
 
 ```
-new Registry();
+taskjs.registry();
 ```
 
 ---------------------------------------
 
 <a name="Registry.load" />
-### Registry.load()
+### Registry.load(options)
 
-Load from NPM, file, or directory.
+Load from NPM, directory, or file.
+
+__Arguments__
+
+ * options.module - Module to load tasks from.
+ * options.dirname - Directory to load tasks from.
+ * options.filename - File to load tasks from.
 
 __Example__
 
 ```
-new Registry().load();
+taskjs.registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
