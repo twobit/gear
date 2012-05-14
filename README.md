@@ -51,7 +51,7 @@ taskjs.queue()
 
 ## Documentation
 
-### Core
+### [Core](#core)
 
  * [queue](#queue)
  * [Queue.task](#Queue.task)
@@ -59,7 +59,7 @@ taskjs.queue()
  * [registry](#registry)
  * [Registry.load](#Registry.load)
 
-### Tasks
+### [Tasks](#tasks)
 
  * [files](#files)
  * [write](#write)
@@ -68,6 +68,9 @@ taskjs.queue()
  * [log](#log)
  * [fork](#fork)
 
+### [Custom Tasks](#custom)
+
+<a name="core" />
 ## Core
 
 <a name="queue" />
@@ -155,6 +158,7 @@ taskjs.registry().load({dirname: 'foo'});
 
 ---------------------------------------
 
+<a name="tasks" />
 ## Tasks
 
 <a name="files" />
@@ -254,6 +258,7 @@ __Example__
 })
 ```
 
+<a name="custom" />
 ## Custom Tasks
 
 Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks simply transform input to output like a piped command. Input is immutable, the task returns transformed data via the callback.
