@@ -32,12 +32,12 @@ taskjs.queue()
 ### Complex Task Execution
 
 ```
-taskjs.flow({workflow: {
+taskjs.queue().flow({
     read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'output']}
-}});
+}).run();
 ```
 
 ## Documentation
