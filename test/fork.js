@@ -8,12 +8,12 @@ var taskjs = require('../lib/task'),
 describe('taskjs.queue()', function() {
     it('should wrap task correctly', function() {
         taskjs.queue().fork({
-            read_files:      {task: 'files', params: fixtures.files},
+            read_files:      {task: 'files', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
-            read_files2:      {task: 'files', params: fixtures.parallel_files},
+            read_files2:      {task: 'files', options: fixtures.parallel_files},
             inspect_results2: {requires: ['read_files2'], task: 'inspect'},
-            inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'log', params: 'Done'}
+            inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'log', options: 'Done'}
         }).run();
     });
 });
@@ -21,12 +21,12 @@ describe('taskjs.queue()', function() {
 describe('fork()', function() {
     it('should execute complex tasks', function(done) {
         fork({
-            read_files:      {task: 'files', params: fixtures.files},
+            read_files:      {task: 'files', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
-            read_files2:      {task: 'files', params: fixtures.parallel_files},
+            read_files2:      {task: 'files', options: fixtures.parallel_files},
             inspect_results2: {requires: ['read_files2'], task: 'inspect'},
-            inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'log', params: 'Done'}
+            inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'log', options: 'Done'}
         }, [], console, function(err, results) {
             done(err);
         });

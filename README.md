@@ -33,7 +33,7 @@ taskjs.queue()
 
 ```
 taskjs.queue().fork({
-    read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
+    read: {task: 'files', options: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'output']}
@@ -81,7 +81,7 @@ taskjs.queue()
 ---------------------------------------
 
 <a name="Queue.task" />
-### Queue.task(name, params)
+### Queue.task(name, options)
 
 Runs the specified task.
 
