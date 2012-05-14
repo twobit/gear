@@ -51,29 +51,29 @@ taskjs.queue()
 
 ## Documentation
 
-### [Core](#core)
+### [Core](#Core)
 
- * [queue](#queue)
- * [Queue.task](#Queue.task)
- * [Queue.run](#Queue.run)
- * [registry](#registry)
- * [Registry.load](#Registry.load)
+ * [queue](#Core.queue)
+ * [Queue.task](#Core.Queue.task)
+ * [Queue.run](#Core.Queue.run)
+ * [registry](#Core.registry)
+ * [Registry.load](#Core.Registry.load)
 
 ### [Tasks](#Tasks)
 
- * [files](#files)
- * [write](#write)
- * [concat](#concat)
- * [inspect](#inspect)
- * [log](#log)
- * [fork](#fork)
+ * [files](#Tasks.files)
+ * [write](#Tasks.write)
+ * [concat](#Tasks.concat)
+ * [inspect](#Tasks.inspect)
+ * [log](#Tasks.log)
+ * [fork](#Tasks.fork)
 
-### [Custom Tasks](#custom)
+### [Custom Tasks](#Custom)
 
-<a name="core" />
+<a name="Core" />
 ## Core
 
-<a name="queue" />
+<a name="Core.queue" />
 ### queue(options)
 
 Creates a new Queue instance.
@@ -92,7 +92,7 @@ taskjs.queue()
 
 ---------------------------------------
 
-<a name="Queue.task" />
+<a name="Core.Queue.task" />
 ### Queue.task(name, options)
 
 Runs the specified task.
@@ -111,7 +111,7 @@ taskjs.queue()
 
 ---------------------------------------
 
-<a name="Queue.run" />
+<a name="Core.Queue.run" />
 ### Queue.run()
 
 Runs the queue.
@@ -126,7 +126,7 @@ taskjs.queue()
 
 ---------------------------------------
 
-<a name="registry" />
+<a name="Core.registry" />
 ### registry()
 
 Creates a new Registry instance.
@@ -139,7 +139,7 @@ taskjs.registry();
 
 ---------------------------------------
 
-<a name="Registry.load" />
+<a name="Core.Registry.load" />
 ### Registry.load(options)
 
 Load from NPM, directory, or file.
@@ -161,7 +161,7 @@ taskjs.registry().load({dirname: 'foo'});
 <a name="Tasks" />
 ## Tasks
 
-<a name="files" />
+<a name="Tasks.files" />
 ### files(filenames)
 
 Adds objects loaded from files to object chain.
@@ -178,7 +178,7 @@ __Example__
 
 ---------------------------------------
 
-<a name="write" />
+<a name="Tasks.write" />
 ### write(options)
 
 __Arguments__
@@ -195,7 +195,7 @@ __Example__
 
 ---------------------------------------
 
-<a name="concat" />
+<a name="Tasks.concat" />
 ### concat()
 
 Concatenates object chain contents.
@@ -208,7 +208,7 @@ __Example__
 
 ---------------------------------------
 
-<a name="inspect" />
+<a name="Tasks.inspect" />
 ### inspect()
 
 Inspects object chain.
@@ -221,7 +221,7 @@ __Example__
 
 ---------------------------------------
 
-<a name="log" />
+<a name="Tasks.log" />
 ### log(message)
 
 __Arguments__
@@ -238,7 +238,7 @@ __Example__
 
 ---------------------------------------
 
-<a name="fork" />
+<a name="Tasks.fork" />
 ### fork(tasks)
 
 __Arguments__
@@ -258,7 +258,7 @@ __Example__
 })
 ```
 
-<a name="custom" />
+<a name="Custom" />
 ## Custom Tasks
 
 Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks simply transform input to output like a piped command. Input is immutable, the task returns transformed data via the callback.
