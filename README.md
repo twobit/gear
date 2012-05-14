@@ -1,8 +1,8 @@
-# TaskJS
+# taskjs
 
 ## Asynchronous Task-based Build System
 
-TaskJS is a scriptable build system using simple tasks that acts like a sequence of piped commands.
+taskjs is a scriptable build system using simple tasks that act like a sequence of piped commands.
 
 Features include:
  * Simple building blocks that can be combined to perform complex builds.
@@ -16,11 +16,10 @@ Features include:
 ### Chaining Tasks
 
 ```
-new taskjs.Queue()
+taskjs.queue()
  .files(['foo.js', 'bar.js', 'baz.js']
  .concat()
- .jsminify()
- .inspect()
+ .write({name: 'foobarbaz.js'})
  .run();
 ```
 
@@ -28,26 +27,140 @@ new taskjs.Queue()
 
 ```
 taskjs.flow({
-    readjs: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
-    concatjs: {task: 'concat', requires: ['readjs']}
-    jsminify: {task: 'jsminify', requires: ['concatjs']}
-    inspectjs: {task: 'inspect', requires: ['concatjs', 'jsminify']}
+    read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
+    combine: {task: 'concat', requires: ['read']}
+    output: {task: 'jsminify', requires: ['combine']}
+    print: {task: 'inspect', requires: ['read', 'combine', 'output']}
 });
 ```
 
 ## Documentation
 
-### Core Tasks
+### Core
+
+ * [queue](#queue)
+ * [Queue.task](#Queue.task)
+ * [Queue.run](#Queue.run)
+ * [flow](#coreflow)
+ * [Registry](#Registry)
+ * [Registry.load](#Registry.load)
+
+### Tasks
 
  * [files](#files)
  * [write](#write)
- * [fork](#fork)
- * [flow](#flow)
  * [concat](#concat)
  * [inspect](#inspect)
  * [log](#log)
+ * [fork](#fork)
+ * [flow](#flow)
 
-## Core Tasks
+## Core
+
+<a name="queue" />
+### queue(options)
+
+Creates a new queue.
+
+__Arguments__
+
+ * options.registry - Registry with available tasks.
+
+__Example__
+
+```
+taskjs.queue()
+ .log('test')
+ .run();
+```
+
+---------------------------------------
+
+<a name="Queue.task" />
+### Queue.task(name, params)
+
+Runs the specified task.
+
+__Arguments__
+
+ * name - Name of task in registry.
+
+__Example__
+
+```
+taskjs.queue()
+ .task('log', 'Hello, world!')
+ .run();
+```
+
+---------------------------------------
+
+<a name="Queue.run" />
+### Queue.run()
+
+Runs the queue.
+
+__Example__
+
+```
+taskjs.queue()
+ .log('test')
+ .run();
+```
+
+---------------------------------------
+
+<a name="coreflow" />
+### flow(options)
+
+Runs a workflow.
+
+__Arguments__
+
+ * options.workflow - What tasks to run.
+ * options.callback - Callback on workflow completion.
+ * registry - Registry to load tasks from.
+
+__Example__
+
+```
+taskjs.flow({workflow: {
+    read: {task: 'read', params: ['foo.js', 'bar.js', 'baz.js']}
+    combine: {task: 'concat', requires: ['read']}
+    output: {task: 'jsminify', requires: ['combine']}
+    print: {task: 'inspect', requires: ['read', 'combine', 'output']}
+});
+```
+
+---------------------------------------
+
+<a name="Registry" />
+### Registry()
+
+Creates a new registry.
+
+__Example__
+
+```
+new Registry();
+```
+
+---------------------------------------
+
+<a name="Registry.load" />
+### Registry.load()
+
+Load from NPM, file, or directory.
+
+__Example__
+
+```
+new Registry().load();
+```
+
+---------------------------------------
+
+## Tasks
 
 <a name="files" />
 ### files(filenames)
@@ -58,11 +171,11 @@ __Arguments__
 
  * filenames - List of filenames.
 
- __Example__
+__Example__
 
- ```
-    .files(['foo', 'bar', 'baz'])
- ```
+```
+.files(['foo', 'bar', 'baz'])
+```
 
 ---------------------------------------
 
@@ -75,45 +188,11 @@ __Arguments__
 
 Write the last object in the object chain.
 
- __Example__
+__Example__
 
- ```
-    .write({filename: 'foo'})
- ```
-
----------------------------------------
-
-<a name="fork" />
-### fork(tasks)
-
-__Arguments__
-
- * tasks - TODO.
-
-TODO
-
- __Example__
-
- ```
-    .fork()
- ```
-
----------------------------------------
-
-<a name="fork" />
-### flow(workflow)
-
-__Arguments__
-
- * workflow - TODO.
-
-TODO
-
- __Example__
-
- ```
-    .workflow()
- ```
+```
+.write({filename: 'foo'})
+```
 
 ---------------------------------------
 
@@ -122,11 +201,11 @@ TODO
 
 Concatenates object chain contents.
 
- __Example__
+__Example__
 
- ```
-    .concat()
- ```
+```
+.concat()
+```
 
 ---------------------------------------
 
@@ -135,11 +214,11 @@ Concatenates object chain contents.
 
 Inspects object chain.
 
- __Example__
+__Example__
 
- ```
-    .inspect()
- ```
+```
+.inspect()
+```
 
 ---------------------------------------
 
@@ -152,11 +231,45 @@ __Arguments__
 
 Log a message.
 
- __Example__
+__Example__
 
- ```
-    .log('Finished')
- ```
+```
+.log('Finished')
+```
+
+---------------------------------------
+
+<a name="fork" />
+### fork(tasks)
+
+__Arguments__
+
+ * tasks - TODO.
+
+TODO
+
+__Example__
+
+```
+.fork()
+```
+
+---------------------------------------
+
+<a name="flow" />
+### flow(workflow)
+
+__Arguments__
+
+ * workflow - TODO.
+
+TODO
+
+__Example__
+
+```
+.workflow()
+```
 
 ---------------------------------------
 
@@ -167,4 +280,4 @@ TODO
 
 ## Special Thanks
 
-TaskJS was insprired by [Buildy](/mosen/build) created by [mosen](/mosen).
+taskjs was insprired by [Buildy](/mosen/build) created by [mosen](/mosen).

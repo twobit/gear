@@ -1,4 +1,4 @@
-var Queue = require('../lib/task').Queue,
+var taskjs = require('../lib/task'),
     fixtures = {
         files: ['test/fixtures/test1.js']
     };
@@ -6,7 +6,7 @@ var Queue = require('../lib/task').Queue,
 describe('Queue', function() {
     describe('run', function() {
         it('should execute chained tasks', function(done) {
-            var queue = new Queue()
+            taskjs.queue()
                 .files(fixtures.files)
                 .concat()
                 .inspect()
@@ -17,7 +17,7 @@ describe('Queue', function() {
         });
 
         it('should handle forks', function(done) {
-            var queue = new Queue()
+            taskjs.queue()
                 .fork()
                 .files(fixtures.files)
                 .concat()
