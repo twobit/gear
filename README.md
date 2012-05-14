@@ -64,7 +64,7 @@ taskjs.queue().fork({
 <a name="queue" />
 ### queue(options)
 
-Creates a new queue.
+Creates a new Queue instance.
 
 __Arguments__
 
@@ -117,7 +117,7 @@ taskjs.queue()
 <a name="registry" />
 ### registry()
 
-Creates a new registry.
+Creates a new Registry instance.
 
 __Example__
 
@@ -230,14 +230,21 @@ __Example__
 
 __Arguments__
 
- * tasks - TODO.
-
-TODO
+ * tasks - Object containing tasks to run. Format is:
+ {Label: {task: Task, options: Options, requires: Requires}}
+ where
+  1. Label - Task instance name.
+  2. Task - Task name.
+  3. Options - Task options.
+  4. Requires - List of labels that must be executed before this task runs.
 
 __Example__
 
 ```
-.fork()
+.fork({
+    output: {task: 'log', options: 'Hello, world!'}
+    output2: {task: 'log', options: 'Hello, world 2!'}
+})
 ```
 
 ## Custom Tasks
