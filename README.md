@@ -1,20 +1,26 @@
 # taskjs
 
-## Asynchronous Task-based Build System
+## Task-Based Build System
 
 taskjs is a scriptable build system using simple tasks that act like a sequence of piped commands.
 
 Features include:
- * Simple building blocks that can be combined to perform complex builds.
- * Simple tasks. Tasks simply transform input to output without relying on system internals.
- * Excellent async support.
- * Loading tasks from NPM.
+ * Basic building blocks that can be combined to perform complex builds.
+ * Tasks simply transform input to output without relying on system internals.
+ * Asynchronous execution.
+ * Extensible task loading via NPM, file, or directory.
  * Advanced flow control for complex task execution.
 
 ## Installation
 
 ```
 npm install taskjs
+```
+
+To get the most out of taskjs, you will want to install [taskjs-lib](/twobit/taskjs-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets:
+
+```
+npm install taskjs-lib
 ```
 
 ## Quick Examples
@@ -249,7 +255,33 @@ __Example__
 
 ## Custom Tasks
 
-TODO
+Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks simply transform input to output like a piped command. Input is immutable, the task returns transformed data via a callback.
+
+__Arguments__
+
+ * options - Options for the task.
+ * objects - Immutable list of objects created by other tasks. Objects must each have a content property.
+ * logger - Logger for outputting status.
+ * callback(err, results) - Callback executed when task is complete.
+
+__Example__
+```
+// example.js
+// Example task replaces each objects content with a string.
+exports.example = function(options, objects, logger, callback) {
+    objects.map(function(item) {
+        return {content: options};
+    });
+
+    callback(null, objects);
+};
+```
+
+__Running Example Task__
+
+taskjs.queue({registry: taskjs.registry({filename: 'example.js'})})
+ .example('EXAMPLE')
+ .run();
 
 ## Special Thanks
 
