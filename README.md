@@ -11,6 +11,12 @@ Features include:
  * Loading tasks from NPM.
  * Advanced flow control for complex task execution.
 
+## Installation
+
+```
+npm install taskjs
+```
+
 ## Quick Examples
 
 ### Chaining Tasks
