@@ -59,7 +59,7 @@ taskjs.queue()
  * [registry](#registry)
  * [Registry.load](#Registry.load)
 
-### [Tasks](#tasks)
+### [Tasks](#Tasks)
 
  * [files](#files)
  * [write](#write)
@@ -158,7 +158,7 @@ taskjs.registry().load({dirname: 'foo'});
 
 ---------------------------------------
 
-<a name="tasks" />
+<a name="Tasks" />
 ## Tasks
 
 <a name="files" />
