@@ -279,9 +279,11 @@ exports.example = function(options, objects, logger, callback) {
 
 __Running Example Task__
 
+```
 taskjs.queue({registry: taskjs.registry({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
+```
 
 ## Special Thanks
 
