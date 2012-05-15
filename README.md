@@ -258,7 +258,7 @@ __Example__
 <a name="Custom" />
 ## Custom Tasks
 
-Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks simply transform input to output like a piped command. Input is immutable, the task returns transformed data via the callback.
+Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks operate on lists of simple immutable objects. Objects have content and meta properties. The task returns transformed data via its callback.
 
 __Arguments__
 
