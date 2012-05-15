@@ -13,13 +13,10 @@ Features include:
 
 ## Installation
 
+To get the most out of taskjs, you will want to install [taskjs-lib](/twobit/taskjs-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+
 ```
 npm install taskjs
-```
-
-To get the most out of taskjs, you will want to install [taskjs-lib](/twobit/taskjs-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets:
-
-```
 npm install taskjs-lib
 ```
 
