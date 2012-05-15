@@ -1,7 +1,7 @@
 {
   "name": "taskjs",
   "version": "0.0.6",
-  "description": "Asynchronous task-based build system.",
+  "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
   "repository": {"type": "git", "url": "http://github.com/twobit/taskjs.git"},
