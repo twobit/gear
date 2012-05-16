@@ -1,5 +1,5 @@
 var should = require('should'),
-    files = require('../lib/tasks/files').files,
+    files = require('../lib/tasks/files').files.fn,
     fixtures = {
         file: 'test/fixtures/test1.js',
         missing_file: 'test/fixtures/missing_file.js'

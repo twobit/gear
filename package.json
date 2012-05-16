@@ -8,8 +8,7 @@
   "bugs": {"url": "http://github.com/twobit/taskjs/issues"},
   "main": "index",
   "dependencies": {
-    "async": "0.1.x",
-    "mime": "1.2.x"
+      "taskjs-core": "0.0.x"
   },
   "devDependencies": {
       "should": "0.6.x",
