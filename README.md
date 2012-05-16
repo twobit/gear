@@ -242,6 +242,8 @@ __Arguments__
 
  * tasks - Object containing tasks to run.
 
+Fork execution into parallel tasks with optional dependencies. Data is joined on fork completion.
+
 __Example__
 
 ```
