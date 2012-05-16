@@ -1,5 +1,5 @@
-var taskjs = require('../lib/task'),
-    fork = require('../lib/tasks/fork').fork.fn,
+/*var taskjs = require('../lib/task'),
+    fork = require('../lib/fork').fork.fn,
     fixtures = {
         files: ['test/fixtures/test1.js'],
         parallel_files: ['test/fixtures/test2.js']
@@ -33,4 +33,4 @@ describe('fork()', function() {
     });
 
     it('should accept existing data');
-});
+});*/

@@ -1,29 +1,28 @@
-var concat = require('../lib/tasks/concat').concat.fn,
+var should = require('should'),
+    concat = require('../lib/concat').concat.fn,
     fixtures = {
-        objects: [{meta: {}, content: 'abc'}, {meta: {}, content: 'def'}],
-        object: [{meta: {}, content: 'abc'}]
+        messages: [{body: 'abc'}, {body: 'def'}],
+        message: [{body: 'abc'}]
     };
 
 describe('concat()', function() {
     it('should concat objects', function(done) {
-        concat(null, fixtures.objects, console, function(err, objects) {
-            objects.should.have.lengthOf(1);
-            objects[0].content.should.equal('abcdef');
+        concat(null, fixtures.messages, console, function(err, message) {
+            message.body.should.equal('abcdef');
             done(err);
         });
     });
 
     it('should not concat one object', function(done) {
-        concat(null, fixtures.object, console, function(err, objects) {
-            objects.should.have.lengthOf(1);
-            objects[0].content.should.equal('abc');
+        concat(null, fixtures.message, console, function(err, message) {
+            message.body.should.equal('abc');
             done(err);
         });
     });
 
     it('should handle empty objects', function(done) {
-        concat(null, [], console, function(err, objects) {
-            objects.should.have.lengthOf(0);
+        concat(null, [], console, function(err, message) {
+            message.body.should.equal('');
             done(err);
         });
     });

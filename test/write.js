@@ -1,14 +1,13 @@
 var path = require('path'),
-    write = require('../lib/tasks/write').write.fn,
+    write = require('../lib/write').write.fn,
     fixtures = {
         filename: 'testing/write.txt',
-        objects: [{meta: {}, content: 'abc'}, {meta: {}, content: 'def'}],
-        object: [{meta: {}, content: 'abc'}]
+        object: {body: 'abc'}
     };
 
 describe('write()', function() {
     it('should write last object', function(done) {
-        write({filename: fixtures.filename}, fixtures.objects, console, function(err, objects) {
+        write({filename: fixtures.filename}, fixtures.object, console, function(err, message) {
             path.existsSync(fixtures.filename);
 
             done(err);

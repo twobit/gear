@@ -1,5 +1,5 @@
 var should = require('should'),
-    files = require('../lib/tasks/files').files.fn,
+    files = require('../lib/files').files.fn,
     fixtures = {
         file: 'test/fixtures/test1.js',
         missing_file: 'test/fixtures/missing_file.js'
@@ -7,15 +7,13 @@ var should = require('should'),
 
 describe('files()', function() {
     it('should read files', function(done) {
-        files([fixtures.file], [], console, function(err, objects) {
-            should.not.exist(err);
-            objects.should.have.lengthOf(1);
+        files(fixtures.file, [], console, function(err, message) {
             done(err);
         });
     });
 
     it('should handle missing files', function(done) {
-        files([fixtures.missing_file], [], console, function(err, objects) {
+        files(fixtures.missing_file, [], console, function(err, message) {
             should.exist(err);
             done();
         });
