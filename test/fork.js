@@ -23,9 +23,9 @@ describe('taskjs.queue()', function() {
 
 describe('fork()', function() {
     it('should handle err', function(done) {
-        var registry = {_registry: taskjs.registry()};
+        var queue = taskjs.queue();
 
-        fork.call(registry, {
+        fork.call(queue, {
             read_files:      {task: 'load', options: fixtures.missing_files}
         }, [], console, function(err, results) {
             should.exist(err);
@@ -34,9 +34,9 @@ describe('fork()', function() {
     });
 
     it('should execute complex tasks', function(done) {
-        var registry = {_registry: taskjs.registry()};
+        var queue = taskjs.queue();
 
-        fork.call(registry, {
+        fork.call(queue, {
             read_files:      {task: 'load', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
