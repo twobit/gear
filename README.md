@@ -268,14 +268,13 @@ __Arguments__
 
  * options - Options for the task.
  * messages - Immutable list of messages created by other tasks. Messages must each have a body property.
- * logger - Logger for outputting status.
  * done(err, results) - Callback executed when task is complete.
 
 __Example__
 ```
 // example.js
 // Example task replaces each message body with a string.
-exports.example = function(string, message, logger, done) {
+exports.example = function(string, message, done) {
     done(null, {body: string});
 };
 ```
@@ -295,3 +294,4 @@ taskjs takes inspiration from a few sources:
  * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
  * [buildy](/mosen/build) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
+ * [TermKit](https://github.com/unconed/TermKit) created by [unconed](/unconed)

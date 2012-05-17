@@ -7,9 +7,8 @@ var path = require('path'),
 
 describe('write()', function() {
     it('should write last message', function(done) {
-        write({file: fixtures.filename}, fixtures.message, console, function(err, message) {
+        write({file: fixtures.filename}, fixtures.message, function(err, message) {
             path.existsSync(fixtures.filename);
-
             done(err);
         });
     });

@@ -27,7 +27,7 @@ describe('fork()', function() {
 
         fork.call(queue, {
             read_files:      {task: 'load', options: fixtures.missing_files}
-        }, [], console, function(err, results) {
+        }, [], function(err, results) {
             should.exist(err);
             done();
         });
@@ -43,7 +43,7 @@ describe('fork()', function() {
             read_files2:      {task: 'load', options: fixtures.parallel_files},
             inspect_results2: {requires: ['read_files2'], task: 'inspect'},
             inspect_1_and_2: {requires: ['inspect_results', 'inspect_results2'], task: 'log', options: 'Done'}
-        }, [], console, function(err, results) {
+        }, [], function(err, results) {
             done(err);
         });
     });

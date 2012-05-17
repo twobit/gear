@@ -7,13 +7,13 @@ var should = require('should'),
 
 describe('load()', function() {
     it('should read files', function(done) {
-        load(fixtures.file, [], console, function(err, message) {
+        load(fixtures.file, [], function(err, message) {
             done(err);
         });
     });
 
     it('should handle missing files', function(done) {
-        load(fixtures.missing_file, [], console, function(err, message) {
+        load(fixtures.missing_file, [], function(err, message) {
             should.exist(err);
             done();
         });
