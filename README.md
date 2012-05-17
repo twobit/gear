@@ -28,7 +28,7 @@ npm install taskjs-lib
 taskjs.queue()
  .load([{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]
  .concat()
- .write({name: 'foobarbaz.js'})
+ .write({file: 'foobarbaz.js'})
  .run();
 ```
 
@@ -182,14 +182,14 @@ __Example__
 
 __Arguments__
 
- * options.filename - File to write.
+ * options.file - File to write, will replace {checksum} with hash of message body.
 
 Write the message to disk.
 
 __Example__
 
 ```
-.write({filename: 'foo'})
+.write({file: 'foo'})
 ```
 
 ---------------------------------------
