@@ -26,7 +26,7 @@ npm install taskjs-lib
 
 ```
 taskjs.queue()
- .files(['foo.js', 'bar.js', 'baz.js']
+ .load([{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]
  .concat()
  .write({name: 'foobarbaz.js'})
  .run();
@@ -36,10 +36,10 @@ taskjs.queue()
 
 ```
 taskjs.queue()
- .files(['foo.js'])
+ .load([{file: 'foo.js'}])
  .log('Complex Task')
  .fork({
-    read: {task: 'files', options: ['foo.js', 'bar.js', 'baz.js']}
+    read: {task: 'load', options: [{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'output']}
@@ -58,7 +58,7 @@ taskjs.queue()
 
 ### [Tasks](#Tasks)
 
- * [files](#Tasks.files)
+ * [load](#Tasks.load)
  * [write](#Tasks.write)
  * [concat](#Tasks.concat)
  * [inspect](#Tasks.inspect)
@@ -158,19 +158,21 @@ taskjs.registry().load({dirname: 'foo'});
 <a name="Tasks" />
 ## Tasks
 
-<a name="Tasks.files" />
-### files(filenames)
+<a name="Tasks.load" />
+### load(sources)
 
-Loads files as messages.
+Loads messages from different sources.
 
 __Arguments__
 
- * filenames - List of filenames.
+ * sources - List of sources.
 
 __Example__
 
 ```
-.files(['foo', 'bar', 'baz'])
+// source - What resource to load.
+// source.file - Filename of resource.
+.load([{file: 'foo'}, {file: 'bar'}, {file: 'baz'}])
 ```
 
 ---------------------------------------

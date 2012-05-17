@@ -5,7 +5,7 @@ exports.queue = core.createQueue;
 
 var tasks = [
     './lib/concat',
-    './lib/files',
+    './lib/load',
     //'./lib/fork',
     './lib/inspect',
     './lib/log',
