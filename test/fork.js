@@ -1,10 +1,11 @@
-/*var taskjs = require('../lib/task'),
+var core = require('taskjs-core'),
     fork = require('../lib/fork').fork.fn,
     fixtures = {
         files: ['test/fixtures/test1.js'],
         parallel_files: ['test/fixtures/test2.js']
     };
 
+/*
 describe('taskjs.queue()', function() {
     it('should wrap task correctly', function() {
         taskjs.queue().fork({

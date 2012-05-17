@@ -161,7 +161,7 @@ taskjs.registry().load({dirname: 'foo'});
 <a name="Tasks.files" />
 ### files(filenames)
 
-Adds objects loaded from files to object chain.
+Loads files as messages.
 
 __Arguments__
 
@@ -182,7 +182,7 @@ __Arguments__
 
  * options.filename - File to write.
 
-Write the last object in the object chain.
+Write the message to disk.
 
 __Example__
 
@@ -195,7 +195,7 @@ __Example__
 <a name="Tasks.concat" />
 ### concat()
 
-Concatenates object chain contents.
+Concatenates messages.
 
 __Example__
 
@@ -208,7 +208,7 @@ __Example__
 <a name="Tasks.inspect" />
 ### inspect()
 
-Inspects object chain.
+Inspects a message.
 
 __Example__
 
@@ -240,7 +240,7 @@ __Example__
 
 __Arguments__
 
- * tasks - Object containing tasks to run.
+ * tasks - Task workflow.
 
 Fork execution into parallel tasks with optional dependencies. Data is joined on fork completion.
 
@@ -260,25 +260,21 @@ __Example__
 <a name="Custom" />
 ## Custom Tasks
 
-Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks operate on lists of simple immutable objects. Objects have content and meta properties. The task returns transformed data via its callback.
+Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
 
 __Arguments__
 
  * options - Options for the task.
- * objects - Immutable list of objects created by other tasks. Objects must each have a content property.
+ * messages - Immutable list of messages created by other tasks. Messages must each have a body property.
  * logger - Logger for outputting status.
  * callback(err, results) - Callback executed when task is complete.
 
 __Example__
 ```
 // example.js
-// Example task replaces each objects content with a string.
-exports.example = function(options, objects, logger, callback) {
-    var data = objects.map(function(item) {
-        return {content: options};
-    });
-
-    callback(null, data);
+// Example task replaces each message body with a string.
+exports.example = function(string, message, logger, callback) {
+    callback(null, {body: string});
 };
 ```
 
