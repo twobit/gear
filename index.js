@@ -1,3 +1,8 @@
+var core = require('taskjs-core');
+
+exports.registry = core.createRegistry;
+exports.queue = core.createQueue;
+
 var tasks = [
     './lib/concat',
     './lib/files',
