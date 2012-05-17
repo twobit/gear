@@ -1,6 +1,6 @@
 {
   "name": "taskjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
