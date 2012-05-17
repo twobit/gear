@@ -17,7 +17,7 @@ describe('taskjs.queue()', function() {
             inspect_1_and_2: {requires: ['inspect_results2', 'inspect_results'], task: 'log', options: 'Done'}
         }).run();
     });
-});
+});*/
 
 describe('fork()', function() {
     it('should execute complex tasks', function(done) {
@@ -34,4 +34,4 @@ describe('fork()', function() {
     });
 
     it('should accept existing data');
-});*/
+});
