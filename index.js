@@ -1,7 +1,16 @@
 var core = require('taskjs-core');
 
-exports.registry = core.createRegistry;
-exports.queue = core.createQueue;
+var registry = exports.registry = function(options) {
+    var reg = new core.Registry(options);
+    reg.load({dirname: __dirname + '/lib'});
+    return reg;
+};
+
+exports.queue = function(options) {
+    options = options || {};
+    options.registry = options.registry || registry();
+    return new core.Queue(options);
+};
 
 var tasks = [
     './lib/concat',

@@ -1,6 +1,6 @@
 var should = require('should'),
     path = require('path'),
-    core = require('taskjs-core'),
+    taskjs = require(path.join(process.cwd(), './index')),
     fork = require('../lib/fork').fork.fn,
     fixtures = {
         files: [{file: 'test/fixtures/test1.js'}],
@@ -10,8 +10,7 @@ var should = require('should'),
 
 describe('taskjs.queue()', function() {
     it('should wrap task correctly', function() {
-        var registry = core.createRegistry({filename: path.join(process.cwd(), './index.js')});
-        core.createQueue({registry: registry}).fork({
+        taskjs.queue().fork({
             read_files:      {task: 'load', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
@@ -24,9 +23,7 @@ describe('taskjs.queue()', function() {
 
 describe('fork()', function() {
     it('should handle err', function(done) {
-        var registry = {
-            _registry: core.createRegistry({filename: path.join(process.cwd(), './index.js')})
-        };
+        var registry = {_registry: taskjs.registry()};
 
         fork.call(registry, {
             read_files:      {task: 'load', options: fixtures.missing_files}
@@ -37,9 +34,7 @@ describe('fork()', function() {
     });
 
     it('should execute complex tasks', function(done) {
-        var registry = {
-            _registry: core.createRegistry({filename: path.join(process.cwd(), './index.js')})
-        };
+        var registry = {_registry: taskjs.registry()};
 
         fork.call(registry, {
             read_files:      {task: 'load', options: fixtures.files},
