@@ -288,4 +288,8 @@ taskjs.queue({registry: taskjs.registry({filename: 'example.js'})})
 
 ## Special Thanks
 
-taskjs was insprired by [Buildy](/mosen/build) created by [mosen](/mosen).
+taskjs takes inspiration from a few sources:
+
+ * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
+ * [buildy](/mosen/build) created by [mosen](/mosen).
+ * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
