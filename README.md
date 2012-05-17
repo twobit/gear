@@ -269,14 +269,14 @@ __Arguments__
  * options - Options for the task.
  * messages - Immutable list of messages created by other tasks. Messages must each have a body property.
  * logger - Logger for outputting status.
- * callback(err, results) - Callback executed when task is complete.
+ * done(err, results) - Callback executed when task is complete.
 
 __Example__
 ```
 // example.js
 // Example task replaces each message body with a string.
-exports.example = function(string, message, logger, callback) {
-    callback(null, {body: string});
+exports.example = function(string, message, logger, done) {
+    done(null, {body: string});
 };
 ```
 
