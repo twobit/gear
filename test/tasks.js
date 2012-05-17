@@ -17,9 +17,8 @@ describe('Queue', function() {
                 });
         });
 
-        /*
         it('should handle forks', function(done) {
-            core.createQueue({registry: core.createRegistry({module: 'index.js'})})
+            core.createQueue({registry: core.createRegistry({filename: path.join(process.cwd(), './index.js')})})
                 .fork({
                     load: {task: 'load', options: fixtures.files},
                     log: {task: 'log', options: 'Finished', requires: ['load']}
@@ -28,6 +27,5 @@ describe('Queue', function() {
                     done(err);
                 });
         });
-        */
     });
 });
