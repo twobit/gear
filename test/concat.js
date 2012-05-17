@@ -1,5 +1,5 @@
 var should = require('should'),
-    concat = require('../lib/concat').concat.fn,
+    concat = require('../lib/tasks/concat').concat.fn,
     fixtures = {
         messages: [{body: 'abc'}, {body: 'def'}],
         message: [{body: 'abc'}]

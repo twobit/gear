@@ -1,7 +1,7 @@
 var should = require('should'),
     path = require('path'),
     taskjs = require(path.join(process.cwd(), './index')),
-    fork = require('../lib/fork').fork.fn,
+    fork = require('../lib/tasks/fork').fork.fn,
     fixtures = {
         files: [{file: 'test/fixtures/test1.js'}],
         missing_files: [{file: 'test/fixtures/missing_file.js'}],

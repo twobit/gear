@@ -1,6 +1,6 @@
 {
   "name": "taskjs",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
@@ -8,7 +8,7 @@
   "bugs": {"url": "http://github.com/twobit/taskjs/issues"},
   "main": "index",
   "dependencies": {
-      "taskjs-core": "0.0.x"
+      "async": "0.1.x"
   },
   "devDependencies": {
       "should": "0.6.x",

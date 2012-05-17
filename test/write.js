@@ -1,5 +1,5 @@
 var path = require('path'),
-    write = require('../lib/write').write.fn,
+    write = require('../lib/tasks/write').write.fn,
     fixtures = {
         filename: 'testing/write.txt',
         message: {body: 'abc'}

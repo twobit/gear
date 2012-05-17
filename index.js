@@ -1,24 +1,25 @@
-var core = require('taskjs-core');
+var Registry = require('./lib/registry').Registry;
+var Queue = require('./lib/queue').Queue;
 
 var registry = exports.registry = function(options) {
-    var reg = new core.Registry(options);
-    reg.load({dirname: __dirname + '/lib'});
+    var reg = new Registry(options);
+    reg.load({dirname: __dirname + '/lib/tasks'});
     return reg;
 };
 
 exports.queue = function(options) {
     options = options || {};
     options.registry = options.registry || registry();
-    return new core.Queue(options);
+    return new Queue(options);
 };
 
 var tasks = [
-    './lib/concat',
-    './lib/load',
-    './lib/fork',
-    './lib/inspect',
-    './lib/log',
-    './lib/write'
+    './lib/tasks/concat',
+    './lib/tasks/load',
+    './lib/tasks/fork',
+    './lib/tasks/inspect',
+    './lib/tasks/log',
+    './lib/tasks/write'
 ];
 
 tasks.forEach(function(task) {
