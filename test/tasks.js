@@ -1,20 +1,17 @@
 var core = require('taskjs-core'),
     path = require('path'),
     fixtures = {
-        files: ['test/fixtures/test1.js']
+        files: ['test/fixtures/test1.js', 'test/fixtures/test2.js']
     };
 
 describe('Queue', function() {
     describe('run()', function() {
         it('should execute chained tasks', function(done) {
             core.createQueue({registry: core.createRegistry({filename: path.join(process.cwd(), './index.js')})})
-                .log('Hello')
-                /*
                 .files(fixtures.files)
                 .concat()
                 .inspect()
                 .log('Finished')
-                */
                 .run(function(err, results) {
                     done(err);
                 });
