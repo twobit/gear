@@ -9,4 +9,8 @@ describe('Queue', function() {
                 });
         });
     });
+
+    describe('on', function() {
+        it('should fire events');
+    });
 });
