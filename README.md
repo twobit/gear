@@ -294,4 +294,3 @@ gear takes inspiration from a few sources:
  * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
  * [buildy](/mosen/build) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
- * [TermKit](https://github.com/unconed/TermKit) created by [unconed](/unconed)
