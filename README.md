@@ -1,8 +1,8 @@
-# taskjs
+# gear
 
 ## Task-Based Build System
 
-taskjs is a scriptable build system using simple tasks that act like a sequence of piped commands.
+gear is a scriptable build system using simple tasks that act like a sequence of piped commands.
 
 Features include:
  * Basic building blocks that can be combined to perform complex builds.
@@ -13,11 +13,11 @@ Features include:
 
 ## Installation
 
-To get the most out of taskjs, you will want to install [taskjs-lib](/twobit/taskjs-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+To get the most out of gear, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
 ```
-npm install taskjs
-npm install taskjs-lib
+npm install gear
+npm install gear-lib
 ```
 
 ## Quick Examples
@@ -25,7 +25,7 @@ npm install taskjs-lib
 ### Chaining Tasks
 
 ```
-taskjs.queue()
+gear.queue()
  .load([{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]
  .concat()
  .write({file: 'foobarbaz.js'})
@@ -35,7 +35,7 @@ taskjs.queue()
 ### Complex Task Execution
 
 ```
-taskjs.queue()
+gear.queue()
  .load([{file: 'foo.js'}])
  .log('Complex Task')
  .fork({
@@ -82,7 +82,7 @@ __Arguments__
 __Example__
 
 ```
-taskjs.queue()
+gear.queue()
  .log('test')
  .run();
 ```
@@ -101,7 +101,7 @@ __Arguments__
 __Example__
 
 ```
-taskjs.queue()
+gear.queue()
  .task('log', 'Hello, world!')
  .run();
 ```
@@ -116,7 +116,7 @@ Runs the queue.
 __Example__
 
 ```
-taskjs.queue()
+gear.queue()
  .log('test')
  .run();
 ```
@@ -131,7 +131,7 @@ Creates a new Registry instance.
 __Example__
 
 ```
-taskjs.registry();
+gear.registry();
 ```
 
 ---------------------------------------
@@ -150,7 +150,7 @@ __Arguments__
 __Example__
 
 ```
-taskjs.registry().load({dirname: 'foo'});
+gear.registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
@@ -262,7 +262,7 @@ __Example__
 <a name="Custom" />
 ## Custom Tasks
 
-Writing a task is especially easy compared to other Node build systems. There is no need to use taskjs internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
+Writing a task is especially easy compared to other Node build systems. There is no need to use gear internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
 
 __Arguments__
 
@@ -282,14 +282,14 @@ exports.example = function(string, message, done) {
 __Running Example Task__
 
 ```
-taskjs.queue({registry: taskjs.registry({filename: 'example.js'})})
+gear.queue({registry: gear.registry({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
 ```
 
 ## Special Thanks
 
-taskjs takes inspiration from a few sources:
+gear takes inspiration from a few sources:
 
  * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
  * [buildy](/mosen/build) created by [mosen](/mosen).

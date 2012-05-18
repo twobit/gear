@@ -1,6 +1,6 @@
 var should = require('should'),
     path = require('path'),
-    taskjs = require(path.join(process.cwd(), './index')),
+    gear = require(path.join(process.cwd(), './index')),
     fork = require('../lib/tasks/fork').fork.fn,
     fixtures = {
         files: [{file: 'test/fixtures/test1.js'}],
@@ -8,9 +8,9 @@ var should = require('should'),
         parallel_files: [{file: 'test/fixtures/test2.js'}]
     };
 
-describe('taskjs.queue()', function() {
+describe('gear.queue()', function() {
     it('should wrap task correctly', function() {
-        taskjs.queue().fork({
+        gear.queue().fork({
             read_files:      {task: 'load', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
@@ -23,7 +23,7 @@ describe('taskjs.queue()', function() {
 
 describe('fork()', function() {
     it('should handle err', function(done) {
-        var queue = taskjs.queue();
+        var queue = gear.queue();
 
         fork.call(queue, {
             read_files:      {task: 'load', options: fixtures.missing_files}
@@ -34,7 +34,7 @@ describe('fork()', function() {
     });
 
     it('should execute complex tasks', function(done) {
-        var queue = taskjs.queue();
+        var queue = gear.queue();
 
         fork.call(queue, {
             read_files:      {task: 'load', options: fixtures.files},

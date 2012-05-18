@@ -1,11 +1,11 @@
 {
-  "name": "taskjs",
+  "name": "gear",
   "version": "0.0.9",
   "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
-  "repository": {"type": "git", "url": "http://github.com/twobit/taskjs.git"},
-  "bugs": {"url": "http://github.com/twobit/taskjs/issues"},
+  "repository": {"type": "git", "url": "http://github.com/twobit/gear.git"},
+  "bugs": {"url": "http://github.com/twobit/gear/issues"},
   "main": "index",
   "dependencies": {
       "async": "0.1.x"

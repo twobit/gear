@@ -10,7 +10,5 @@ describe('Queue', function() {
         });
     });
 
-    describe('on', function() {
-        it('should fire events');
-    });
+    it('should execute task callback');
 });
