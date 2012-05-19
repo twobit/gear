@@ -12,4 +12,6 @@ describe('write()', function() {
             done(err);
         });
     });
+
+    it('should replace {checksum} in filename');
 });
