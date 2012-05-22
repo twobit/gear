@@ -16,7 +16,7 @@ exports.queue = function(options) {
 var tasks = [
     './lib/tasks/concat',
     './lib/tasks/load',
-    './lib/tasks/fork',
+    './lib/tasks/tasks',
     './lib/tasks/inspect',
     './lib/tasks/log',
     './lib/tasks/write'

@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],

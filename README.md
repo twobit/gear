@@ -38,7 +38,7 @@ gear.queue()
 gear.queue()
  .load([{file: 'foo.js'}])
  .log('Complex Task')
- .fork({
+ .tasks({
     read: {task: 'load', options: [{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]}
     combine: {task: 'concat', requires: ['read']}
     output: {task: 'jsminify', requires: ['combine']}
@@ -63,7 +63,7 @@ gear.queue()
  * [concat](#Tasks.concat)
  * [inspect](#Tasks.inspect)
  * [log](#Tasks.log)
- * [fork](#Tasks.fork)
+ * [tasks](#Tasks.tasks)
 
 ### [Custom Tasks](#Custom)
 
@@ -237,14 +237,14 @@ __Example__
 
 ---------------------------------------
 
-<a name="Tasks.fork" />
-### fork(tasks)
+<a name="Tasks.tasks" />
+### tasks(workflow)
 
 __Arguments__
 
- * tasks - Task workflow.
+ * workflow - Task workflow.
 
-Fork execution into parallel tasks with optional dependencies. Data is joined on fork completion.
+Execute tasks in parallel with optional dependencies. Data is joined on completion.
 
 __Example__
 
@@ -253,7 +253,7 @@ __Example__
 // label.task - Task name.
 // label.options - Task options.
 // label.requires - List of labels that must be executed before this task runs.
-.fork({
+.tasks({
     label_1: {task: 'log', options: 'Hello, world!'}
     label_2: {task: 'log', options: 'Hello, world 2!', requires: ['label_1']}
 })
