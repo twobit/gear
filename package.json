@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
@@ -8,7 +8,8 @@
   "bugs": {"url": "http://github.com/twobit/gear/issues"},
   "main": "index",
   "dependencies": {
-      "async": "0.1.x"
+      "async": "0.1.x",
+      "mkdirp": "0.3.x"
   },
   "devDependencies": {
       "should": "0.6.x",
