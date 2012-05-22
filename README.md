@@ -41,8 +41,9 @@ gear.queue()
  .tasks({
     read: {task: 'load', options: [{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]}
     combine: {task: 'concat', requires: ['read']}
-    output: {task: 'jsminify', requires: ['combine']}
-    print: {task: 'inspect', requires: ['read', 'combine', 'output']}
+    minify: {task: 'jsminify', requires: ['combine']}
+    print: {task: 'inspect', requires: ['read', 'combine', 'minify']}
+    parallel: {task: 'log', options: "Hello gear world!"}
  }).run();
 ```
 
