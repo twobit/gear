@@ -26,7 +26,7 @@ npm install gear-lib
 
 ```
 gear.queue()
- .load([{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]
+ .load(['foo.js', 'bar.js', 'baz.js'])
  .concat()
  .write({file: 'foobarbaz.js'})
  .run();
@@ -36,10 +36,10 @@ gear.queue()
 
 ```
 gear.queue()
- .load([{file: 'foo.js'}])
+ .load(['foo.js'])
  .log('Complex Task')
  .tasks({
-    read: {task: 'load', options: [{file: 'foo.js'}, {file: 'bar.js'}, {file: 'baz.js'}]}
+    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     minify: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
@@ -173,8 +173,9 @@ __Arguments__
 __Example__
 
 ```
-// source - What resource to load.
+// source - Filename or object to load.
 // source.file - Filename of resource.
+.load(['foo', 'baz'])
 .load([{file: 'foo'}, {file: 'bar'}, {file: 'baz'}])
 ```
 
