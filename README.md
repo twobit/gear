@@ -57,7 +57,7 @@ gear.queue()
  * [registry](#Core.registry)
  * [Registry.load](#Core.Registry.load)
 
-### [Tasks](#Tasks)
+### [Core Tasks](#Tasks)
 
  * [load](#Tasks.load)
  * [write](#Tasks.write)
@@ -65,6 +65,8 @@ gear.queue()
  * [inspect](#Tasks.inspect)
  * [log](#Tasks.log)
  * [tasks](#Tasks.tasks)
+
+### [Library Tasks](#Library)
 
 ### [Custom Tasks](#Custom)
 
@@ -258,6 +260,21 @@ __Example__
     label_1: {task: 'log', options: 'Hello, world!'}
     label_2: {task: 'log', options: 'Hello, world 2!', requires: ['label_1']}
 })
+```
+
+<a name="Library" />
+## Library Tasks
+
+Install [gear-lib](/twobit/gear-lib) which contains tasks such as:
+
+ * jslint
+ * jsminify
+ * csslint
+ * cssminify
+ * s3
+
+```
+npm install gear-lib
 ```
 
 <a name="Custom" />
