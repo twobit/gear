@@ -318,10 +318,14 @@ gear.queue({registry: gear.registry({filename: 'example.js'})})
  .run();
 ```
 
+## Who's Using Gear
+
+ * [Mojito Shaker](/yahoo/mojito-shaker) by Yahoo.
+
 ## Special Thanks
 
 gear takes inspiration from a few sources:
 
- * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
  * [buildy](/mosen/build) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
+ * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
