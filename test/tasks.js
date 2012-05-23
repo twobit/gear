@@ -1,7 +1,7 @@
 var should = require('should'),
     path = require('path'),
     gear = require(path.join(process.cwd(), './index')),
-    tasks = require('../lib/tasks/tasks').tasks.fn,
+    tasks = require('../lib/tasks/tasks').tasks,
     fixtures = {
         files: [{file: 'test/fixtures/test1.js'}],
         missing_files: [{file: 'test/fixtures/missing_file.js'}],

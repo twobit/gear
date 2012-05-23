@@ -1,6 +1,6 @@
 var path = require('path'),
     fs = require('fs'),
-    write = require('../lib/tasks/write').write.fn,
+    write = require('../lib/tasks/write').write,
     fixtures = {
         filename: 'testing/write.txt',
         filename2: 'testing/write2.txt',
