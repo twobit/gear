@@ -26,9 +26,21 @@ npm install gear-lib
 
 ```
 gear.queue()
- .load(['foo.js', 'bar.js', 'baz.js'])
- .concat()
- .write({file: 'foobarbaz.js'})
+ .load('foo.js')
+ .log('read foo.js')
+ .inspect()
+ .write('foobarbaz.js')
+ .run();
+```
+
+### Execute Tasks Using Array Style
+
+```
+gear.queue()
+ .load(['foo.js', {file: 'bar.js'}, 'baz.js'])
+ .log('read foo.js')
+ .inspect()
+ .write(['newfoo.js', 'newbar.js']) // Not writing 'baz.js'
  .run();
 ```
 
@@ -36,10 +48,10 @@ gear.queue()
 
 ```
 gear.queue()
- .load(['foo.js'])
+ .load('foo.js')
  .log('Complex Task')
  .tasks({
-    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js']}
+    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js'], callback: function(err, results) {}}
     combine: {task: 'concat', requires: ['read']}
     minify: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
