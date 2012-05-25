@@ -17,8 +17,7 @@ var tasks = [
     './lib/tasks/concat',
     './lib/tasks/load',
     './lib/tasks/tasks',
-    './lib/tasks/inspect',
-    './lib/tasks/log',
+    './lib/tasks/core',
     './lib/tasks/write'
 ];
 
