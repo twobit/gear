@@ -51,7 +51,7 @@ gear.queue()
  .load('foo.js')
  .log('Complex Task')
  .tasks({
-    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js'], callback: function(err, results) {}}
+    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js']}
     combine: {task: 'concat', requires: ['read']}
     minify: {task: 'jsminify', requires: ['combine']}
     print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
