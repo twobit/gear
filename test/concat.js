@@ -1,28 +1,14 @@
 var should = require('should'),
     concat = require('../lib/tasks/concat').concat,
     fixtures = {
-        messages: [{body: 'abc'}, {body: 'def'}],
-        message: [{body: 'abc'}]
+        prev: {body: 'abc'},
+        cur: {body: 'def'}
     };
 
 describe('concat()', function() {
     it('should concat messages', function(done) {
-        concat(null, fixtures.messages, function(err, message) {
+        concat(null, fixtures.prev, fixtures.cur, function(err, message) {
             message.body.should.equal('abcdef');
-            done(err);
-        });
-    });
-
-    it('should not concat one message', function(done) {
-        concat(null, fixtures.message, function(err, message) {
-            message.body.should.equal('abc');
-            done(err);
-        });
-    });
-
-    it('should handle empty messages', function(done) {
-        concat(null, [], function(err, message) {
-            message.body.should.equal('');
             done(err);
         });
     });
