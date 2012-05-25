@@ -8,19 +8,19 @@ var should = require('should'),
 
 describe('load()', function() {
     it('should handle filenames instead of objects', function(done) {
-        load(fixtures.filename, [], function(err, message) {
+        load(fixtures.filename, function(err, message) {
             done(err);
         });
     });
 
     it('should read files', function(done) {
-        load(fixtures.file, [], function(err, message) {
+        load(fixtures.file, function(err, message) {
             done(err);
         });
     });
 
     it('should handle missing files', function(done) {
-        load(fixtures.missing_file, [], function(err, message) {
+        load(fixtures.missing_file, function(err, message) {
             should.exist(err);
             done();
         });
