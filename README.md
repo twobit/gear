@@ -1,8 +1,8 @@
-# gear
+# Gear.js
 
 ## Task-Based Build System
 
-gear is a scriptable build system using simple tasks that act like a sequence of piped commands.
+Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.
 
 Features include:
  * Basic building blocks that can be combined to perform complex builds.
@@ -13,7 +13,7 @@ Features include:
 
 ## Installation
 
-To get the most out of gear, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+To get the most out of Gear, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
 ```
 npm install gear
