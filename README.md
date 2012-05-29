@@ -326,6 +326,6 @@ gear.queue({registry: gear.registry({filename: 'example.js'})})
 
 gear takes inspiration from a few sources:
 
- * [buildy](/mosen/build) created by [mosen](/mosen).
+ * [buildy](/mosen/buildy) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
  * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
