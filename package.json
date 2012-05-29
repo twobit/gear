@@ -1,11 +1,11 @@
 {
   "name": "gear",
-  "version": "0.1.3",
-  "description": "Task-based build system.",
+  "version": "0.1.4",
+  "description": "Gear.js - Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
-  "repository": {"type": "git", "url": "http://github.com/twobit/gear.git"},
-  "bugs": {"url": "http://github.com/twobit/gear/issues"},
+  "repository": {"type": "git", "url": "http://github.com/yahoo/gear.git"},
+  "bugs": {"url": "http://github.com/yahoo/gear/issues"},
   "main": "index",
   "dependencies": {
       "async": "0.1.x",
