@@ -332,7 +332,7 @@ gear.queue({registry: gear.registry({filename: 'example.js'})})
 
 ## Special Thanks
 
-gear takes inspiration from a few sources:
+Gear.js takes inspiration from a few sources:
 
  * [buildy](/mosen/buildy) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
