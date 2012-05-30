@@ -328,7 +328,7 @@ gear.queue({registry: gear.registry({filename: 'example.js'})})
 
 ## Who's Using Gear.js
 
- * [Mojito Shaker](/yahoo/mojito-shaker) by Yahoo.
+ * [Mojito Shaker](/yahoo/mojito-shaker) by [Yahoo](/yahoo).
 
 ## Special Thanks
 
