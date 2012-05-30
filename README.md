@@ -13,7 +13,7 @@ Features include:
 
 ## Installation
 
-To get the most out of Gear, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+To get the most out of Gear.js, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
 ```
 npm install gear
@@ -124,9 +124,13 @@ gear.queue()
 ---------------------------------------
 
 <a name="Core.Queue.run" />
-### Queue.run()
+### Queue.run(callback)
 
 Runs the queue.
+
+__Arguments__
+
+ * callback - (optional) Callback accepting (err, results)
 
 __Example__
 
@@ -142,6 +146,10 @@ gear.queue()
 ### registry()
 
 Creates a new Registry instance.
+
+__Arguments__
+
+ * options - (optional) Same as .load
 
 __Example__
 
@@ -237,11 +245,11 @@ __Example__
 ---------------------------------------
 
 <a name="Tasks.log" />
-### log(message)
+### log(string)
 
 __Arguments__
 
- * message - Message to log.
+ * string - String to log.
 
 Log a message.
 
@@ -293,7 +301,7 @@ npm install gear-lib
 <a name="Custom" />
 ## Custom Tasks
 
-Writing a task is especially easy compared to other Node build systems. There is no need to use gear internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
+Writing a task is especially easy compared to other Node build systems. There is no need to use Gear.js internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
 
 __Arguments__
 
