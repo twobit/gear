@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Gear.js - Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
