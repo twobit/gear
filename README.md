@@ -162,7 +162,7 @@ gear.gearbox();
 <a name="Core.Gearbox.load" />
 ### Gearbox.load(options)
 
-Load from NPM, directory, or file.
+Load tasks from NPM, directory, or file.
 
 __Arguments__
 
