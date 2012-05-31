@@ -1,6 +1,6 @@
-var Registry = require('../lib/registry').Registry;
+var Gearbox = require('../lib/gearbox').Gearbox;
 
-describe('Registry', function() {
+describe('Gearbox', function() {
     describe('load', function() {
         it('should load modules');
         it('should load directories');
