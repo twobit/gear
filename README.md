@@ -15,16 +15,16 @@ Features include:
 
 To get the most out of Gear.js, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
-```
-npm install gear
-npm install gear-lib
+```bash
+$ npm install gear
+$ npm install gear-lib
 ```
 
 ## Quick Examples
 
 ### Chaining Tasks
 
-```
+```javascript
 gear.queue()
  .load('foo.js')
  .log('read foo.js')
@@ -35,7 +35,7 @@ gear.queue()
 
 ### Execute Tasks Using Array Style
 
-```
+```javascript
 gear.queue()
  .load(['foo.js', {file: 'bar.js'}, 'baz.js'])
  .log('read foo.js')
@@ -46,7 +46,7 @@ gear.queue()
 
 ### Complex Task Execution
 
-```
+```javascript
 gear.queue()
  .load('foo.js')
  .log('Complex Task')
@@ -96,7 +96,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 gear.queue()
  .log('test')
  .run();
@@ -115,7 +115,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 gear.queue()
  .task('log', 'Hello, world!')
  .run();
@@ -134,7 +134,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 gear.queue()
  .log('test')
  .run();
@@ -153,7 +153,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 gear.gearbox();
 ```
 
@@ -172,7 +172,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 gear.gearbox().load({dirname: 'foo'});
 ```
 
@@ -192,7 +192,7 @@ __Arguments__
 
 __Example__
 
-```
+```javascript
 // source - Filename or object to load.
 // source.file - Filename of resource.
 .load(['foo', 'baz'])
@@ -212,7 +212,7 @@ Write the message to disk.
 
 __Example__
 
-```
+```javascript
 .write({file: 'foo'})
 ```
 
@@ -225,7 +225,7 @@ Concatenates messages.
 
 __Example__
 
-```
+```javascript
 .concat()
 ```
 
@@ -238,7 +238,7 @@ Inspects a message.
 
 __Example__
 
-```
+```javascript
 .inspect()
 ```
 
@@ -255,7 +255,7 @@ Log a message.
 
 __Example__
 
-```
+```javascript
 .log('Finished')
 ```
 
@@ -272,7 +272,7 @@ Execute tasks in parallel with optional dependencies. Data is joined on completi
 
 __Example__
 
-```
+```javascript
 // label - Task instance name.
 // label.task - Task name.
 // label.options - Task options.
@@ -294,8 +294,8 @@ Install [gear-lib](/twobit/gear-lib) which contains tasks such as:
  * cssminify
  * s3
 
-```
-npm install gear-lib
+```bash
+$ npm install gear-lib
 ```
 
 <a name="Custom" />
@@ -320,7 +320,7 @@ exports.example = function(string, message, done) {
 
 __Running Example Task__
 
-```
+```javascript
 gear.queue({gearbox: gear.gearbox({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
