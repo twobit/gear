@@ -6,9 +6,9 @@ var should = require('should'),
     };
 
 describe('concat()', function() {
-    it('should concat messages', function(done) {
-        concat(null, fixtures.prev, fixtures.cur, function(err, message) {
-            message.body.should.equal('abcdef');
+    it('should concat blobs', function(done) {
+        concat(null, fixtures.prev, fixtures.cur, function(err, blob) {
+            blob.body.should.equal('abcdef');
             done(err);
         });
     });

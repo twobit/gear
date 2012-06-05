@@ -6,7 +6,7 @@ var path = require('path'),
         filename2: 'testing/write2.txt',
         checksum: 'testing/write_{checksum}.txt',
         checksum_replaced: 'testing/write_900150983cd24fb0d6963f7d28e17f72.txt',
-        message: {body: 'abc'}
+        blob: {body: 'abc'}
     };
 
 function remove(filename) {
@@ -18,7 +18,7 @@ function remove(filename) {
 describe('write()', function() {
     it('should write file', function(done) {
         remove(fixtures.filename);
-        write(fixtures.filename, fixtures.message, function(err, message) {
+        write(fixtures.filename, fixtures.blob, function(err, blob) {
             path.existsSync(fixtures.filename).should.equal(true);
             done(err);
         });
@@ -26,7 +26,7 @@ describe('write()', function() {
 
     it('should write file with options', function(done) {
         remove(fixtures.filename);
-        write({file: fixtures.filename2}, fixtures.message, function(err, message) {
+        write({file: fixtures.filename2}, fixtures.blob, function(err, blob) {
             path.existsSync(fixtures.filename2).should.equal(true);
             done(err);
         });
@@ -34,7 +34,7 @@ describe('write()', function() {
 
     it('should replace {checksum} in filename', function(done) {
         remove(fixtures.checksum_replaced);
-        write({file: fixtures.checksum}, fixtures.message, function(err, message) {
+        write({file: fixtures.checksum}, fixtures.blob, function(err, blob) {
             path.existsSync(fixtures.checksum_replaced).should.equal(true);
             done(err);
         });
