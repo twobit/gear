@@ -6,7 +6,7 @@ Gear.js is a scriptable build system using simple tasks that act like a sequence
 
 Features include:
  * Basic building blocks that can be combined to perform complex builds.
- * Tasks simply transform input to output without relying on system internals.
+ * Tasks are simply defined and keep system internals to a minimum.
  * Asynchronous execution.
  * Extensible task loading via NPM, file, or directory.
  * Advanced flow control for complex task execution.
