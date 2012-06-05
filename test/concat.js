@@ -1,14 +1,15 @@
 var should = require('should'),
+    Blob = require('../lib/blob').Blob,
     concat = require('../lib/tasks/concat').concat,
     fixtures = {
-        prev: {body: 'abc'},
-        cur: {body: 'def'}
+        prev: new Blob(['abc']),
+        cur: new Blob(['def'])
     };
 
 describe('concat()', function() {
     it('should concat blobs', function(done) {
         concat(null, fixtures.prev, fixtures.cur, function(err, blob) {
-            blob.body.should.equal('abcdef');
+            blob.toString().should.equal('abcdef');
             done(err);
         });
     });

@@ -34,3 +34,5 @@ tasks.forEach(function(task) {
         exports[name] = mod[name];
     }
 });
+
+exports.Blob = require('./lib/blob').Blob;

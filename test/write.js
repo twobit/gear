@@ -1,12 +1,13 @@
 var path = require('path'),
     fs = require('fs'),
+    Blob = require('../lib/blob').Blob,
     write = require('../lib/tasks/write').write,
     fixtures = {
         filename: 'testing/write.txt',
         filename2: 'testing/write2.txt',
         checksum: 'testing/write_{checksum}.txt',
         checksum_replaced: 'testing/write_900150983cd24fb0d6963f7d28e17f72.txt',
-        blob: {body: 'abc'}
+        blob: new Blob(['abc'])
     };
 
 function remove(filename) {
