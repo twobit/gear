@@ -336,4 +336,3 @@ Gear.js takes inspiration from a few sources:
 
  * [buildy](/mosen/buildy) created by [mosen](/mosen).
  * [grunt](/cowboy/grunt) created by [cowboy](/cowboy).
- * [Thread Building Blocks](http://threadingbuildingblocks.org/) by Intel.
