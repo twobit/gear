@@ -107,7 +107,7 @@ gear.queue()
 <a name="Core.Queue.task" />
 ### Queue.task(name, options)
 
-Helper method to run the specified task. Preferred task execution style is to call the task directly i.e. `.inspect` instead of `.task('inspect')`.
+Helper method to run the specified task. Preferred task execution style is to call the task directly i.e. `inspect()` instead of `task('inspect')`.
 
 __Arguments__
 
