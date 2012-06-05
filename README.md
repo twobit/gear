@@ -184,7 +184,7 @@ gear.gearbox().load({dirname: 'foo'});
 <a name="Tasks.load" />
 ### load(sources)
 
-Loads messages from different sources.
+Loads blobs from different sources.
 
 __Arguments__
 
@@ -206,9 +206,9 @@ __Example__
 
 __Arguments__
 
- * options.file - File to write, will replace {checksum} with hash of message body.
+ * options.file - File to write, will replace {checksum} with hash of blob content.
 
-Write the message to disk.
+Write the blob to disk.
 
 __Example__
 
@@ -221,7 +221,7 @@ __Example__
 <a name="Tasks.concat" />
 ### concat()
 
-Concatenates messages.
+Concatenates blobs.
 
 __Example__
 
@@ -234,7 +234,7 @@ __Example__
 <a name="Tasks.inspect" />
 ### inspect()
 
-Inspects a message.
+Inspects blobs.
 
 __Example__
 
@@ -301,19 +301,19 @@ $ npm install gear-lib
 <a name="Custom" />
 ## Custom Tasks
 
-Writing a task is especially easy compared to other Node build systems. There is no need to use Gear.js internals within a task. Tasks operate on immutable messages. Messages have a body property. The task returns transformed data via its callback.
+Writing a task is especially easy compared to other Node build systems. There is no need to use Gear.js internals within a task. Tasks operate on immutable blobs. Blobs have a body property. The task returns transformed data via its callback.
 
 __Arguments__
 
  * options - Options for the task.
- * messages - Immutable list of messages created by other tasks. Messages must each have a body property.
- * done(err, results) - Callback executed when task is complete.
+ * blob - Immutable blob.
+ * done(err, result) - Callback executed when task is complete.
 
 __Example__
 ```
 // example.js
-// Example task replaces each message body with a string.
-exports.example = function(string, message, done) {
+// Example task replaces each blob with a string.
+exports.example = function(string, blob, done) {
     done(null, {body: string});
 };
 ```
