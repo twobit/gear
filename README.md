@@ -310,11 +310,11 @@ __Arguments__
  * done(err, result) - Callback executed when task is complete.
 
 __Example__
-```
+```javascript
 // example.js
-// Example task replaces each blob with a string.
+// Example task creates new blob containing `string`
 exports.example = function(string, blob, done) {
-    done(null, {body: string});
+    done(null, blob.create([string])); // blob.create() is equivalent to new Blob()
 };
 ```
 
