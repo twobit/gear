@@ -2,8 +2,8 @@ var should = require('should'),
     Blob = require('../lib/blob').Blob,
     concat = require('../lib/tasks/concat').concat,
     fixtures = {
-        prev: new Blob(['abc']),
-        cur: new Blob(['def'])
+        prev: new Blob('abc'),
+        cur: new Blob('def')
     };
 
 describe('concat()', function() {

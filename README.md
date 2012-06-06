@@ -314,7 +314,7 @@ __Example__
 // example.js
 // Example task creates new blob containing `string`
 exports.example = function(string, blob, done) {
-    done(null, blob.create([string])); // blob.create() is equivalent to new Blob()
+    done(null, blob.create(string)); // blob.create() is equivalent to new Blob()
 };
 ```
 

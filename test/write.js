@@ -7,7 +7,7 @@ var path = require('path'),
         filename2: 'testing/write2.txt',
         checksum: 'testing/write_{checksum}.txt',
         checksum_replaced: 'testing/write_900150983cd24fb0d6963f7d28e17f72.txt',
-        blob: new Blob(['abc'])
+        blob: new Blob('abc')
     };
 
 function remove(filename) {
