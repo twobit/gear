@@ -162,7 +162,7 @@
     var Queue = exports.Queue = function Queue(options) {
         var self = this;
         options = options || {};
-        this._registry = options.registry || new Registry();
+        this._registry = options.registry || new Registry({dirname: __dirname + '/tasks'});
         this._queue = [
             function(callback) {
                 callback(null, []);
