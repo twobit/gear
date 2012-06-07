@@ -14,7 +14,8 @@ var files = [
 
 gear.queue()
     .load(files)
-    .inspect()
+    .concat()
+    .write('build/gear.js')
     .run(function(err, results) {
         console.log(err);
     });
