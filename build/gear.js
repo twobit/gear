@@ -743,10 +743,6 @@
         }});
     };
 
-    Blob.prototype.create = function(parts, properties) {
-        return new Blob(parts, properties);
-    };
-
     Blob.prototype.toString = function() {
         return this._content;
     };
@@ -766,7 +762,7 @@
      */
     var concat = exports.concat = function concat(options, prev, blob, done) {
         options = options || {};
-        done(null, blob.create([prev, options.callback ? options.callback(blob) : blob]));
+        done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
     };
     concat.type = 'reduce';
     concat.browser = true;
@@ -924,6 +920,11 @@
         }
         
         async.auto(auto, function(err, results) {
+            if (err) {
+                done(err);
+                return;
+            }
+            
             done(err, results.join ? results.join : []);
         });
     };
@@ -957,7 +958,7 @@
 
         function writeFile(name, b) {
             fs.writeFile(name, blob.toString(), function(err) {
-                done(err, blob.create(blob, {name: name}));
+                done(err, new blob.constructor(blob, {name: name}));
             });
         }
 
