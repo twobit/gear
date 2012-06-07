@@ -37,7 +37,7 @@ new Queue()
 
 ```javascript
 new Queue()
- .load(['foo.js', {file: 'bar.js'}, 'baz.js'])
+ .load(['foo.js', {name: 'bar.js'}, 'baz.js'])
  .log('read foo.js')
  .inspect()
  .write(['newfoo.js', 'newbar.js']) // Not writing 'baz.js'
@@ -169,6 +169,7 @@ __Arguments__
  * options.module - Module to load tasks from.
  * options.dirname - Directory to load tasks from.
  * options.filename - File to load tasks from.
+ * options.tasks - Object to load tasks from.
 
 __Example__
 
@@ -194,9 +195,10 @@ __Example__
 
 ```javascript
 // source - Filename or object to load.
-// source.file - Filename of resource.
+// source.name - Filename of resource.
+.load('foo')
 .load(['foo', 'baz'])
-.load([{file: 'foo'}, {file: 'bar'}, {file: 'baz'}])
+.load([{name: 'foo'}, {name: 'bar'}, {name: 'baz'}])
 ```
 
 ---------------------------------------
@@ -206,14 +208,15 @@ __Example__
 
 __Arguments__
 
- * options.file - File to write, will replace {checksum} with hash of blob content.
+ * options.name - File to write, will replace {checksum} with hash of blob content.
 
 Write the blob to disk.
 
 __Example__
 
 ```javascript
-.write({file: 'foo'})
+.write('foo')
+.write({name: 'foo'})
 ```
 
 ---------------------------------------

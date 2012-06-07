@@ -27,7 +27,7 @@ describe('write()', function() {
 
     it('should write file with options', function(done) {
         remove(fixtures.filename);
-        write({file: fixtures.filename2}, fixtures.blob, function(err, blob) {
+        write({name: fixtures.filename2}, fixtures.blob, function(err, blob) {
             path.existsSync(fixtures.filename2).should.equal(true);
             done(err);
         });
@@ -35,7 +35,7 @@ describe('write()', function() {
 
     it('should replace {checksum} in filename', function(done) {
         remove(fixtures.checksum_replaced);
-        write({file: fixtures.checksum}, fixtures.blob, function(err, blob) {
+        write({name: fixtures.checksum}, fixtures.blob, function(err, blob) {
             path.existsSync(fixtures.checksum_replaced).should.equal(true);
             done(err);
         });

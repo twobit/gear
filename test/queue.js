@@ -2,9 +2,9 @@ var should = require('should'),
     path = require('path'),
     gear = require(path.join(process.cwd(), './index')),
     fixtures = {
-        file: {file: 'test/fixtures/test1.js'},
-        files: [{file: 'test/fixtures/test1.js'}, {file: 'test/fixtures/test2.js'}],
-        missing_file: {file: 'test/fixtures/missing_file.js'}
+        file: {name: 'test/fixtures/test1.js'},
+        files: [{name: 'test/fixtures/test1.js'}, {name: 'test/fixtures/test2.js'}],
+        missing_file: {name: 'test/fixtures/missing_file.js'}
     };
 
 describe('Queue', function() {

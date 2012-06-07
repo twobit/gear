@@ -847,19 +847,20 @@
      * TODO: Add more sources i.e. (url).
      *
      * @param options {Object} File options or filename.
-     * @param options.file {Object} Filename to load.
+     * @param options.name {Object} Filename to load.
      * @param done {Function} Callback on task completion.
      */
     var load = exports.load = function load(options, done) {
-        options = (typeof options === 'string') ? {file: options} : options;
+        options = (typeof options === 'string') ? {name: options} : options;
 
-        if (options.file) {
-            fs.readFile(options.file, function(err, data) {
-                done(err, new Blob(data, {name: options.file}));
+        if (options.name) {
+            fs.readFile(options.name, function(err, data) {
+                done(err, new Blob(data, {name: options.name}));
             });
         }
     };
     load.type = 'append';
+    load.browser = true;
 })(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -951,9 +952,9 @@
      * @param done {Function} Callback on task completion.
      */
     var write = exports.write = function write(options, blob, done) {
-        options = (typeof options === 'string') ? {file: options} : options;
+        options = (typeof options === 'string') ? {name: options} : options;
 
-        var dirname = path.resolve(path.dirname(options.file)),
+        var dirname = path.resolve(path.dirname(options.name)),
             checksum;
 
         function writeFile(name, b) {
@@ -962,10 +963,10 @@
             });
         }
 
-        if (options.file.indexOf('{checksum}') > -1) {  // Replace {checksum} with md5 string
+        if (options.name.indexOf('{checksum}') > -1) {  // Replace {checksum} with md5 string
             checksum = Crypto.createHash('md5');
             checksum.update(blob.toString());
-            options.file = options.file.replace('{checksum}', checksum.digest('hex'));
+            options.name = options.name.replace('{checksum}', checksum.digest('hex'));
         }
 
         path.exists(dirname, function(exists) {
@@ -974,12 +975,12 @@
                     if (err) {
                         done(err);
                     } else {
-                        writeFile(options.file, blob);
+                        writeFile(options.name, blob);
                     }
                 });
             }
             else {
-                writeFile(options.file, blob);
+                writeFile(options.name, blob);
             }
         });
     };

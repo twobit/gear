@@ -2,8 +2,8 @@ var should = require('should'),
     load = require('../lib/tasks/load').load,
     fixtures = {
         filename: 'test/fixtures/test1.js',
-        file: {file: 'test/fixtures/test1.js'},
-        missing_file: {file: 'test/fixtures/missing_file.js'}
+        file: {name: 'test/fixtures/test1.js'},
+        missing_file: {name: 'test/fixtures/missing_file.js'}
     };
 
 describe('load()', function() {
