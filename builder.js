@@ -12,7 +12,7 @@ var files = [
     'lib/tasks/write.js'
 ];
 
-gear.queue()
+new gear.Queue()
     .load(files)
     .concat()
     .write('build/gear.js')

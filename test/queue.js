@@ -10,7 +10,7 @@ var should = require('should'),
 describe('Queue', function() {
     describe('run()', function() {
         it('should handle append tasks', function(done) {
-            gear.queue()
+            new gear.Queue()
                 .load(fixtures.files)
                 .load(fixtures.file)
                 .run(function(err, results) {
@@ -20,7 +20,7 @@ describe('Queue', function() {
         });
 
         it('should handle tasks called with array options', function(done) {
-            gear.queue()
+            new gear.Queue()
                 .load(fixtures.files)
                 .concat()
                 .run(function(err, results) {
@@ -29,7 +29,7 @@ describe('Queue', function() {
         });
 
         it('should execute chained tasks', function(done) {
-            gear.queue()
+            new gear.Queue()
                 .load(fixtures.file)
                 .concat()
                 .run(function(err, results) {
@@ -38,7 +38,7 @@ describe('Queue', function() {
         });
 
         it('should handle errors', function(done) {
-            gear.queue()
+            new gear.Queue()
                 .load(fixtures.missing_file)
                 .concat()
                 .run(function(err, results) {
@@ -50,7 +50,7 @@ describe('Queue', function() {
 
     describe('run', function() {
         it('should run empty queues', function(done) {
-            gear.queue()
+            new gear.Queue()
                 .run(function(err, results) {
                     done(err);
                 });

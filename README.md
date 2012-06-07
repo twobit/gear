@@ -25,7 +25,7 @@ $ npm install gear-lib
 ### Chaining Tasks
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .load('foo.js')
  .log('read foo.js')
  .inspect()
@@ -36,7 +36,7 @@ gear.queue()
 ### Execute Tasks Using Array Style
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .load(['foo.js', {file: 'bar.js'}, 'baz.js'])
  .log('read foo.js')
  .inspect()
@@ -47,7 +47,7 @@ gear.queue()
 ### Complex Task Execution
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .load('foo.js')
  .log('Complex Task')
  .tasks({
@@ -63,10 +63,10 @@ gear.queue()
 
 ### [Core](#Core)
 
- * [queue](#Core.queue)
+ * [Queue](#Core.Queue)
  * [Queue.task](#Core.Queue.task)
  * [Queue.run](#Core.Queue.run)
- * [registry](#Core.registry)
+ * [Registry](#Core.Registry)
  * [Registry.load](#Core.Registry.load)
 
 ### [Core Tasks](#Tasks)
@@ -85,10 +85,10 @@ gear.queue()
 <a name="Core" />
 ## Core
 
-<a name="Core.queue" />
-### queue(options)
+<a name="Core.Queue" />
+### Queue(options)
 
-Creates a new Queue instance.
+Queue constructor.
 
 __Arguments__
 
@@ -97,7 +97,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .log('test')
  .run();
 ```
@@ -116,7 +116,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .task('log', 'Hello, world!')
  .run();
 ```
@@ -135,15 +135,15 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.queue()
+new gear.Queue()
  .log('test')
  .run();
 ```
 
 ---------------------------------------
 
-<a name="Core.registry" />
-### registry()
+<a name="Core.Registry" />
+### Registry()
 
 Creates a new Registry instance. Registries contain available tasks.
 
@@ -154,7 +154,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.registry();
+gear.Registry();
 ```
 
 ---------------------------------------
@@ -173,7 +173,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.registry().load({dirname: 'foo'});
+gear.Registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
@@ -321,7 +321,7 @@ exports.example = function(string, blob, done) {
 __Running Example Task__
 
 ```javascript
-gear.queue({registry: gear.registry({filename: 'example.js'})})
+new gear.Queue({registry: new gear.Registry({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
 ```

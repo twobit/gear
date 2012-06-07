@@ -4,7 +4,7 @@
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (require) {
+    if (typeof require !== 'undefined') {
         var path = require('path'),
             fs = require('fs');
     }
@@ -83,16 +83,21 @@
             return this._tasks[name];
         }
     };
-})(typeof exports === 'undefined' ? this['gear_core'] = {} : exports);/*
- * Blob
- *
- * Loosely based on W3C Blob:
- * http://www.w3.org/TR/FileAPI/#dfn-Blob
- * https://developer.mozilla.org/en/DOM/Blob
- *
- * @param parts {String|Blob|Array} Create new Blob from String/Blob or Array of String/Blob.
+})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);/*
+ * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
+ * Copyrights licensed under the New BSD License.
+ * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
+     /*
+     * Blob
+     *
+     * Loosely based on W3C Blob:
+     * http://www.w3.org/TR/FileAPI/#dfn-Blob
+     * https://developer.mozilla.org/en/DOM/Blob
+     *
+     * @param parts {String|Blob|Array} Create new Blob from String/Blob or Array of String/Blob.
+     */
     var Blob = exports.Blob = function Blob(parts, properties) {
         if (parts === undefined) {
             parts = [];
@@ -139,13 +144,13 @@
     Blob.prototype.toString = function() {
         return this._content;
     };
-})(typeof exports === 'undefined' ? this['gear_core'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (require) {
+    if (typeof require !== 'undefined') {
         var async = require('async'),
             Registry = require('./registry').Registry,
             Blob = require('./blob').Blob;
@@ -221,7 +226,7 @@
     Queue.prototype.run = function(callback) {
         async.waterfall(this._queue, callback);
     };
-})(typeof exports === 'undefined' ? this['gear_core'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -241,7 +246,7 @@
     };
     concat.type = 'reduce';
     concat.browser = true;
-})(typeof exports === 'undefined' ? this['gear_tasks'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -293,13 +298,13 @@
     };
     inspect.type = 'iterate';
     inspect.browser = true;
-})(typeof exports === 'undefined' ? this['gear_tasks'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (require) {
+    if (typeof require !== 'undefined') {
         var fs = require('fs'),
             Blob = require('../blob').Blob;
     }
@@ -322,13 +327,13 @@
         }
     };
     load.type = 'append';
-})(typeof exports === 'undefined' ? this['gear_tasks'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (require) {
+    if (typeof require !== 'undefined') {
         var async = require('async');
     }
 
@@ -369,13 +374,13 @@
         async.auto(auto, done);
     };
     tasks.type = 'iterate';
-})(typeof exports === 'undefined' ? this['gear_tasks'] = {} : exports);/*
+})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (require) {
+    if (typeof require !== 'undefined') {
         var fs = require('fs'),
             path = require('path'),
             mkdirp = require('mkdirp').mkdirp,
@@ -424,4 +429,4 @@
         });
     };
     write.type = 'slice';
-})(typeof exports === 'undefined' ? this['gear_tasks'] = {} : exports);
+})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);

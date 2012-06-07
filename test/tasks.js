@@ -8,9 +8,9 @@ var should = require('should'),
         parallel_files: [{file: 'test/fixtures/test2.js'}]
     };
 
-describe('gear.queue()', function() {
+describe('Queue()', function() {
     it('should wrap task correctly', function() {
-        gear.queue().tasks({
+        new gear.Queue().tasks({
             read_files:      {task: 'load', options: fixtures.files},
             concat_files:    {requires: ['read_files'], task: 'concat'},
             inspect_results: {requires: ['concat_files'], task: 'inspect'},
@@ -23,7 +23,7 @@ describe('gear.queue()', function() {
 
 describe('tasks()', function() {
     it('should handle err', function(done) {
-        var queue = gear.queue();
+        var queue = new gear.Queue();
 
         tasks.call(queue, {
             read_files:      {task: 'load', options: fixtures.missing_files}
@@ -34,7 +34,7 @@ describe('tasks()', function() {
     });
 
     it('should execute complex tasks', function(done) {
-        var queue = gear.queue();
+        var queue = new gear.Queue();
 
         tasks.call(queue, {
             read_files:      {task: 'load', options: fixtures.files},
