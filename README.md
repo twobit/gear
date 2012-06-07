@@ -66,8 +66,8 @@ gear.queue()
  * [queue](#Core.queue)
  * [Queue.task](#Core.Queue.task)
  * [Queue.run](#Core.Queue.run)
- * [gearbox](#Core.gearbox)
- * [Gearbox.load](#Core.Gearbox.load)
+ * [registry](#Core.registry)
+ * [Registry.load](#Core.Registry.load)
 
 ### [Core Tasks](#Tasks)
 
@@ -92,7 +92,7 @@ Creates a new Queue instance.
 
 __Arguments__
 
- * options.gearbox - Gearbox loaded with available tasks.
+ * options.registry - Registry loaded with available tasks.
 
 __Example__
 
@@ -111,7 +111,7 @@ Helper method to run the specified task. Preferred task execution style is to ca
 
 __Arguments__
 
- * name - Name of task in gearbox.
+ * name - Name of task in registry.
 
 __Example__
 
@@ -142,10 +142,10 @@ gear.queue()
 
 ---------------------------------------
 
-<a name="Core.gearbox" />
-### gearbox()
+<a name="Core.registry" />
+### registry()
 
-Creates a new Gearbox instance. Gearboxes contain all available tasks.
+Creates a new Registry instance. Registries contain available tasks.
 
 __Arguments__
 
@@ -154,13 +154,13 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.gearbox();
+gear.registry();
 ```
 
 ---------------------------------------
 
-<a name="Core.Gearbox.load" />
-### Gearbox.load(options)
+<a name="Core.Registry.load" />
+### Registry.load(options)
 
 Load tasks from NPM, directory, or file.
 
@@ -173,7 +173,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.gearbox().load({dirname: 'foo'});
+gear.registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
@@ -321,7 +321,7 @@ exports.example = function(string, blob, done) {
 __Running Example Task__
 
 ```javascript
-gear.queue({gearbox: gear.gearbox({filename: 'example.js'})})
+gear.queue({registry: gear.registry({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
 ```

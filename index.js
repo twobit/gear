@@ -3,18 +3,18 @@
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
-var Gearbox = require('./lib/gearbox').Gearbox;
+var Registry = require('./lib/registry').Registry;
 var Queue = require('./lib/queue').Queue;
 
-var gearbox = exports.gearbox = function(options) {
-    var box = new Gearbox(options);
+var registry = exports.registry = function(options) {
+    var box = new Registry(options);
     box.load({dirname: __dirname + '/lib/tasks'});
     return box;
 };
 
 exports.queue = function(options) {
     options = options || {};
-    options.gearbox = options.gearbox || gearbox();
+    options.registry = options.registry || registry();
     return new Queue(options);
 };
 

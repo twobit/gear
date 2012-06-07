@@ -2,7 +2,7 @@ var path = require('path'),
     gear = require(path.join(process.cwd(), 'index'));
 
 var files = [
-    'lib/gearbox.js',
+    'lib/registry.js',
     'lib/blob.js',
     'lib/queue.js',
     'lib/tasks/concat.js',
