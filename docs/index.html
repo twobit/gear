@@ -5,6 +5,22 @@
         <script type="text/javascript" src="../build/gear.js"></script>
     </head>
     <body>
+        <script type="text/javascript">
+        localStorage['test.js'] = 'function() {console.log("foo");}';
 
+        new gear.Queue()
+            .load('test.js')
+            .inspect()
+            .log('TESTING!')
+            .write('test.min.js')
+            .tasks({
+                test: {task: 'log', options: 'TESTING tasks!'}
+            })
+            .run(function(err, results) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        </script>
     </body>
 </html>
