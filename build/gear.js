@@ -776,6 +776,7 @@
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
+
     /**
      * Gets a blob.
      *
@@ -822,6 +823,18 @@
     };
     inspect.type = 'iterate';
     inspect.browser = true;
+
+    /**
+     * Do nothing.
+     *
+     * @param dummy {N/A} N/A.
+     * @param blob {Array} Incoming blob.
+     * @param done {Function} Callback on task completion.
+     */
+    var noop = exports.noop = function noop(dummy, blob, done) {
+        done(null, blob);
+    };
+    noop.browser = true;
 })(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -874,6 +887,7 @@
      */
     var tasks = exports.tasks = function tasks(workflow, blobs, done) {
         var item,
+            name,
             requires,
             fn,
             auto = {},
@@ -894,6 +908,7 @@
         }
 
         for (item in workflow) {
+            name = workflow[item].task ? workflow[item].task : 'noop';
             requires = workflow[item].requires;
 
             if (requires === undefined) {
@@ -904,11 +919,13 @@
                 }
             }
 
-            fn = task(workflow[item].task, workflow[item].options, requires);
+            fn = task(name, workflow[item].options, requires);
             auto[item] = requires ? requires.concat(fn) : fn;
         }
         
-        async.auto(auto, done);
+        async.auto(auto, function(err, results) {
+            done(err, results.join ? results.join : []);
+        });
     };
     tasks.type = 'iterate';
 })(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*

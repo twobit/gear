@@ -22,7 +22,8 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .tasks({
         write: {task: 'write', options: 'build/gear.js'},
         minify: {task: 'jsminify'},
-        writeminify: {task: 'write', options: 'build/gear.min.js', requires: 'minify'}
+        writeminify: {task: 'write', options: 'build/gear.min.js', requires: 'minify'},
+        join: {requires: ['write', 'writeminify']} // Sample join
     })
     .run(function(err, results) {
         if (err) {
