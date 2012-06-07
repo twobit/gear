@@ -154,7 +154,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.Registry();
+new gear.Registry();
 ```
 
 ---------------------------------------
@@ -173,7 +173,7 @@ __Arguments__
 __Example__
 
 ```javascript
-gear.Registry().load({dirname: 'foo'});
+new gear.Registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
