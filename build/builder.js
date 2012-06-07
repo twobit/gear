@@ -1,18 +1,20 @@
 var path = require('path'),
     gear = require(path.join(process.cwd(), 'index'));
 
-/*
 var files = [
-    '../lib/tasks/concat',
-    '../lib/tasks/load',
-    '../lib/tasks/tasks',
-    '../lib/tasks/core',
-    '../lib/tasks/write'
+    'lib/gearbox.js',
+    'lib/blob.js',
+    'lib/queue.js',
+    'lib/tasks/concat.js',
+    'lib/tasks/core.js',
+    'lib/tasks/load.js',
+    'lib/tasks/tasks.js',
+    'lib/tasks/write.js'
 ];
 
 gear.queue()
-    .load('build/builder.js')
-    .log('hello')
-    .run();
-
-console.log(gear);*/
+    .load(files)
+    .inspect()
+    .run(function(err, results) {
+        console.log(err);
+    });
