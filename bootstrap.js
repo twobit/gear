@@ -33,6 +33,6 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     })
     .run(function(err, results) {
         if (err) {
-            console.log(err);
+            console.error(err);
         }
     });
