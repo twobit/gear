@@ -1,21 +1,31 @@
+/*
+ * Bootstraps browser based Gear.js
+ */
 var path = require('path'),
     gear = require(path.join(process.cwd(), 'index'));
 
 var files = [
-    'lib/registry.js',
+    'vendor/async.js',
     'lib/blob.js',
-    'lib/queue.js',
     'lib/tasks/concat.js',
     'lib/tasks/core.js',
     'lib/tasks/load.js',
     'lib/tasks/tasks.js',
-    'lib/tasks/write.js'
+    'lib/tasks/write.js',
+    'lib/registry.js',
+    'lib/queue.js'
 ];
 
-new gear.Queue()
+new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .load(files)
     .concat()
-    .write('build/gear.js')
+    .tasks({
+        write: {task: 'write', options: 'build/gear.js'},
+        minify: {task: 'jsminify'},
+        writeminify: {task: 'write', options: 'build/gear.min.js', requires: 'minify'}
+    })
     .run(function(err, results) {
-        console.log(err);
+        if (err) {
+            console.log(err);
+        }
     });

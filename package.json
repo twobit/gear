@@ -13,6 +13,7 @@
   },
   "devDependencies": {
       "should": "0.6.x",
-      "mocha": "1.0.x"
+      "mocha": "1.0.x",
+      "gear-lib": ">= 0.4.x"
   }
 }
