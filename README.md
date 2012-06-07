@@ -25,7 +25,7 @@ $ npm install gear-lib
 ### Chaining Tasks
 
 ```javascript
-new gear.Queue()
+new Queue()
  .load('foo.js')
  .log('read foo.js')
  .inspect()
@@ -36,7 +36,7 @@ new gear.Queue()
 ### Execute Tasks Using Array Style
 
 ```javascript
-new gear.Queue()
+new Queue()
  .load(['foo.js', {file: 'bar.js'}, 'baz.js'])
  .log('read foo.js')
  .inspect()
@@ -47,7 +47,7 @@ new gear.Queue()
 ### Complex Task Execution
 
 ```javascript
-new gear.Queue()
+new Queue()
  .load('foo.js')
  .log('Complex Task')
  .tasks({
@@ -97,7 +97,7 @@ __Arguments__
 __Example__
 
 ```javascript
-new gear.Queue()
+new Queue()
  .log('test')
  .run();
 ```
@@ -116,7 +116,7 @@ __Arguments__
 __Example__
 
 ```javascript
-new gear.Queue()
+new Queue()
  .task('log', 'Hello, world!')
  .run();
 ```
@@ -135,7 +135,7 @@ __Arguments__
 __Example__
 
 ```javascript
-new gear.Queue()
+new Queue()
  .log('test')
  .run();
 ```
@@ -154,7 +154,7 @@ __Arguments__
 __Example__
 
 ```javascript
-new gear.Registry();
+new Registry();
 ```
 
 ---------------------------------------
@@ -173,7 +173,7 @@ __Arguments__
 __Example__
 
 ```javascript
-new gear.Registry().load({dirname: 'foo'});
+new Registry().load({dirname: 'foo'});
 ```
 
 ---------------------------------------
@@ -321,7 +321,7 @@ exports.example = function(string, blob, done) {
 __Running Example Task__
 
 ```javascript
-new gear.Queue({registry: new gear.Registry({filename: 'example.js'})})
+new Queue({registry: new Registry({filename: 'example.js'})})
  .example('EXAMPLE')
  .run();
 ```
