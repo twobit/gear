@@ -2,19 +2,20 @@
 <html>
     <head>
         <title>Gear.js</title>
+        <script type="text/javascript" src="../node_modules/gear-lib/build/gear-lib.js"></script>
         <script type="text/javascript" src="../build/gear.js"></script>
     </head>
     <body>
         <script type="text/javascript">
-        localStorage['test.js'] = 'function() {console.log("foo");}';
+        localStorage['input.js'] = '(function() {console.log("foo");})();';
 
         new gear.Queue()
-            .load('test.js')
-            .inspect()
-            .log('TESTING!')
-            .write('test.min.js')
+            .load('input.js')
             .tasks({
-                test: {task: 'log', options: 'TESTING tasks!'}
+                write: {task: 'write', options: 'output.js'},
+                minify: {task: 'jsminify'},
+                writeminify: {task: 'write', options: 'output.min.js', requires: 'minify'},
+                join: {requires: ['write', 'writeminify']}
             })
             .run(function(err, results) {
                 if (err) {
