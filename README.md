@@ -51,11 +51,11 @@ new Queue()
  .load('foo.js')
  .log('Complex Task')
  .tasks({
-    read: {task: 'load', options: ['foo.js', 'bar.js', 'baz.js']}
+    read: {task: ['load', ['foo.js', 'bar.js', 'baz.js']]}
     combine: {task: 'concat', requires: 'read'}
     minify: {task: 'jsminify', requires: 'combine'}
     print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
-    parallel: {task: 'log', options: "Hello gear world!"} // Run parallel to read
+    parallel: {task: ['log', "Hello gear world!"]} // Run parallel to read
  }).run();
 ```
 
@@ -277,12 +277,12 @@ __Example__
 
 ```javascript
 // label - Task instance name.
-// label.task - Task name.
-// label.options - Task options.
+// label.task - Task name and optionally options.
 // label.requires - List of labels that must be executed before this task runs.
 .tasks({
-    label_1: {task: 'log', options: 'Hello, world!'}
-    label_2: {task: 'log', options: 'Hello, world 2!', requires: 'label_1'}
+    label_1: {task: 'log'}
+    label_2: {task: ['log', 'Hello, world!']}
+    label_3: {requires: 'label_2', task: ['log', 'Hello, world 2!']}
 })
 ```
 
