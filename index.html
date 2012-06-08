@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Gear.js</title>
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
         <link rel="stylesheet" type="text/css" href="docs/index.css" />
         <link rel="stylesheet" type="text/css" href="docs/monokai.css" />
 
@@ -50,7 +51,7 @@ $ npm install gear-lib
 
                 <h5>Browser</h5>
 
-<pre><code class="bash">&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
+<pre><code class="html">&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear/raw/master/build/gear.js&quot;&gt;&lt;/script&gt;
 </code></pre>
             </div>
@@ -66,7 +67,7 @@ $ npm install gear-lib
                 <p>sources - List of sources.</p>
 
                 <div class="example">
-                    <button type="button">Run</button>
+                    <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
                     <div class="code">
 <pre><code class="javascript">new Queue()
@@ -84,7 +85,7 @@ $ npm install gear-lib
                 <h2>tasks()</h2>
 
                 <div class="example">
-                    <button type="button">Run</button>
+                    <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
                     <div class="code">
 <pre><code class="javascript">new Queue()
@@ -133,7 +134,7 @@ $ npm install gear-lib
             });
 
             Y.all('.example button').on('click', function(e) {
-                var example = e.target.get('parentNode');
+                var example = e.currentTarget.get('parentNode');
 
                 if (!example.hasClass('show')) {
                     var code = example.one('.code pre').get('text'),
@@ -142,11 +143,11 @@ $ npm install gear-lib
                         console = {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
-                                result.set('text', result.get('text') + JSON.stringify(msg));
+                                result.set('text', '> ' + result.get('text') + JSON.stringify(msg));
                             },
                             error: function(msg) {
                                 if (_console) {_console.error(msg);}
-                                result.set('text', result.get('text') + JSON.stringify(msg));
+                                result.set('text', '> ' + result.get('text') + JSON.stringify(msg));
                             }
                         };
 
