@@ -91,10 +91,10 @@ $ npm install gear-lib
 <pre><code class="javascript">new Queue()
     .load(files)
     .tasks({
-        dev: {task: ['write', 'output.js']},
+        dev:     {task: ['write', 'output.js']},
         prodmin: {task: 'jsminify'},
-        prod: {requires: 'prodmin', task: ['write', 'output.min.js']},
-        join: {requires: ['dev', 'prod']}
+        prod:    {requires: 'prodmin', task: ['write', 'output.min.js']},
+        join:    {requires: ['dev', 'prod']}
     })
     .run(function(err, results) {
         console.log(results);
