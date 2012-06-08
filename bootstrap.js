@@ -26,10 +26,10 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .load(files)
     .concat()
     .tasks({
-        write: {task: 'write', options: 'build/gear.js'},
-        minify: {task: 'jsminify'},
-        writeminify: {task: 'write', options: 'build/gear.min.js', requires: 'minify'},
-        join: {requires: ['write', 'writeminify']} // Sample join
+        dev:     {task: ['write', 'build/gear.js']},
+        prodmin: {task: 'jsminify'},
+        prod:    {requires: 'prodmin', task: ['write', 'build/gear.min.js']},
+        join:    {requires: ['dev', 'prod']}
     })
     .run(function(err, results) {
         if (err) {

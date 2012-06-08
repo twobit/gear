@@ -896,13 +896,14 @@
      */
     var tasks = exports.tasks = function tasks(workflow, blobs, done) {
         var item,
+            task,
             name,
             requires,
             fn,
             auto = {},
             self = this;
 
-        function task(name, options, requires) {
+        function runTask(name, options, requires) {
             return function(callback, result) {
                 var new_blobs = requires.length ? [] : blobs;
                 result = result || [];
@@ -917,7 +918,16 @@
         }
 
         for (item in workflow) {
-            name = workflow[item].task ? workflow[item].task : 'noop';
+            task = workflow[item].task;
+
+            if (task === undefined) {
+                task = ['noop'];
+            } else {
+                if (!Array.isArray(task)) {
+                    task = [task];
+                }
+            }
+
             requires = workflow[item].requires;
 
             if (requires === undefined) {
@@ -928,7 +938,7 @@
                 }
             }
 
-            fn = task(name, workflow[item].options, requires);
+            fn = runTask(task[0], task[1], requires);
             auto[item] = requires ? requires.concat(fn) : fn;
         }
         
