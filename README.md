@@ -51,10 +51,10 @@ new Queue()
  .load('foo.js')
  .log('Complex Task')
  .tasks({
-    read: {task: ['load', ['foo.js', 'bar.js', 'baz.js']]}
-    combine: {task: 'concat', requires: 'read'}
-    minify: {task: 'jsminify', requires: 'combine'}
-    print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
+    read:     {task: ['load', ['foo.js', 'bar.js', 'baz.js']]}
+    combine:  {requires: 'read', task: 'concat'}
+    minify:   {requires: 'combine', task: 'jsminify'}
+    print:    {requires: ['read', 'combine', 'minify'], task: 'inspect'} // Runs when read, combine, and minify complete
     parallel: {task: ['log', "Hello Gear.js world!"]} // Run parallel to read
  }).run();
 ```
