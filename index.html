@@ -2,84 +2,92 @@
 <html>
     <head>
         <title>Gear.js</title>
+        <link rel="stylesheet" type="text/css" href="docs/index.css" />
+        <link rel="stylesheet" type="text/css" href="docs/monokai.css" />
+
+        <script type="text/javascript" src="docs/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
         <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
         <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
         <script type="text/javascript" src="build/gear.js"></script>
-
-        <style type="text/css">
-        * {margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
-
-        body {font-family: Arial, Helvetica, sans-serif; margin: 0 auto; width: 970px;}
-
-        .example {
-            display: -webkit-box; display: -moz-box; display: -ms-box; display: box;
-            border: 1px solid #666;
-            margin-bottom: 10px;
-        }
-
-        .code {
-            -webkit-box-flex: 1; -moz-box-flex: 1; -ms-box-flex: 1; box-flex: 1;
-            background: #EEE;
-            padding: 10px;
-            border-right: 1px solid #666;
-        }
-
-        .info {
-            width: 30%;
-            padding: 10px;
-            background: #FFF;
-        }
-
-        .info .result {
-            display: none;
-        }
-        
-        .show .info {background: #ACB2B8;}
-
-        .show .info .result {display: block;}
-        .show .info .description {display: none;}
-        </style>
     </head>
     <body>
-        <h1>Gear.js</h1>
+        <header>
+            <h1>Gear.js</h1>
 
-        <h2>Download</h2>
-        <ul>
-            <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.js">Development</a></li>
-            <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
-        </ul>
+            <h2>Download</h2>
+            <ul>
+                <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.js">Development</a></li>
+                <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
+            </ul>
+        </header>
 
-        <input type="file" id="files" name="files[]" multiple />
+        <section>
+            <h3>Task-Based Build System</h3>
 
-        <div class="example">
-            <div class="code">
-                <h2>Load</h2>
-<pre>
-new Queue()
+            <p>Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.</p>
+
+            <h4>Features include:</h4>
+            <ul>
+                <li>Basic building blocks that can be combined to perform complex builds.</li>
+                <li>Tasks are simply defined and keep system internals to a minimum.</li>
+                <li>Asynchronous execution.</li>
+                <li>Extensible task loading via NPM, file, or directory.</li>
+                <li>Advanced flow control for complex task execution.</li>
+            </ul>
+
+            <div>
+                <h4>Installation</h4>
+
+                <h5>Node</h5>
+
+                <p>To get the most out of Gear.js install <a href="/twobit/gear-lib">gear-lib</a> which contains tasks for linting, minifying, and deploying JS/CSS assets.</p>
+
+<pre><code class="bash">$ npm install gear
+$ npm install gear-lib
+</code></pre>
+
+                <h5>Browser</h5>
+
+<pre><code class="bash">&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear/raw/master/build/gear.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+            </div>
+            
+            <a name="documentation"></a>
+            <input type="file" id="files" name="files[]" multiple />
+
+            <div>
+                <h2>load()</h2>
+                <p>Loads blobs from different sources.</p>
+
+                <h3>Arguments</h3>
+                <p>sources - List of sources.</p>
+
+                <div class="example">
+                    <button type="button">Run</button>
+
+                    <div class="code">
+<pre><code class="javascript">new Queue()
     .load(files)
     .run(function(err, results) {
-        console.log('' + results[0]);
-    });
-</pre>
-            </div>
-            <div class="info">
-                <div class="description">
-                    <p>Load a file.</p>
-                    <button type="button">Run</button>
-                </div>
-                <div class="result">
-                    <h3>Result</h3>
-                    <pre></pre>
-                    <button type="button">Clear</button>
+        console.log(('' + results[0]).length + ' characters');
+    });</code></pre>
+                    </div>
+                    
+                    <div class="result"><pre></pre></div>
                 </div>
             </div>
-        </div>
 
-        <div class="example">
-            <div class="code">
-                <h2>Example</h2>
-<pre>
-new Queue()
+            <div>
+                <h2>tasks()</h2>
+
+                <div class="example">
+                    <button type="button">Run</button>
+
+                    <div class="code">
+<pre><code class="javascript">new Queue()
     .load(files)
     .tasks({
         write: {task: 'write', options: 'output.js'},
@@ -88,25 +96,14 @@ new Queue()
         join: {requires: ['write', 'writemin']}
     })
     .run(function(err, results) {
-        if (err) {
-            console.error(err);
-        }
         console.log(results);
-    });
-</pre>
-            </div>
-            <div class="info">
-                <div class="description">
-                    <p>Test example.</p>
-                    <button type="button">Run</button>
-                </div>
-                <div class="result">
-                    <h3>Result</h3>
-                    <pre></pre>
-                    <button type="button">Clear</button>
+    });</code></pre>
+                    </div>
+
+                    <div class="result"><pre></pre></div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
@@ -135,31 +132,31 @@ new Queue()
                 });
             });
 
-            Y.all('.description button').on('click', function(e) {
-                var example = e.target.ancestor('.example'),
-                    code = example.one('.code pre').get('text'),
-                    result = example.one('.result pre'),
-                    _console = window.console,
-                    console = {
-                        log: function(msg) {
-                            if (_console) {_console.log(msg);}
-                            result.set('text', result.get('text') + JSON.stringify(msg));
-                        },
-                        error: function(msg) {
-                            if (_console) {_console.error(msg);}
-                            result.set('text', result.get('text') + JSON.stringify(msg));
-                        }
-                    };
+            Y.all('.example button').on('click', function(e) {
+                var example = e.target.get('parentNode');
 
-                result.set('text', '');
+                if (!example.hasClass('show')) {
+                    var code = example.one('.code pre').get('text'),
+                        result = example.one('.result pre'),
+                        _console = window.console,
+                        console = {
+                            log: function(msg) {
+                                if (_console) {_console.log(msg);}
+                                result.set('text', result.get('text') + JSON.stringify(msg));
+                            },
+                            error: function(msg) {
+                                if (_console) {_console.error(msg);}
+                                result.set('text', result.get('text') + JSON.stringify(msg));
+                            }
+                        };
 
-                var ret = eval(code);
-                if (ret !== undefined) {console.log(ret);}
-                example.addClass('show');
-            });
+                    result.set('text', '');
 
-            Y.all('.result button').on('click', function(e) {
-                e.target.ancestor('.example').removeClass('show');
+                    var ret = eval(code);
+                    if (ret !== undefined) {console.log(ret);}
+                }
+
+                example.toggleClass('show');
             });
         });
         </script>
