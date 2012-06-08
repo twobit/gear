@@ -5,6 +5,40 @@
         <script type="text/javascript" src="../node_modules/gear-lib/build/gear-lib.js"></script>
         <script type="text/javascript" src="../build/gear.js"></script>
         <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
+
+        <style type="text/css">
+        * {margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+        body {font-family: Arial, Helvetica, sans-serif; margin: 0 auto; width: 970px;}
+
+        .example {
+            display: -webkit-box; display: -moz-box; display: -ms-box; display: box;
+            border: 1px solid #666;
+            margin-bottom: 10px;
+        }
+
+        .code {
+            -webkit-box-flex: 1; -moz-box-flex: 1; -ms-box-flex: 1; box-flex: 1;
+            background: #EEE;
+            padding: 10px;
+            border-right: 1px solid #666;
+        }
+
+        .info {
+            width: 30%;
+            padding: 10px;
+            background: #FFF;
+        }
+
+        .info .result {
+            display: none;
+        }
+        
+        .show .info {background: #ACB2B8;}
+
+        .show .info .result {display: block;}
+        .show .info .description {display: none;}
+        </style>
     </head>
     <body>
         <h1>Gear.js</h1>
@@ -15,31 +49,114 @@
             <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
         </ul>
 
-        <script type="text/javascript">
-        localStorage['input.js'] = '(function() {console.log("foo");})();';
-        </script>
+        <input type="file" id="files" name="files[]" multiple />
 
-        <pre class="javascript">
-        new gear.Queue()
-            .load('input.js')
-            .tasks({
-                write: {task: 'write', options: 'output.js'},
-                minify: {task: 'jsminify'},
-                writeminify: {task: 'write', options: 'output.min.js', requires: 'minify'},
-                join: {requires: ['write', 'writeminify']}
-            })
-            .run(function(err, results) {
-                if (err) {
-                    console.error(err);
-                }
-                console.log(results);
-            });
-        </pre>
+        <div class="example">
+            <div class="code">
+                <h2>Load</h2>
+<pre>
+new Queue()
+    .load(files)
+    .run(function(err, results) {
+        console.log('' + results[0]);
+    });
+</pre>
+            </div>
+            <div class="info">
+                <div class="description">
+                    <p>Load a file.</p>
+                    <button type="button">Run</button>
+                </div>
+                <div class="result">
+                    <h3>Result</h3>
+                    <pre></pre>
+                    <button type="button">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="code">
+                <h2>Example</h2>
+<pre>
+new Queue()
+    .load(files)
+    .tasks({
+        write: {task: 'write', options: 'output.js'},
+        min: {task: 'jsminify'},
+        writemin: {task: 'write', options: 'output.min.js', requires: 'min'},
+        join: {requires: ['write', 'writemin']}
+    })
+    .run(function(err, results) {
+        if (err) {
+            console.error(err);
+        }
+        console.log(results);
+    });
+</pre>
+            </div>
+            <div class="info">
+                <div class="description">
+                    <p>Test example.</p>
+                    <button type="button">Run</button>
+                </div>
+                <div class="result">
+                    <h3>Result</h3>
+                    <pre></pre>
+                    <button type="button">Clear</button>
+                </div>
+            </div>
+        </div>
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
-            Y.all('.javascript').each(function(node) {
-                eval(node.get('text'));
+            var Queue = gear.Queue,
+                Registry = gear.Registry,
+                files = [];
+
+            Y.one('#files').on('change', function(e) {
+                var raw_files = e.currentTarget.getDOMNode().files;
+
+                Array.prototype.forEach.call(raw_files, function(file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        console.log(e.target.result);
+                    }
+
+                    reader.onloadend = function(e) {
+                        if (e.target.readyState == FileReader.DONE) {
+                            localStorage[file.name] = e.target.result;
+                            console.log(file.name, e);
+                        }
+                    };
+
+                    reader.onerror = function(e) {
+                        console.log(e);
+                    };
+
+                    reader.readAsBinaryString(file);
+                });
+            });
+
+            Y.all('.description button').on('click', function(e) {
+                var example = e.target.ancestor('.example'),
+                    code = example.one('.code pre').get('text');
+
+                var _console = window.console;
+                var console = {
+                    log: function(msg) {
+                        if (_console) {_console.log(msg);}
+                        example.one('.result pre').set('text', JSON.stringify(msg));
+                    }
+                };
+                var result = eval(code);
+                if (result !== undefined) {console.log(result);}
+                example.addClass('show');
+            });
+
+            Y.all('.result button').on('click', function(e) {
+                e.target.ancestor('.example').removeClass('show');
             });
         });
         </script>
