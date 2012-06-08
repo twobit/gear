@@ -44,12 +44,12 @@ new Queue()
  .run();
 ```
 
-### Complex Task Execution
+### Parallel Task Execution
 
 ```javascript
 new Queue()
  .load('foo.js')
- .log('Complex Task')
+ .log('Parallel Tasks')
  .tasks({
     read:     {task: ['load', ['foo.js', 'bar.js', 'baz.js']]}
     combine:  {requires: 'read', task: 'concat'}
