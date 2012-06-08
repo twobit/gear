@@ -135,13 +135,18 @@ new Queue()
 
             Y.all('.description button').on('click', function(e) {
                 var example = e.target.ancestor('.example'),
-                    code = example.one('.code pre').get('text');
+                    code = example.one('.code pre').get('text'),
+                    result = example.one('.result pre');
 
                 var _console = window.console;
                 var console = {
                     log: function(msg) {
                         if (_console) {_console.log(msg);}
-                        example.one('.result pre').set('text', JSON.stringify(msg));
+                        result.set('text', result.get('text') + JSON.stringify(msg));
+                    },
+                    error: function(msg) {
+                        if (_console) {_console.error(msg);}
+                        result.set('text', result.get('text') + JSON.stringify(msg));
                     }
                 };
                 var result = eval(code);
