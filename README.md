@@ -55,7 +55,7 @@ new Queue()
     combine: {task: 'concat', requires: 'read'}
     minify: {task: 'jsminify', requires: 'combine'}
     print: {task: 'inspect', requires: ['read', 'combine', 'minify']} // Runs when read, combine, and minify complete
-    parallel: {task: ['log', "Hello gear world!"]} // Run parallel to read
+    parallel: {task: ['log', "Hello Gear.js world!"]} // Run parallel to read
  }).run();
 ```
 
