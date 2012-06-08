@@ -121,18 +121,12 @@ new Queue()
                     var reader = new FileReader();
 
                     reader.onload = function(e) {
-                        console.log(e.target.result);
-                    }
-
-                    reader.onloadend = function(e) {
-                        if (e.target.readyState == FileReader.DONE) {
-                            localStorage[file.name] = e.target.result;
-                            console.log(file.name, e);
-                        }
+                        localStorage[file.name] = e.target.result;
+                        files.push(file.name);
                     };
 
                     reader.onerror = function(e) {
-                        console.log(e);
+                        alert("Can't read local files");
                     };
 
                     reader.readAsBinaryString(file);
