@@ -847,14 +847,13 @@
     }
 
     /**
-     * Loads blobs from different sources.
-     * TODO: Add more sources i.e. (url).
+     * Appends file contents onto queue.
      *
      * @param options {Object} File options or filename.
-     * @param options.name {Object} Filename to load.
+     * @param options.name {Object} Filename to read.
      * @param done {Function} Callback on task completion.
      */
-    var load = exports.load = function load(options, done) {
+    var read = exports.read = function read(options, done) {
         options = (typeof options === 'string') ? {name: options} : options;
 
         if (typeof fs === 'undefined') {
@@ -871,8 +870,8 @@
             });
         }
     };
-    load.type = 'append';
-    load.browser = true;
+    read.type = 'append';
+    read.browser = true;
 })(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.

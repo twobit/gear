@@ -22,11 +22,10 @@ section > div {margin: 10px 0; border-bottom: 1px solid #272822; padding: 10px 0
 .result {
     display: none;
     -webkit-transition: all 0.3s ease; -moz-transition: all 0.3s ease; -ms-transition: all 0.3s ease; transition: all 0.3s ease;
-    background: #000;
+    background: #666;
 }
 
 .clear {display: none;}
 .show .clear {display: block;}
 .show .run {display: none;}
 .show .result {background: #EFEFEF; display: block;}
-.show .result:hover {background: #000; display: block;}

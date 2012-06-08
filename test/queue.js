@@ -11,8 +11,8 @@ describe('Queue', function() {
     describe('run()', function() {
         it('should handle append tasks', function(done) {
             new gear.Queue()
-                .load(fixtures.files)
-                .load(fixtures.file)
+                .read(fixtures.files)
+                .read(fixtures.file)
                 .run(function(err, results) {
                     results.should.have.length(3);
                     done(err);
@@ -21,7 +21,7 @@ describe('Queue', function() {
 
         it('should handle tasks called with array options', function(done) {
             new gear.Queue()
-                .load(fixtures.files)
+                .read(fixtures.files)
                 .concat()
                 .run(function(err, results) {
                     done(err);
@@ -30,7 +30,7 @@ describe('Queue', function() {
 
         it('should execute chained tasks', function(done) {
             new gear.Queue()
-                .load(fixtures.file)
+                .read(fixtures.file)
                 .concat()
                 .run(function(err, results) {
                     done(err);
@@ -39,7 +39,7 @@ describe('Queue', function() {
 
         it('should handle errors', function(done) {
             new gear.Queue()
-                .load(fixtures.missing_file)
+                .read(fixtures.missing_file)
                 .concat()
                 .run(function(err, results) {
                     should.exist(err);

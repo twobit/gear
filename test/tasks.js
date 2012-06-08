@@ -11,10 +11,10 @@ var should = require('should'),
 describe('Queue()', function() {
     it('should wrap task correctly', function() {
         new gear.Queue().tasks({
-            read_files:       {task: ['load', fixtures.files]},
+            read_files:       {task: ['read', fixtures.files]},
             concat_files:     {requires: 'read_files', task: 'concat'},
             inspect_results:  {requires: 'concat_files', task: 'inspect'},
-            read_files2:      {task: ['load', fixtures.parallel_files]},
+            read_files2:      {task: ['read', fixtures.parallel_files]},
             inspect_results2: {requires: 'read_files2', task: 'inspect'},
             inspect_1_and_2:  {requires: ['inspect_results2', 'inspect_results'], task: ['log', 'Done']}
         }).run();
@@ -26,7 +26,7 @@ describe('tasks()', function() {
         var queue = new gear.Queue();
 
         tasks.call(queue, {
-            read_files:      {task: ['load', fixtures.missing_files]}
+            read_files:      {task: ['read', fixtures.missing_files]}
         }, [], function(err, results) {
             should.exist(err);
             done();
@@ -37,10 +37,10 @@ describe('tasks()', function() {
         var queue = new gear.Queue();
 
         tasks.call(queue, {
-            read_files:       {task: ['load', fixtures.files]},
+            read_files:       {task: ['read', fixtures.files]},
             concat_files:     {requires: 'read_files', task: 'concat'},
             inspect_results:  {requires: 'concat_files', task: 'inspect'},
-            read_files2:      {task: ['load', fixtures.parallel_files]},
+            read_files2:      {task: ['read', fixtures.parallel_files]},
             inspect_results2: {requires: 'read_files2', task: 'inspect'},
             inspect_1_and_2:  {requires: ['inspect_results', 'inspect_results2'], task: ['log', 'Done']}
         }, [], function(err, results) {

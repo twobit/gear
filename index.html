@@ -60,7 +60,7 @@ $ npm install gear-lib
             <input type="file" id="files" name="files[]" multiple />
 
             <div>
-                <h2>load()</h2>
+                <h2>read()</h2>
                 <p>Loads blobs from different sources.</p>
 
                 <h3>Arguments</h3>
@@ -71,7 +71,7 @@ $ npm install gear-lib
 
                     <div class="code">
 <pre><code class="javascript">new Queue()
-    .load(files)
+    .read(files)
     .run(function(err, results) {
         console.log(('' + results[0]).length + ' characters');
     });</code></pre>
@@ -89,15 +89,16 @@ $ npm install gear-lib
 
                     <div class="code">
 <pre><code class="javascript">new Queue()
-    .load(files)
+    .read(files)
     .tasks({
         dev:     {task: ['write', 'output.js']},
         prodmin: {task: 'jsminify'},
         prod:    {requires: 'prodmin', task: ['write', 'output.min.js']},
         join:    {requires: ['dev', 'prod']}
     })
-    .run(function(err, results) {
-        console.log(results);
+    .run(function() {
+        console.log('output.js - ' + localStorage['output.js'].length);
+        console.log('output.min.js - ' + localStorage['output.min.js'].length);
     });</code></pre>
                     </div>
 
@@ -143,11 +144,11 @@ $ npm install gear-lib
                         console = {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
-                                result.set('text', '> ' + result.get('text') + JSON.stringify(msg));
+                                result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
                             },
                             error: function(msg) {
                                 if (_console) {_console.error(msg);}
-                                result.set('text', '> ' + result.get('text') + JSON.stringify(msg));
+                                result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
                             }
                         };
 

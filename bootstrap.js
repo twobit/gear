@@ -15,7 +15,7 @@ var files = [
     'lib/blob.js',
     'lib/tasks/concat.js',
     'lib/tasks/core.js',
-    'lib/tasks/load.js',
+    'lib/tasks/read.js',
     'lib/tasks/tasks.js',
     'lib/tasks/write.js',
     'lib/registry.js',
@@ -23,7 +23,7 @@ var files = [
 ];
 
 new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
-    .load(files)
+    .read(files)
     .concat()
     .tasks({
         dev:     {task: ['write', 'build/gear.js']},
