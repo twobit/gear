@@ -4,11 +4,22 @@
         <title>Gear.js</title>
         <script type="text/javascript" src="../node_modules/gear-lib/build/gear-lib.js"></script>
         <script type="text/javascript" src="../build/gear.js"></script>
+        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
     </head>
     <body>
+        <h1>Gear.js</h1>
+
+        <h2>Download</h2>
+        <ul>
+            <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.js">Development</a></li>
+            <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
+        </ul>
+
         <script type="text/javascript">
         localStorage['input.js'] = '(function() {console.log("foo");})();';
+        </script>
 
+        <pre class="javascript">
         new gear.Queue()
             .load('input.js')
             .tasks({
@@ -21,7 +32,16 @@
                 if (err) {
                     console.error(err);
                 }
+                console.log(results);
             });
+        </pre>
+
+        <script type="text/javascript">
+        YUI().use('event', function(Y) {
+            Y.all('.javascript').each(function(node) {
+                eval(node.get('text'));
+            });
+        });
         </script>
     </body>
 </html>
