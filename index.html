@@ -118,18 +118,20 @@ $ npm install gear-lib
                     <input type="file" id="files" name="files[]" multiple />
                 </p>
 
-                <h3><a href="#core">Core</a></h3>
-
+                <h3>Queue</h3>
                 <ul>
                     <li><a href="#Queue">Queue</a></li>
                     <li><a href="#Queue.task">Queue.task</a></li>
                     <li><a href="#Queue.run">Queue.run</a></li>
+                </ul>
+
+                <h3>Registry</h3>
+                <ul>
                     <li><a href="#Registry">Registry</a></li>
                     <li><a href="#Registry.load">Registry.load</a></li>
                 </ul>
 
-                <h3><a href="#tasks">Core Tasks</a></h3>
-
+                <h3>Tasks</h3>
                 <ul>
                     <li><a href="#tasks.read">read</a></li>
                     <li><a href="#tasks.write">write</a></li>
@@ -143,8 +145,6 @@ $ npm install gear-lib
 
                 <h3><a href="#custom">Custom Tasks</a></h3>
 
-                <h3 name="core">Core</h3>
-
                 <div name="Queue">
                     <h3>Queue()</h3>
                     <h3>Queue(options)</h3>
@@ -153,7 +153,7 @@ $ npm install gear-lib
 
                     <h4>Arguments</h4>
                     <ul>
-                        <li>options - (Object) Object with registry.</li>
+                        <li>options - (Object) Options for queue.</li>
                         <li>options.registry - (Registry) Registry loaded with available tasks.</li>
                     </ul>
 
@@ -195,16 +195,15 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="Queue.task">
-                    <h3>Queue.task(name)</h3>
-                    <h3>Queue.task(name, options)</h3>
+                <div name="Queue.run">
+                    <h3>Queue.run()</h3>
+                    <h3>Queue.run(callback)</h3>
 
-                    <p>Helper method to run the specified task. Preferred task execution style is to call the task directly i.e. <strong>inspect()</strong> instead of <strong>task('inspect')</strong>.</p>
+                    <p>Runs the queue.</p>
 
                     <h4>Arguments</h4>
                     <ul>
-                        <li>name - (String) Name of task in registry.</li>
-                        <li>options - Task specific options.</li>
+                        <li>callback - (Function(err, results)) Called on queue completion.</li>
                     </ul>
 
                     <div class="example">
@@ -212,7 +211,7 @@ $ npm install gear-lib
 
                         <div class="code">
 <pre><code class="javascript">new Queue()
-    .task('log', 'New queue')
+    .log('test')
     .run();</code></pre>
                     </div>
                         
@@ -220,13 +219,61 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div>
-                    <h3 name="read">read()</h3>
-                    <p>Loads blobs from different sources.</p>
+                <div name="Registry">
+                    <h3>Registry()</h3>
+                    <h3>Registry(options)</h3>
+
+                    <p>Creates a new Registry instance. Registries contain available tasks.</p>
 
                     <h4>Arguments</h4>
                     <ul>
-                        <li>sources - List of sources.</li>
+                        <li>options - See Registry.load.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Registry();</code></pre>
+                    </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="Registry.load">
+                    <h3>Registry.load(options)</h3>
+
+                    <p>Load tasks from NPM module, directory, or file.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>options.module - Module to load tasks from.</li>
+                        <li>options.dirname - Directory to load tasks from.</li>
+                        <li>options.filename - File to load tasks from.</li>
+                        <li>options.tasks - Object to load tasks from.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Registry().load({dirname: 'foo'});</code></pre>
+                    </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="tasks.read">
+                    <h3>read(name)</h3>
+                    <h3>read(options)</h3>
+
+                    <p>Appends file contents onto queue.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>name - (String) Filename to read.</li>
                     </ul>
 
                     <div class="example">
@@ -234,6 +281,9 @@ $ npm install gear-lib
 
                         <div class="code">
 <pre><code class="javascript">new Queue()
+    .read('foo.js')
+    .read(['foo.js', 'bar.js'])
+    .read([{name: 'foo.js'}, {name: 'bar.js'}, {name: 'baz.js'}])
     .read(files)
     .run(function(err, results) {
         console.log(('' + results[0]).length + ' characters');
@@ -244,14 +294,115 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div>
-                    <h3>tasks()</h3>
+                <div name="tasks.read">
+                    <h3>write(name)</h3>
+                    <h3>write(options)</h3>
+
+                    <p>Write the blob to disk.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>name - (String) File to write, will replace {checksum} with hash of blob content.</li>
+                    </ul>
 
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
                         <div class="code">
 <pre><code class="javascript">new Queue()
+    .read('foo.js')
+    .write('foo2.js')
+    .write({name: 'foo3.js'})
+    .run();</code></pre>
+                        </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="tasks.concat">
+                    <h3>concat()</h3>
+                    <h3>concat(callback)</h3>
+
+                    <p>Concatenates blobs.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>callback - (Function) N/A.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .read(['foo.js', 'bar.js'])
+    .concat()
+    .run();</code></pre>
+                        </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="tasks.inspect">
+                    <h3>inspect()</h3>
+
+                    <p>Inspects blobs.</p>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .read(['foo.js', 'bar.js'])
+    .inspect()
+    .run();</code></pre>
+                        </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="tasks.log">
+                    <h3>log(message)</h3>
+
+                    <p>Log a message.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>message - (String) Message to log.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .log('Hi')
+    .run();</code></pre>
+                        </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="tasks.tasks">
+                    <h3>tasks(workflow)</h3>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>workflow - (Object) Task workflow described below.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">// label - Task instance name.
+// label.task - Task name and optionally options.
+// label.requires - List of labels that must be executed before this task runs.
+new Queue()
     .read(files)
     .tasks({
         dev:     {task: ['write', 'output.js']},
@@ -267,6 +418,50 @@ $ npm install gear-lib
 
                         <div class="result"><pre></pre></div>
                     </div>
+                </div>
+
+                <div name="library">
+                    <h3>Library Tasks</h3>
+
+                    <p>Install <a href="http://github.com/twobit/gear-lib">gear-lib</a> which contains tasks such as:</p>
+
+                    <ul>
+                        <li>jslint</li>
+                        <li>jsminify</li>
+                        <li>csslint</li>
+                        <li>cssminify</li>
+                        <li>s3</li>
+                    </ul>
+
+                    <pre><code class="bash">$ npm install gear-lib</code></pre>
+                </div>
+
+                <div name="custom">
+                    <h3>Custom Tasks</h3>
+
+                    <p>Writing a task is especially easy compared to other Node build systems. There is no need to use Gear.js internals within a task. Tasks operate on immutable blobs. Blobs have a body property. The task returns transformed data via its callback.</p>
+
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>options - Options for the task.</li>
+                        <li>blob - Immutable blob.</li>
+                        <li>done(err, result) - Callback executed when task is complete.</li>
+                    </ul>
+
+<pre><code class="javascript">// example.js
+// Example task creates new blob containing `string`
+exports.example = function(string, blob, done) {
+    done(null, new blob.constructor(string)); // blob.constructor() is equivalent to Blob()
+};
+</code></pre>
+
+                    <h4>Running Example Task</h4>
+
+<pre><code class="javascript">new Queue({registry: new Registry({filename: 'example.js'})})
+ .example('EXAMPLE')
+ .run();
+</code></pre>
                 </div>
             </section>
 
