@@ -14,7 +14,7 @@ Features include:
 
 ## Installation
 
-To get the most out of Gear.js, you will want to install [gear-lib](/twobit/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+To get the most out of Gear.js, you will want to install [gear-lib](/yahoo/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
 ```bash
 $ npm install gear
