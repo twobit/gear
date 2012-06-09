@@ -2,92 +2,255 @@
 <html>
     <head>
         <title>Gear.js</title>
-        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans" />
+        <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Economica" />
         <link rel="stylesheet" type="text/css" href="docs/index.css" />
         <link rel="stylesheet" type="text/css" href="docs/monokai.css" />
-
-        <script type="text/javascript" src="docs/highlight.min.js"></script>
-        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
-
-        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
-        <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
-        <script type="text/javascript" src="build/gear.js"></script>
     </head>
     <body>
+        <a href="https://github.com/yahoo/gear"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+
         <header>
             <h1>Gear.js</h1>
-
-            <h2>Download</h2>
-            <ul>
-                <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.js">Development</a></li>
-                <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
-            </ul>
         </header>
 
-        <section>
-            <h3>Task-Based Build System</h3>
+        <article>
+            <section name="intro">
+                <h2>Task-Based Build System</h2>
+                <p>Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.</p>
+                
+                <h3>Features include:</h3>
+                <ul>
+                    <li>Runs in Node and the browser.</li>
+                    <li>Basic building blocks that can be combined to perform complex builds.</li>
+                    <li>Tasks are simply defined and keep system internals to a minimum.</li>
+                    <li>Asynchronous execution.</li>
+                    <li>Extensible task loading via NPM, file, or directory.</li>
+                    <li>Advanced flow control for complex task execution.</li>
+                </ul>
+            </section>
 
-            <p>Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.</p>
+            <section name="installation">
+                <h2>Installation</h2>
 
-            <h4>Features include:</h4>
-            <ul>
-                <li>Basic building blocks that can be combined to perform complex builds.</li>
-                <li>Tasks are simply defined and keep system internals to a minimum.</li>
-                <li>Asynchronous execution.</li>
-                <li>Extensible task loading via NPM, file, or directory.</li>
-                <li>Advanced flow control for complex task execution.</li>
-            </ul>
-
-            <div>
-                <h4>Installation</h4>
-
-                <h5>Node</h5>
-
-                <p>To get the most out of Gear.js install <a href="/twobit/gear-lib">gear-lib</a> which contains tasks for linting, minifying, and deploying JS/CSS assets.</p>
-
+                <h3>Node</h3>
+                <p>To get the most out of Gear.js, install <a href="http://github.com/twobit/gear-lib">gear-lib</a> which contains tasks for linting, minifying, and deploying JS/CSS assets.</p>
 <pre><code class="bash">$ npm install gear
 $ npm install gear-lib
 </code></pre>
 
-                <h5>Browser</h5>
+                <h3>Browser</h3>
+
+                <ul>
+                    <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.js">Development</a></li>
+                    <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
+                </ul>
 
 <pre><code class="html">&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear/raw/master/build/gear.js&quot;&gt;&lt;/script&gt;
 </code></pre>
-            </div>
-            
-            <a name="documentation"></a>
-            <input type="file" id="files" name="files[]" multiple />
+            </section>
 
-            <div>
-                <h2>read()</h2>
-                <p>Loads blobs from different sources.</p>
+            <section name="examples">
+                <h2>Quick Examples</h2>
 
-                <h3>Arguments</h3>
-                <p>sources - List of sources.</p>
+                <h3>Chaining Tasks</h3>
 
                 <div class="example">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
                     <div class="code">
 <pre><code class="javascript">new Queue()
-    .read(files)
-    .run(function(err, results) {
-        console.log(('' + results[0]).length + ' characters');
-    });</code></pre>
+    .read('foo.js')
+    .log('read foo.js')
+    .inspect()
+    .write('foo2.js')
+    .run();</code></pre>
                     </div>
                     
                     <div class="result"><pre></pre></div>
                 </div>
-            </div>
 
-            <div>
-                <h2>tasks()</h2>
+                <h3>Execute Tasks Using Array Style</h3>
 
                 <div class="example">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
                     <div class="code">
+<pre><code class="javascript">new Queue()
+    .read(['foo.js', {name: 'bar.js'}, 'baz.js'])
+    .log('read files')
+    .inspect()
+    .write(['foo2.js', 'bar2.js']) // Not writing 'baz.js'
+    .run();</code></pre>
+                    </div>
+                    
+                    <div class="result"><pre></pre></div>
+                </div>
+
+                <h3>Parallel Task Execution</h3>
+
+                <div class="example">
+                    <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                    <div class="code">
+<pre><code class="javascript">new Queue()
+    .read('foo.js')
+    .log('Parallel Tasks')
+    .tasks({
+        read:     {task: ['read', ['foo.js', 'bar.js', 'baz.js']]},
+        combine:  {requires: 'read', task: 'concat'},
+        minify:   {requires: 'combine', task: 'jsminify'},
+        // print runs when read, combine, and minify complete
+        print:    {requires: ['read', 'combine', 'minify'], task: 'inspect'},
+        parallel: {task: ['log', "Hello Gear.js world!"]}, // Run parallel to read
+        join:     {requires: ['parallel', 'print']} // Joined data is passed to next task in queue
+     }).run();</code></pre>
+                    </div>
+                    
+                    <div class="result"><pre></pre></div>
+                </div>
+            </section>
+
+            <section id="docs">
+                <h2>Documentation</h2>
+
+                <p>The following examples are able to read uploaded files:
+                    <input type="file" id="files" name="files[]" multiple />
+                </p>
+
+                <h3><a href="#core">Core</a></h3>
+
+                <ul>
+                    <li><a href="#Queue">Queue</a></li>
+                    <li><a href="#Queue.task">Queue.task</a></li>
+                    <li><a href="#Queue.run">Queue.run</a></li>
+                    <li><a href="#Registry">Registry</a></li>
+                    <li><a href="#Registry.load">Registry.load</a></li>
+                </ul>
+
+                <h3><a href="#tasks">Core Tasks</a></h3>
+
+                <ul>
+                    <li><a href="#tasks.read">read</a></li>
+                    <li><a href="#tasks.write">write</a></li>
+                    <li><a href="#tasks.concat">concat</a></li>
+                    <li><a href="#tasks.inspect">inspect</a></li>
+                    <li><a href="#tasks.log">log</a></li>
+                    <li><a href="#tasks.tasks">tasks</a></li>
+                </ul>
+
+                <h3><a href="#library">Library Tasks</a></h3>
+
+                <h3><a href="#custom">Custom Tasks</a></h3>
+
+                <h3 name="core">Core</h3>
+
+                <div name="Queue">
+                    <h3>Queue()</h3>
+                    <h3>Queue(options)</h3>
+
+                    <p>Queue constructor.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>options - (Object) Object with registry.</li>
+                        <li>options.registry - (Registry) Registry loaded with available tasks.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .log('New queue')
+    .run();</code></pre>
+                    </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="Queue.task">
+                    <h3>Queue.task(name)</h3>
+                    <h3>Queue.task(name, options)</h3>
+
+                    <p>Helper method to run the specified task. Preferred task execution style is to call the task directly i.e. <strong>inspect()</strong> instead of <strong>task('inspect')</strong>.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>name - (String) Name of task in registry.</li>
+                        <li>options - Task specific options.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .task('log', 'New queue')
+    .run();</code></pre>
+                    </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div name="Queue.task">
+                    <h3>Queue.task(name)</h3>
+                    <h3>Queue.task(name, options)</h3>
+
+                    <p>Helper method to run the specified task. Preferred task execution style is to call the task directly i.e. <strong>inspect()</strong> instead of <strong>task('inspect')</strong>.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>name - (String) Name of task in registry.</li>
+                        <li>options - Task specific options.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .task('log', 'New queue')
+    .run();</code></pre>
+                    </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 name="read">read()</h3>
+                    <p>Loads blobs from different sources.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                        <li>sources - List of sources.</li>
+                    </ul>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
+<pre><code class="javascript">new Queue()
+    .read(files)
+    .run(function(err, results) {
+        console.log(('' + results[0]).length + ' characters');
+    });</code></pre>
+                        </div>
+                        
+                        <div class="result"><pre></pre></div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>tasks()</h3>
+
+                    <div class="example">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <div class="code">
 <pre><code class="javascript">new Queue()
     .read(files)
     .tasks({
@@ -100,12 +263,36 @@ $ npm install gear-lib
         console.log('output.js - ' + localStorage['output.js'].length);
         console.log('output.min.js - ' + localStorage['output.min.js'].length);
     });</code></pre>
-                    </div>
+                        </div>
 
-                    <div class="result"><pre></pre></div>
+                        <div class="result"><pre></pre></div>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            <section>
+                <h2>Who's Using Gear.js</h2>
+                <p><a href="http://github.com/yahoo/mojito-shaker">Mojito Shaker</a> by <a href="http://github.com/yahoo">Yahoo</a>.</p>
+            </section>
+
+            <section>
+                <h2>Special Thanks</h2>
+                <p>Gear.js takes inspiration from a few sources:</p>
+                <ul>
+                    <li><a href="http://github.com/mosen/buildy">buildy</a> created by <a href="http://github.com/mosen">mosen</a>.</li>
+                    <li><a href="http://github.com/cowboy/grunt">grunt</a> created by <a href="http://github.com/cowboy">cowboy</a>.</li>
+                </ul>
+            </section>
         </section>
+
+
+
+        <script type="text/javascript" src="docs/highlight.min.js"></script>
+        <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
+
+        <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
+        <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
+        <script type="text/javascript" src="build/gear.js"></script>
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
@@ -113,7 +300,7 @@ $ npm install gear-lib
                 Registry = gear.Registry,
                 files = ['index.js'];
 
-            localStorage['index.js'] = 'console.log (    "HI"   );\n\n';
+            localStorage['foo.js'] = localStorage['bar.js'] = localStorage['baz.js'] = localStorage['index.js'] = 'console.log (    "HI"   );\n\n';
 
             Y.one('#files').on('change', function(e) {
                 var raw_files = e.currentTarget.getDOMNode().files;
