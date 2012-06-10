@@ -1141,6 +1141,7 @@
     var Queue = exports.Queue = function Queue(options) {
         var self = this;
         options = options || {};
+        this._logger = options.logger || console;
         this._registry = options.registry || new Registry();
         this._queue = [
             function(callback) {
@@ -1155,7 +1156,7 @@
     };
 
     Queue.prototype._log = function(message) {
-        console.log(message);
+        this._logger.log(message);
     };
 
     Queue.prototype._dispatch = function(name, options, blobs, done) {

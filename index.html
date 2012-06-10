@@ -439,7 +439,7 @@ new Queue()
                 <div name="custom">
                     <h3>Custom Tasks</h3>
 
-                    <p>Writing a task is especially easy compared to other Node build systems. There is no need to use Gear.js internals within a task. Tasks operate on immutable blobs. Blobs have a body property. The task returns transformed data via its callback.</p>
+                    <p>Writing a task is especially easy compared to other Node build systems. Tasks operate on simple immutable blobs. The task returns a transformed blob via its callback.</p>
 
 
                     <h4>Arguments</h4>
@@ -491,9 +491,7 @@ exports.example = function(string, blob, done) {
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
-            var Queue = gear.Queue,
-                Registry = gear.Registry,
-                files = ['index.js'];
+            var files = ['index.js'];
 
             localStorage['foo.js'] = localStorage['bar.js'] = localStorage['baz.js'] = localStorage['index.js'] = 'console.log (    "HI"   );\n\n';
 
@@ -526,13 +524,19 @@ exports.example = function(string, blob, done) {
                         console = {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
-                                result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                if (result) {
+                                    result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                }
                             },
                             error: function(msg) {
                                 if (_console) {_console.error(msg);}
-                                result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                if (result) {
+                                    result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                }
                             }
-                        };
+                        },
+                        Queue = gear.Queue.bind(this, {logger: console}),
+                        Registry = gear.Registry;
 
                     result.set('text', '');
 
