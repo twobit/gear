@@ -97,7 +97,7 @@ $ npm install gear-lib
     .read('foo.js')
     .log('Parallel Tasks')
     .tasks({
-        read:     {task: ['read', ['foo.js', 'bar.js', 'baz.js']]},
+        read:     {task: ['read', ['bar.js', 'baz.js']]},
         combine:  {requires: 'read', task: 'concat'},
         minify:   {requires: 'combine', task: 'jsminify'},
         // print runs when read, combine, and minify complete
@@ -113,10 +113,6 @@ $ npm install gear-lib
 
             <section id="docs">
                 <h2>Documentation</h2>
-
-                <p>The following examples are able to read uploaded files:
-                    <input type="file" id="files" name="files[]" multiple />
-                </p>
 
                 <h3>Queue</h3>
                 <ul>
@@ -284,7 +280,6 @@ $ npm install gear-lib
     .read('foo.js')
     .read(['foo.js', 'bar.js'])
     .read([{name: 'foo.js'}, {name: 'bar.js'}, {name: 'baz.js'}])
-    .read(files)
     .run(function(err, results) {
         console.log(('' + results[0]).length + ' characters');
     });</code></pre>
@@ -403,7 +398,7 @@ $ npm install gear-lib
 // label.task - Task name and optionally options.
 // label.requires - List of labels that must be executed before this task runs.
 new Queue()
-    .read(files)
+    .read('foo.js')
     .tasks({
         dev:     {task: ['write', 'output.js']},
         prodmin: {task: 'jsminify'},
@@ -491,10 +486,11 @@ exports.example = function(string, blob, done) {
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
-            var files = ['index.js'];
+            ['foo', 'bar', 'baz'].forEach(function(name) {
+                localStorage[name + '.js'] = 'var ' + name +  ' = function ' + name + '() { console.log("' + name + '"); };';
+            });
 
-            localStorage['foo.js'] = localStorage['bar.js'] = localStorage['baz.js'] = localStorage['index.js'] = 'console.log (    "HI"   );\n\n';
-
+            /*
             Y.one('#files').on('change', function(e) {
                 var raw_files = e.currentTarget.getDOMNode().files;
 
@@ -512,7 +508,7 @@ exports.example = function(string, blob, done) {
 
                     reader.readAsBinaryString(file);
                 });
-            });
+            });*/
 
             Y.all('.example button').on('click', function(e) {
                 var example = e.currentTarget.get('parentNode');
