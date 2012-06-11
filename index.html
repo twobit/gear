@@ -100,11 +100,12 @@ $ npm install gear-lib
         read:     {task: ['read', ['bar.js', 'baz.js']]},
         combine:  {requires: 'read', task: 'concat'},
         minify:   {requires: 'combine', task: 'jsminify'},
-        // print runs when read, combine, and minify complete
-        print:    {requires: ['read', 'combine', 'minify'], task: 'inspect'},
+        print:    {requires: 'minify', task: 'inspect'},
         parallel: {task: ['log', "Hello Gear.js world!"]}, // Run parallel to read
         join:     {requires: ['parallel', 'print']} // Joined data is passed to next task in queue
-     }).run();</code></pre>
+     })
+     .inspect()
+     .run();</code></pre>
                     </div>
                     
                     <div class="result"><pre></pre></div>

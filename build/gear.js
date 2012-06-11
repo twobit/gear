@@ -1,4 +1,4 @@
-/*global setTimeout: false, console: false */
+this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global setTimeout: false, console: false */
 (function () {
 
     var async = {};
@@ -746,7 +746,7 @@
     Blob.prototype.toString = function() {
         return this._content;
     };
-})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -765,13 +765,32 @@
         done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
     };
     concat.type = 'reduce';
-    concat.browser = true;
-})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
+    var Blob;
+    if (typeof require !== 'undefined') {
+        var fs = require('fs');
+        Blob = require('../blob').Blob;
+    }
+    else {
+        Blob = gear.Blob;
+    }
+
+    /**
+     * Add a blob string.
+     *
+     * @param index {Integer} Index of blobs.
+     * @param blobs {Array} Incoming blobs.
+     * @param done {Function} Callback on task completion.
+     */
+    var load = exports.load = function load(string, done) {
+        done(null, new Blob(string));
+    };
+    load.type = 'append';
 
     /**
      * Gets a blob.
@@ -784,7 +803,6 @@
         done(null, blobs.slice(index, index + 1));
     };
     get.type = 'iterate';
-    get.browser = true;
 
     /**
      * Log a string.
@@ -798,7 +816,6 @@
         done(null, blobs);
     };
     log.type = 'iterate';
-    log.browser = true;
 
     /**
      * Inspects blobs.
@@ -818,7 +835,6 @@
         done(null, blobs);
     };
     inspect.type = 'iterate';
-    inspect.browser = true;
 
     /**
      * Do nothing.
@@ -830,8 +846,7 @@
     var noop = exports.noop = function noop(dummy, blob, done) {
         done(null, blob);
     };
-    noop.browser = true;
-})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -871,8 +886,7 @@
         }
     };
     read.type = 'append';
-    read.browser = true;
-})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -951,8 +965,7 @@
         });
     };
     tasks.type = 'iterate';
-    tasks.browser = true;
-})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -1013,8 +1026,7 @@
         }
     };
     write.type = 'slice';
-    write.browser = true;
-})(typeof exports === 'undefined' ? this.tasks || (this.tasks = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -1025,7 +1037,7 @@
             fs = require('fs');
     }
     else {
-        var default_tasks = this.tasks;
+        var default_tasks = this.gear.tasks;
     }
     
     /*
@@ -1114,10 +1126,13 @@
         },
 
         task: function(name) {
+            if (!(name in this._tasks)) {
+                throw new Error('Task ' + name + ' doesn\'t exist');
+            }
             return this._tasks[name];
         }
     };
-})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);/*
+})(typeof exports === 'undefined' ? this.gear : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -1206,4 +1221,4 @@
     Queue.prototype.run = function(callback) {
         async.waterfall(this._queue, callback);
     };
-})(typeof exports === 'undefined' ? this.gear || (this.gear = {}) : exports);
+})(typeof exports === 'undefined' ? this.gear : exports);

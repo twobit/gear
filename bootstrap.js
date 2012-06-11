@@ -10,6 +10,9 @@
 var path = require('path'),
     gear = require(path.join(process.cwd(), 'index'));
 
+var namespace = 'this.gear = this.gear || {};' +
+                'this.gear.tasks = this.gear.tasks || {};';
+
 var files = [
     'vendor/async.js',
     'lib/blob.js',
@@ -23,6 +26,7 @@ var files = [
 ];
 
 new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
+    .load(namespace)
     .read(files)
     .concat()
     .tasks({
