@@ -1,4 +1,4 @@
-this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global setTimeout: false, console: false */
+var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor || {};/*global setTimeout: false, console: false */
 (function () {
 
     var async = {};
@@ -689,7 +689,7 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
       };
     };
 
-}());/*
+}).call(gear.vendor);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -832,20 +832,13 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
         done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
     };
     concat.type = 'reduce';
-})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
+})(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var Blob;
-    if (typeof require !== 'undefined') {
-        var fs = require('fs');
-        Blob = require('../blob').Blob;
-    }
-    else {
-        Blob = gear.Blob;
-    }
+    var Blob = typeof require !== 'undefined' ? require('../blob').Blob : gear.Blob;
 
     /**
      * Add a blob string.
@@ -913,7 +906,7 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
     var noop = exports.noop = function noop(dummy, blob, done) {
         done(null, blob);
     };
-})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
+})(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -935,19 +928,13 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
         Blob.readFile(options.name, encoding, done);
     };
     read.type = 'append';
-})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
+})(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var async;
-    if (typeof require !== 'undefined') {
-        async = require('async');
-    }
-    else {
-        async = this.async;
-    }
+    var async = typeof require !== 'undefined' ? require('async') : gear.vendor.async;
 
     /**
      * Advanced flow execution.
@@ -1014,7 +1001,7 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
         });
     };
     tasks.type = 'iterate';
-})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
+})(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -1034,15 +1021,14 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
         blob.writeFile(options.name, blob, encoding, done);
     };
     write.type = 'slice';
-})(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
+})(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
     if (typeof require !== 'undefined') {
-        var path = require('path'),
-            fs = require('fs');
+        var path = require('path');
     }
     else {
         var default_tasks = this.gear.tasks;
@@ -1101,7 +1087,8 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
         },
 
         _loadDir: function(dirname) {
-            var files = fs.readdirSync(dirname),
+            var fs = require('fs'),
+                files = fs.readdirSync(dirname),
                 self = this;
 
             if (!path.existsSync(dirname)) {
@@ -1146,18 +1133,10 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var async, Registry, Blob;
-    if (typeof require !== 'undefined') {
-        async = require('async');
-        Registry = require('./registry').Registry;
-        Blob = require('./blob').Blob;
-    }
-    else {
-        async = this.async;
-        Registry = this.gear.Registry;
-        Blob = this.gear.Blob;
-    }
-    
+    var async = typeof require !== 'undefined' ? require('async') : this.gear.vendor.async,
+        Registry = typeof require !== 'undefined' ? require('./registry').Registry : this.gear.Registry,
+        Blob = typeof require !== 'undefined' ? require('./blob').Blob : this.gear.Blob;
+
     /*
      * Queue
      */
