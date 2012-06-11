@@ -746,6 +746,73 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
     Blob.prototype.toString = function() {
         return this._content;
     };
+
+    var readFile = {
+        server: function(name, encoding, callback) {
+            var fs = require('fs');
+            fs.readFile(name, encoding, function(err, data) {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, new Blob(data, {name: name}));
+                }
+            });
+        },
+        client: function(name, encoding, callback) {
+            if (name in localStorage) {
+                callback(null, new Blob(localStorage[name], {name: name}));
+            } else {
+                callback('localStorage has no item ' + name);
+            }
+        }
+    };
+
+    Blob.readFile = Blob.prototype.readFile = (typeof require === 'undefined') ? readFile.client : readFile.server;
+
+    var writeFile = {
+        server: function(name, blob, encoding, callback) {
+            var fs = require('fs'),
+                path = require('path'),
+                mkdirp = require('mkdirp').mkdirp,
+                Crypto = require('crypto');
+            
+            function writeFile(filename, b) {
+                fs.writeFile(filename, b.toString(), function(err) {
+                    callback(err, new Blob(b, {name: filename}));
+                });
+            }
+
+            var dirname = path.resolve(path.dirname(name)),
+                checksum;
+
+            if (name.indexOf('{checksum}') > -1) {  // Replace {checksum} with md5 string
+                checksum = Crypto.createHash('md5');
+                checksum.update(blob.toString());
+                name = name.replace('{checksum}', checksum.digest('hex'));
+            }
+
+            path.exists(dirname, function(exists) {
+                if (!exists) {
+                    mkdirp(dirname, '0755', function(err) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            writeFile(name, blob);
+                        }
+                    });
+                }
+                else {
+                    writeFile(name, blob);
+                }
+            });
+        },
+        client: function(name, blob, encoding, callback) {
+            localStorage[name] = blob.toString();
+            callback(null, new blob.constructor(blob, {name: name}));
+        }
+    };
+
+    Blob.writeFile = Blob.prototype.writeFile = (typeof require === 'undefined') ? writeFile.client : writeFile.server;
 })(typeof exports === 'undefined' ? this.gear : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -852,38 +919,20 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var Blob;
-    if (typeof require !== 'undefined') {
-        var fs = require('fs');
-        Blob = require('../blob').Blob;
-    }
-    else {
-        Blob = gear.Blob;
-    }
+    var Blob = typeof require !== 'undefined' ? require('../blob').Blob : gear.Blob;
 
     /**
      * Appends file contents onto queue.
      *
      * @param options {Object} File options or filename.
-     * @param options.name {Object} Filename to read.
+     * @param options.name {String} Filename to read.
+     * @param options.encoding {String} File encoding.
      * @param done {Function} Callback on task completion.
      */
     var read = exports.read = function read(options, done) {
         options = (typeof options === 'string') ? {name: options} : options;
-
-        if (typeof fs === 'undefined') {
-            if (options.name in localStorage) {
-                done(null, new Blob(localStorage[options.name], {name: options.name}));
-            }
-            else {
-                done('localStorage has no item ' + options.name);
-            }
-        }
-        else {
-            fs.readFile(options.name, function(err, data) {
-                done(err, new Blob(data, {name: options.name}));
-            });
-        }
+        var encoding = options.encoding || 'utf8';
+        Blob.readFile(options.name, encoding, done);
     };
     read.type = 'append';
 })(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
@@ -971,13 +1020,6 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    if (typeof require !== 'undefined') {
-        var fs = require('fs'),
-            path = require('path'),
-            mkdirp = require('mkdirp').mkdirp,
-            Crypto = require('crypto');
-    }
-    
     /**
      * Write the blob to disk with an optional checksum in the filename.
      *
@@ -988,42 +1030,8 @@ this.gear = this.gear || {};this.gear.tasks = this.gear.tasks || {};/*global set
      */
     var write = exports.write = function write(options, blob, done) {
         options = (typeof options === 'string') ? {name: options} : options;
-
-        function writeFile(name, b) {
-            fs.writeFile(name, blob.toString(), function(err) {
-                done(err, new blob.constructor(blob, {name: name}));
-            });
-        }
-
-        if (typeof fs !== 'undefined') {
-            var dirname = path.resolve(path.dirname(options.name)),
-                checksum;
-
-            if (options.name.indexOf('{checksum}') > -1) {  // Replace {checksum} with md5 string
-                checksum = Crypto.createHash('md5');
-                checksum.update(blob.toString());
-                options.name = options.name.replace('{checksum}', checksum.digest('hex'));
-            }
-
-            path.exists(dirname, function(exists) {
-                if (!exists) {
-                    mkdirp(dirname, '0755', function(err) {
-                        if (err) {
-                            done(err);
-                        } else {
-                            writeFile(options.name, blob);
-                        }
-                    });
-                }
-                else {
-                    writeFile(options.name, blob);
-                }
-            });
-        }
-        else {
-            localStorage[options.name] = blob.toString();
-            done(null, new blob.constructor(blob, {name: name}));
-        }
+        var encoding = options.encoding || 'utf8';
+        blob.writeFile(options.name, blob, encoding, done);
     };
     write.type = 'slice';
 })(typeof exports === 'undefined' ? this.gear.tasks : exports);/*
