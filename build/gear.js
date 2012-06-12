@@ -776,7 +776,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
                 Crypto = require('crypto');
             
             function writeFile(filename, b) {
-                fs.writeFile(filename, b.toString(), function(err) {
+                fs.writeFile(filename, b.result, function(err) {
                     callback(err, new Blob(b, {name: filename}));
                 });
             }
@@ -786,7 +786,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
 
             if (name.indexOf('{checksum}') > -1) {  // Replace {checksum} with md5 string
                 checksum = Crypto.createHash('md5');
-                checksum.update(blob.toString());
+                checksum.update(blob.result);
                 name = name.replace('{checksum}', checksum.digest('hex'));
             }
 
@@ -806,7 +806,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
             });
         },
         client: function(name, blob, encoding, callback) {
-            localStorage[name] = blob.toString();
+            localStorage[name] = blob.result;
             callback(null, new blob.constructor(blob, {name: name}));
         }
     };
@@ -885,7 +885,9 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
         var self = this;
 
         blobs.forEach(function(blob, index) {
-            self._log('blob ' + (index + 1) + ': ' + JSON.stringify(blob, null, ' '));
+            var obj = {result: blob.result};
+            Object.keys(blob).forEach(function(attr) {obj[attr] = blob[attr];});
+            self._log('blob ' + (index + 1) + ': ' + JSON.stringify(obj, null, ' '));
         });
 
         done(null, blobs);

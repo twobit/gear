@@ -9,7 +9,7 @@ var should = require('should'),
 describe('concat()', function() {
     it('should concat blobs', function(done) {
         concat(null, fixtures.prev, fixtures.cur, function(err, blob) {
-            blob.toString().should.equal('abcdef');
+            blob.result.should.equal('abcdef');
             done(err);
         });
     });
