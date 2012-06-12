@@ -715,36 +715,39 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
 
         properties = properties || {};
 
-        var content = '',
-            props = {};
+        var result = '',
+            props = {},
+            self = this;
 
         parts.forEach(function(part) {
-            content += part;
+            result += part;
 
-            var attr;
-            if (typeof part === 'object') {
-                for (attr in part) {
+            if (part instanceof Blob) {
+                Object.keys(part).forEach(function(attr) {
                     props[attr] = part[attr];
-                }
+                });
             }
         });
 
-        var attr;
-        for (attr in properties) {
+        Object.keys(properties).forEach(function(attr) {
             props[attr] = properties[attr];
-        }
+        });
 
-        Object.defineProperty(this, '_content', {get: function() {
-            return content;
-        }});
+        Object.keys(props).forEach(function(attr) {
+            if (attr !== 'result') {
+                Object.defineProperty(self, attr, {enumerable: true, get: function() {
+                    return properties[attr];
+                }});
+            }
+        });
 
-        Object.defineProperty(this, 'properties', {get: function() {
-            return props;
+        Object.defineProperty(this, 'result', {get: function() {
+            return result;
         }});
     };
 
     Blob.prototype.toString = function() {
-        return this._content;
+        return this.result;
     };
 
     var readFile = {
@@ -884,10 +887,9 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
      */
     var inspect = exports.inspect = function inspect(options, blobs, done) {
         var self = this;
-        this._log('INSPECT: ' + blobs.length + (blobs.length > 1 ? ' blobs' : ' blob'));
 
         blobs.forEach(function(blob, index) {
-            self._log(blob.toString());
+            self._log('blob ' + (index + 1) + ': ' + JSON.stringify(blob, null, ' '));
         });
 
         done(null, blobs);
