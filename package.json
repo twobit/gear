@@ -1,9 +1,10 @@
 {
   "name": "gear",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Gear.js - Task-based build system.",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
+  "homepage": "http://yahoo.github.com/gear/",
   "repository": {"type": "git", "url": "http://github.com/yahoo/gear.git"},
   "bugs": {"url": "http://github.com/yahoo/gear/issues"},
   "main": "index",
