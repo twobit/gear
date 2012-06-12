@@ -735,15 +735,11 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
 
         Object.keys(props).forEach(function(attr) {
             if (attr !== 'result') {
-                Object.defineProperty(self, attr, {enumerable: true, get: function() {
-                    return properties[attr];
-                }});
+                Object.defineProperty(self, attr, {enumerable: true, value: props[attr]});
             }
         });
 
-        Object.defineProperty(this, 'result', {get: function() {
-            return result;
-        }});
+        Object.defineProperty(this, 'result', {value: result});
     };
 
     Blob.prototype.toString = function() {
