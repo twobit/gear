@@ -30,9 +30,10 @@ var files = [
 new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .load(namespace)
     .read(files)
-    .concat()
     .jslint({callback: function(blob) {
+        console.log(blob.name, blob.jslint);
     }})
+    .concat()
     .tasks({
         dev:     {task: ['write', 'build/gear.js']},
         prodmin: {task: 'jsminify'},
