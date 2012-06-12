@@ -831,7 +831,6 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
         options = options || {};
         done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
     };
-    concat.type = 'reduce';
 })(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -850,7 +849,6 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
     var load = exports.load = function load(string, done) {
         done(null, new Blob(string));
     };
-    load.type = 'append';
 
     /**
      * Gets a blob.
@@ -862,7 +860,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
     var get = exports.get = function get(index, blobs, done) {
         done(null, blobs.slice(index, index + 1));
     };
-    get.type = 'iterate';
+    get.type = 'collect';
 
     /**
      * Log a string.
@@ -875,7 +873,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
         this._log(string);
         done(null, blobs);
     };
-    log.type = 'iterate';
+    log.type = 'collect';
 
     /**
      * Inspects blobs.
@@ -894,7 +892,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
 
         done(null, blobs);
     };
-    inspect.type = 'iterate';
+    inspect.type = 'collect';
 
     /**
      * Do nothing.
@@ -927,7 +925,6 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
         var encoding = options.encoding || 'utf8';
         Blob.readFile(options.name, encoding, done);
     };
-    read.type = 'append';
 })(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -1000,7 +997,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
             done(err, results.join ? results.join : []);
         });
     };
-    tasks.type = 'iterate';
+    tasks.type = 'collect';
 })(typeof exports === 'undefined' ? gear.tasks : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -1164,9 +1161,9 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
     Queue.prototype._dispatch = function(name, options, blobs, done) {
         var task = this._registry.task(name);
 
-        // Task type determines how blobs are processed
-        switch (task.type) {
-            case 'append': // Add blobs to queue
+        // Task parameters determine how blobs are processed
+        switch (task.length) {
+            case 2: // Add blobs to queue
                 if (options === undefined) {
                     options = [];
                 } else {
@@ -1180,22 +1177,20 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
                 });
                 break;
 
-            case 'iterate': // Task can look at all blobs at once
-                task.call(this, options, blobs, done);
+            case 3:
+                if (task.type === 'collect') { // Task can look at all blobs at once
+                    task.call(this, options, blobs, done);
+                } else if (task.type === 'slice') { // Select up to options.length blobs
+                    async.map(blobs.slice(0, Array.isArray(options) ? options.length : 1), task.bind(this, options), done);
+                } else { // Transform blob on a per task basis
+                    async.map(blobs, task.bind(this, options), done);
+                }
                 break;
 
-            case 'reduce': // Reduce blobs operating on a per task basis
+            case 4: // Reduce blobs operating on a per task basis
                 async.reduce(blobs, new Blob(), task.bind(this, options), function(err, results) {
                     done(err, [results]);
                 });
-                break;
-
-            case 'slice': // Select up to options.length blobs
-                async.map(blobs.slice(0, Array.isArray(options) ? options.length : 1), task.bind(this, options), done);
-                break;
-
-            default: // Transform blob on a per task basis
-                async.map(blobs, task.bind(this, options), done);
                 break;
         }
     };
