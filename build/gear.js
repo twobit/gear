@@ -827,7 +827,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
      * @param blobs {Array} Incoming blobs.
      * @param done {Function} Callback on task completion.
      */
-    var concat = exports.concat = function concat(options, prev, blob, done) {
+    exports.concat = function(options, prev, blob, done) {
         options = options || {};
         done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
     };
@@ -846,7 +846,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
      * @param blobs {Array} Incoming blobs.
      * @param done {Function} Callback on task completion.
      */
-    var load = exports.load = function load(string, done) {
+    exports.load = function(string, done) {
         done(null, new Blob(string));
     };
 
@@ -901,7 +901,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
      * @param blob {Array} Incoming blob.
      * @param done {Function} Callback on task completion.
      */
-    var noop = exports.noop = function noop(dummy, blob, done) {
+    exports.noop = function(dummy, blob, done) {
         done(null, blob);
     };
 })(typeof exports === 'undefined' ? gear.tasks : exports);/*
@@ -920,7 +920,7 @@ var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor ||
      * @param options.encoding {String} File encoding.
      * @param done {Function} Callback on task completion.
      */
-    var read = exports.read = function read(options, done) {
+    exports.read = function(options, done) {
         options = (typeof options === 'string') ? {name: options} : options;
         var encoding = options.encoding || 'utf8';
         Blob.readFile(options.name, encoding, done);
