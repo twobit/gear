@@ -58,16 +58,12 @@ $ npm install gear-lib
                 <div class="example">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                    <div class="code">
-<pre><code class="javascript">new Queue()
+<pre><code class="code javascript">new Queue()
     .read('foo.js')
     .log('read foo.js')
     .inspect()
     .write('foo2.js')
-    .run();</code></pre>
-                    </div>
-                    
-                    <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                 </div>
 
                 <h3>Execute Tasks Using Array Style</h3>
@@ -75,16 +71,12 @@ $ npm install gear-lib
                 <div class="example">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                    <div class="code">
-<pre><code class="javascript">new Queue()
+                    <pre><code class="code javascript">new Queue()
     .read(['foo.js', {name: 'bar.js'}, 'baz.js'])
     .log('read files')
     .inspect()
     .write(['foo2.js', 'bar2.js']) // Not writing 'baz.js'
-    .run();</code></pre>
-                    </div>
-                    
-                    <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                 </div>
 
                 <h3>Parallel Task Execution</h3>
@@ -92,8 +84,7 @@ $ npm install gear-lib
                 <div class="example">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                    <div class="code">
-<pre><code class="javascript">new Queue()
+                    <pre><code class="code javascript">new Queue()
     .read('foo.js')
     .log('Parallel Tasks')
     .tasks({
@@ -105,10 +96,7 @@ $ npm install gear-lib
         join:     {requires: ['parallel', 'print']} // Joined data is passed to next task in queue
      })
      .inspect()
-     .run();</code></pre>
-                    </div>
-                    
-                    <div class="result"><pre></pre></div>
+     .run();</code><code class="result"></code></pre>
                 </div>
             </section>
 
@@ -158,13 +146,9 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .log('New queue')
-    .run();</code></pre>
-                    </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -183,13 +167,9 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .task('log', 'New queue')
-    .run();</code></pre>
-                    </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -207,13 +187,9 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .log('test')
-    .run();</code></pre>
-                    </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -229,13 +205,7 @@ $ npm install gear-lib
                     </ul>
 
                     <div class="example">
-                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
-
-                        <div class="code">
-<pre><code class="javascript">new Registry();</code></pre>
-                    </div>
-                        
-                        <div class="result"><pre></pre></div>
+                        <pre><code class="code javascript">new Registry();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -253,13 +223,7 @@ $ npm install gear-lib
                     </ul>
 
                     <div class="example">
-                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
-
-                        <div class="code">
-<pre><code class="javascript">new Registry().load({dirname: 'foo'});</code></pre>
-                    </div>
-                        
-                        <div class="result"><pre></pre></div>
+                        <pre><code class="code javascript">new Registry().load({dirname: 'foo'});</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -277,17 +241,13 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .read('foo.js')
     .read(['foo.js', 'bar.js'])
     .read([{name: 'foo.js'}, {name: 'bar.js'}, {name: 'baz.js'}])
     .run(function(err, results) {
         console.log(('' + results[0]).length + ' characters');
-    });</code></pre>
-                        </div>
-                        
-                        <div class="result"><pre></pre></div>
+    });</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -305,16 +265,12 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .read('foo.js')
     .write('foo2.js')
     .write({name: 'foo3.js'})
     .inspect()
-    .run();</code></pre>
-                        </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -332,15 +288,11 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .read(['foo.js', 'bar.js'])
     .concat()
     .inspect()
-    .run();</code></pre>
-                        </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -352,14 +304,10 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .read(['foo.js', 'bar.js'])
     .inspect()
-    .run();</code></pre>
-                        </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -376,13 +324,9 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">new Queue()
+                        <pre><code class="code javascript">new Queue()
     .log('Hi')
-    .run();</code></pre>
-                        </div>
-                        
-                        <div class="result"><pre></pre></div>
+    .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
 
@@ -397,8 +341,7 @@ $ npm install gear-lib
                     <div class="example">
                         <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
 
-                        <div class="code">
-<pre><code class="javascript">// label - Task instance name.
+                        <pre><code class="code javascript">// label - Task instance name.
 // label.task - Task name and optionally options.
 // label.requires - List of labels that must be executed before this task runs.
 new Queue()
@@ -412,7 +355,7 @@ new Queue()
     .run(function() {
         console.log('output.js - ' + localStorage['output.js'].length);
         console.log('output.min.js - ' + localStorage['output.min.js'].length);
-    });</code></pre>
+    });</code><code class="result"></code></pre>
                         </div>
 
                         <div class="result"><pre></pre></div>
@@ -422,7 +365,7 @@ new Queue()
                 <div name="library">
                     <h3>Library Tasks</h3>
 
-                    <p>Install <a href="http://github.com/yahoo/gear-lib">gear-lib</a> which contains tasks such as:</p>
+                    <p><a href="http://github.com/yahoo/gear-lib">gear-lib</a> contains tasks such as:</p>
 
                     <ul>
                         <li>jslint</li>
@@ -432,7 +375,16 @@ new Queue()
                         <li>s3</li>
                     </ul>
 
+                    <h4>Node</h4>
+
                     <pre><code class="bash">$ npm install gear-lib</code></pre>
+
+                    <h4>Node</h4>
+
+                    <ul>
+                        <li><a href="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js">Development</a></li>
+                        <li><a href="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.min.js">Production</a></li>
+                    </ul>
                 </div>
 
                 <div name="custom">
@@ -517,8 +469,8 @@ exports.example = function(string, blob, done) {
                 var example = e.currentTarget.get('parentNode');
 
                 if (!example.hasClass('show')) {
-                    var code = example.one('.code pre').get('text'),
-                        result = example.one('.result pre'),
+                    var code = example.one('.code').get('text'),
+                        result = example.one('.result'),
                         _console = window.console,
                         console = {
                             log: function(msg) {
