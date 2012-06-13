@@ -479,20 +479,20 @@ exports.example = function(string, blob, done) {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
                                 if (result) {
-                                    result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + JSON.stringify(msg) + '<br />');
                                 }
                             },
                             error: function(msg) {
                                 if (_console) {_console.error(msg);}
                                 if (result) {
-                                    result.set('text', result.get('text') + '> ' + JSON.stringify(msg) + '\n');
+                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + JSON.stringify(msg) + '<br />');
                                 }
                             }
                         },
                         Queue = gear.Queue.bind(this, {logger: console}),
                         Registry = gear.Registry;
 
-                    result.set('text', '');
+                    result.setHTML('');
 
                     var ret = eval(code);
                     if (ret !== undefined) {console.log(ret);}
