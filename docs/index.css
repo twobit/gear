@@ -19,6 +19,9 @@ header {text-align: center;}
 
 section {margin: 10px 0; padding: 10px 0;}
 
+.watch {text-align: center; margin: 0;}
+.watch iframe {margin-left: 40px;}
+
 .highlight {
     margin-bottom: 10px;
     position: relative;
