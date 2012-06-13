@@ -31,14 +31,22 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .load(namespace)
     .read(files)
     .jslint({nomen: true, sloppy: true, white: true, vars: true, callback: function(blob) {
-        console.log(blob.name ? blob.name : 'inline', blob.jslint);
+        // console.log(blob.name ? blob.name : 'inline', blob.jslint);
     }})
     .concat()
     .tasks({
-        dev:     {task: ['write', 'build/gear.js']},
-        prodmin: {task: 'jsminify'},
-        prod:    {requires: 'prodmin', task: ['write', 'build/gear.min.js']},
-        join:    {requires: ['dev', 'prod']}
+        dev:      {task: ['write', 'build/gear.js']},
+        
+        fullraw: {task: ['read', 'node_modules/gear-lib/build/gear-lib.js']},
+        full: {requires: 'fullraw', task: 'concat'},
+        devfull: {requires: 'full', task: ['write', 'build/gear-full.js']},
+        prodfullmin: {requires: 'full', task: 'jsminify'},
+        prodfull: {requires: 'prodfullmin', task: ['write', 'build/gear-full.min.js']},
+
+        prodmin:  {task: 'jsminify'},
+        prod:     {requires: 'prodmin', task: ['write', 'build/gear.min.js']},
+        
+        join:     {requires: ['dev', 'devfull', 'prod', 'prodfull']}
     })
     .run(function(err, results) {
         if (err) {
