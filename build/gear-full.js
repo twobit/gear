@@ -23736,7 +23736,9 @@ klass:              do {
     itself.edition = '2012-05-09';
 
     return itself;
-}());(function(Handlebars) {
+}());gear.vendor.handlebars = {};
+
+(function(Handlebars) {
 
 Handlebars.VERSION = "1.0.beta.5";
 
@@ -23952,6 +23954,6 @@ Handlebars.registerHelper('log', function(context) {
      */
     exports.handlebars = function(vars, blob, done) {
         var tmpl = handlebars.compile(blob.result);
-        done(null, blob.constructor(tmpl(vars)));
+        done(null, new blob.constructor(tmpl(vars)));
     };
 })(typeof exports === 'undefined' ? gear.tasks : exports);
