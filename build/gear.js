@@ -1,4 +1,3 @@
-"use strict";
 var gear = gear || {};
 gear.tasks = gear.tasks || {};
 gear.vendor = gear.vendor || {};
