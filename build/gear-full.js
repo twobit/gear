@@ -25370,7 +25370,7 @@ Handlebars.template = Handlebars.VM.template;
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var linter = typeof require !== 'undefined' ? require('jslint/lib/linter.js') : gear.vendor.jslint;
+    var linter = typeof require !== 'undefined' ? require('jslint/lib/linter.js').lint : gear.vendor.jslint;
 
     /**
      * Lint JS.
@@ -25383,7 +25383,7 @@ Handlebars.template = Handlebars.VM.template;
     exports.jslint = function(options, blob, done) {
         options = options || {};
 
-        var result = linter.lint(blob.result, options),
+        var result = linter(blob.result, options),
             errors = result.errors.map(function(err) {
                 return err ? 'line ' + err.line + ' character ' + err.character + ': ' + err.reason : null;
             }).filter(function(err) { // Filter nulls
