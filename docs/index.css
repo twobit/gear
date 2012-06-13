@@ -19,13 +19,13 @@ header {text-align: center;}
 
 section {margin: 10px 0; padding: 10px 0;}
 
-.example {
+.highlight {
     margin-bottom: 10px;
     position: relative;
     overflow: hidden;
 }
 
-.example button {position: absolute; top: 10px; right: 10px;}
+.highlight button {position: absolute; top: 10px; right: 10px;}
 
 .result {
     display: none;
