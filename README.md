@@ -55,7 +55,7 @@ new Queue()
     read:     {task: ['read', ['foo.js', 'bar.js', 'baz.js']]},
     combine:  {requires: 'read', task: 'concat'},
     minify:   {requires: 'combine', task: 'jsminify'},
-    print:    {requires: ['read', 'combine', 'minify'], task: 'inspect'}, // Runs when read, combine, and minify complete
+    print:    {requires: 'minify', task: 'inspect'}, // Runs when read, combine, and minify complete
     parallel: {task: ['log', "Hello Gear.js world!"]} // Run parallel to read
  }).run();
 ```
