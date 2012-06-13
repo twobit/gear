@@ -1,4 +1,8 @@
-var gear = gear || {};gear.tasks = gear.tasks || {};gear.vendor = gear.vendor || {};/*global setTimeout: false, console: false */
+"use strict";
+var gear = gear || {};
+gear.tasks = gear.tasks || {};
+gear.vendor = gear.vendor || {};
+/*global setTimeout: false, console: false */
 (function () {
 
     var async = {};
