@@ -10,7 +10,7 @@
 var path = require('path'),
     gear = require(path.join(process.cwd(), 'index'));
 
-var namespace = '"use strict";\n' +
+var namespace = '' + //"use strict";\n' +
                 'var gear = gear || {};\n' +
                 'gear.tasks = gear.tasks || {};\n' +
                 'gear.vendor = gear.vendor || {};\n';

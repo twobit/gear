@@ -816,7 +816,7 @@ gear.vendor = gear.vendor || {};
     };
 
     Blob.writeFile = Blob.prototype.writeFile = (typeof require === 'undefined') ? writeFile.client : writeFile.server;
-})(typeof exports === 'undefined' ? this.gear : exports);/*
+})(typeof exports === 'undefined' ? gear : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -1032,7 +1032,7 @@ gear.vendor = gear.vendor || {};
         var path = require('path');
     }
     else {
-        var default_tasks = this.gear.tasks;
+        var default_tasks = gear.tasks;
     }
     
     /*
@@ -1128,15 +1128,15 @@ gear.vendor = gear.vendor || {};
             return this._tasks[name];
         }
     };
-})(typeof exports === 'undefined' ? this.gear : exports);/*
+})(typeof exports === 'undefined' ? gear : exports);/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
 (function(exports) {
-    var async = typeof require !== 'undefined' ? require('async') : this.gear.vendor.async,
-        Registry = typeof require !== 'undefined' ? require('./registry').Registry : this.gear.Registry,
-        Blob = typeof require !== 'undefined' ? require('./blob').Blob : this.gear.Blob;
+    var async = typeof require !== 'undefined' ? require('async') : gear.vendor.async,
+        Registry = typeof require !== 'undefined' ? require('./registry').Registry : gear.Registry,
+        Blob = typeof require !== 'undefined' ? require('./blob').Blob : gear.Blob;
 
     /*
      * Queue
@@ -1207,4 +1207,4 @@ gear.vendor = gear.vendor || {};
     Queue.prototype.run = function(callback) {
         async.waterfall(this._queue, callback);
     };
-})(typeof exports === 'undefined' ? this.gear : exports);
+})(typeof exports === 'undefined' ? gear : exports);
