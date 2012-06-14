@@ -10,26 +10,24 @@ body {
   max-width: 970px;
 }
 
+h1, h2, h3, h4, h5, h6 {margin-bottom: 10px;}
+h1, article h2 {font-family: 'Economica', sans-serif; color: #F92672; text-shadow: gray 1px 1px 5px;}
+h1 {font-size: 70px;}
+a {color: #81af24; text-decoration: none; font-weight: bold;}
+p {margin-bottom: 10px;}
 li {list-style-type: none;}
 ul {margin: 0 0 10px 20px;}
 
-h1, h2, h3, h4, h5, h6 {margin-bottom: 10px;}
-
-h1, article h2 {font-family: 'Economica', sans-serif; color: #F92672; text-shadow: gray 1px 1px 5px;}
-h1 {font-size: 70px;}
-header h2 {font-size: 14px; color: #666;}
-article h2 {font-size: 40px;}
-
-
-a {color: #81af24; text-decoration: none; font-weight: bold;}
-
-p {margin-bottom: 10px;}
-
 header {text-align: center;}
+header h2 {font-size: 14px; color: #666;}
 
 article {background: #FFF; border-radius: 10px; padding: 10px; box-shadow: #666 0 0 10px 0; margin: 20px 0;}
+article h2 {font-size: 40px;}
 
 section {margin: 10px 0; padding: 10px 0;}
+
+footer {font-size: 14px; color: #666; margin-bottom: 10px; text-align: center;}
+footer a {color: #81af24;}
 
 .watch {text-align: center; margin: 0;}
 .watch iframe {margin-left: 40px;}
