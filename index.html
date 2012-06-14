@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Gear.js - Task-Based Build System</title>
+        <title>Gear.js - Build System for Node.js and the Browser</title>
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Economica" />
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <link rel="stylesheet" type="text/css" href="css/monokai.css" />
@@ -11,6 +11,7 @@
 
         <header>
             <h1>Gear.js</h1>
+            <h2>Build System for Node.js and the Browser</h2>
 
             <p class="watch"><iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=yahoo&amp;repo=gear&amp;type=watch&amp;count=true"
 allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px"></iframe></p>
@@ -18,24 +19,37 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
 
         <article>
             <section name="intro">
-                <h2>Task-Based Build System </h2>
-                <p>Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.</p>
+                <p>Gear.js is an easy to use, simple to extend, and powerful build system. <strong>Chain tasks</strong> together to build projects with ease.</p>
                 
-                <h3>Features:</h3>
+
+                <div class="highlight">
+                    <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+<pre><code class="code javascript">new Queue()
+    .read('foo.js')
+    .inspect()
+    .jslint()
+    .jsminify()
+    .write('foo.min.js')
+    .inspect()
+    .run();</code><code class="result"></code></pre>
+                </div>
+
+                <h2>Features:</h2>
                 <ul>
-                    <li>Runs in Node and the browser.</li>
                     <li>Basic building blocks that can be combined to perform complex builds.</li>
                     <li>Tasks are simply defined and keep system internals to a minimum.</li>
                     <li>Asynchronous execution.</li>
                     <li>Extensible task loading via NPM, file, or directory.</li>
                     <li>Advanced flow control for complex task execution.</li>
+                    <li>Runs in Node.js and the browser.</li>
                 </ul>
             </section>
 
             <section name="installation">
                 <h2>Installation</h2>
 
-                <h3>Node</h3>
+                <h3>Node.js</h3>
                 <p>To get the most out of Gear.js, install <a href="http://github.com/yahoo/gear-lib">gear-lib</a> which contains tasks for linting, minifying, and deploying JS/CSS assets.</p>
 <div class="highlight"><pre><code class="bash">$ npm install gear
 $ npm install gear-lib
@@ -54,22 +68,9 @@ $ npm install gear-lib
             </section>
 
             <section name="examples">
-                <h2>Quick Examples</h2>
+                <h2>Examples</h2>
 
-                <h3>Chaining Tasks</h3>
-
-                <div class="highlight">
-                    <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
-
-<pre><code class="code javascript">new Queue()
-    .read('foo.js')
-    .log('read foo.js')
-    .inspect()
-    .write('foo2.js')
-    .run();</code><code class="result"></code></pre>
-                </div>
-
-                <h3>Execute Tasks Using Array Style</h3>
+                <h3>Execute Tasks On Multiple Items</h3>
 
                 <div class="highlight">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
@@ -378,7 +379,7 @@ new Queue()
                         <li>s3</li>
                     </ul>
 
-                    <h4>Node</h4>
+                    <h4>Node.js</h4>
 
                     <div class="highlight"><pre><code class="bash">$ npm install gear-lib</code></pre></div>
 
@@ -396,7 +397,7 @@ new Queue()
                 <div name="custom">
                     <h3>Custom Tasks</h3>
 
-                    <p>Writing a task is especially easy compared to other Node build systems. Tasks operate on simple immutable blobs. The task returns a transformed blob via its callback.</p>
+                    <p>Writing a task is especially easy compared to other Node.js build systems. Tasks operate on simple immutable blobs. The task returns a transformed blob via its callback.</p>
 
 
                     <h4>Arguments</h4>
@@ -443,7 +444,8 @@ exports.example = function(string, blob, done) {
         <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
         <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
-        <script type="text/javascript" src="https://github.com/yahoo/gear/raw/master/build/gear-full.js"></script>
+        <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
+        <script type="text/javascript" src="https://github.com/yahoo/gear/raw/master/build/gear.js"></script>
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
@@ -482,13 +484,14 @@ exports.example = function(string, blob, done) {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
                                 if (result) {
-                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + JSON.stringify(msg) + '<br />');
+                                    _console.log(msg);
+                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + msg + '<br />');
                                 }
                             },
                             error: function(msg) {
                                 if (_console) {_console.error(msg);}
                                 if (result) {
-                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + JSON.stringify(msg) + '<br />');
+                                    result.setHTML(result.getHTML() + '<span>&gt;</span> ' + msg + '<br />');
                                 }
                             }
                         },

@@ -15,9 +15,11 @@ ul {margin: 0 0 10px 20px;}
 
 h1, h2, h3, h4, h5, h6 {margin-bottom: 10px;}
 
-h1, h2 {font-family: 'Economica', sans-serif; color: #F92672; text-shadow: gray 1px 1px 5px;}
+h1, article h2 {font-family: 'Economica', sans-serif; color: #F92672; text-shadow: gray 1px 1px 5px;}
 h1 {font-size: 70px;}
-h2 {font-size: 40px;}
+header h2 {font-size: 14px; color: #666;}
+article h2 {font-size: 40px;}
+
 
 a {color: #81af24; text-decoration: none; font-weight: bold;}
 
