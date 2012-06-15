@@ -25,6 +25,9 @@ var helper = handlebars.compile(
     "var tasks = [];\n" +
     "{{#tasks}}tasks.push(require('{{.}}'));{{/tasks}}\n" +
     "tasks.forEach(function(mod) {for (var task in mod) {exports[task] = mod[task];}});\n" +
+    "});\n\n" +
+    "define('gear', ['require', 'exports', 'blob', 'registry', 'queue'], function(require, exports, blob, registry, queue) {\n" +
+    "exports.Blob = blob.Blob; exports.Registry = registry.Registry; exports.Queue = queue.Queue;\n" +
     "});\n\n"
 );
 
@@ -56,9 +59,8 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .concat({callback: function(blob) {
         var obj = files[blob.name];
         if (obj.name) {
-            var vars = {result: blob.result, modules: []};
+            var vars = {result: blob.result};
             Object.keys(obj).forEach(function(attr) {vars[attr] = obj[attr];});
-            //Object.keys(vars.modules).forEach(function(attr) {vars.paths[attr] = obj[attr];});
             return wrap(vars);
         }
         return blob.result;
@@ -66,7 +68,12 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .load(helper({tasks: tasks}))
     .concat()
     .tasks({
-        dev:      {task: ['write', 'build/gear.js']}
+        dev:      {task: ['write', 'build/gear.js']},
+
+        prodmin:  {task: 'jsminify'},
+        prod:     {requires: 'prodmin', task: ['write', 'build/gear.min.js']},
+        
+        join:     {requires: ['dev', 'prod']}
         /*
         fullraw: {task: ['read', 'node_modules/gear-lib/build/gear-lib.js']},
         full: {requires: 'fullraw', task: 'concat'},
@@ -74,10 +81,6 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
         prodfullmin: {requires: 'full', task: 'jsminify'},
         prodfull: {requires: 'prodfullmin', task: ['write', 'build/gear-full.min.js']},
 
-        prodmin:  {task: 'jsminify'},
-        prod:     {requires: 'prodmin', task: ['write', 'build/gear.min.js']},
-        
-        join:     {requires: ['dev', 'devfull', 'prod', 'prodfull']}
         */
     })
     .run(function(err, results) {

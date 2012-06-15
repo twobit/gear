@@ -3311,3 +3311,7 @@ tasks.push(require('./tasks/concat'));tasks.push(require('./tasks/core'));tasks.
 tasks.forEach(function(mod) {for (var task in mod) {exports[task] = mod[task];}});
 });
 
+define('gear', ['require', 'exports', 'blob', 'registry', 'queue'], function(require, exports, blob, registry, queue) {
+exports.Blob = blob.Blob; exports.Registry = registry.Registry; exports.Queue = queue.Queue;
+});
+
