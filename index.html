@@ -62,8 +62,9 @@ $ npm install gear-lib
                     <li><a href="https://github.com/yahoo/gear/raw/master/build/gear.min.js">Production</a></li>
                 </ul>
 
-<div class="highlight"><pre><code class="html">&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
+<div class="highlight"><pre><code class="html">
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear/raw/master/build/gear.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
 </code></pre></div>
             </section>
 
@@ -446,8 +447,17 @@ exports.example = function(string, blob, done) {
         <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
         <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
-        <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
         <script type="text/javascript" src="https://github.com/yahoo/gear/raw/master/build/gear.js"></script>
+        <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
+
+        <script type="text/javascript">
+        require(['registry', 'queue', 'gear-lib'], function(registry, queue, lib) {
+            gear = {};
+            gear.Registry = registry.Registry;
+            gear.Queue = queue.Queue;
+            gear.lib = lib;
+        })
+        </script>
 
         <script type="text/javascript">
         YUI().use('event', function(Y) {
@@ -497,7 +507,7 @@ exports.example = function(string, blob, done) {
                                 }
                             }
                         },
-                        Queue = gear.Queue.bind(this, {logger: console}),
+                        Queue = gear.Queue.bind(this, {registry: new gear.Registry({tasks: gear.lib}), logger: console}),
                         Registry = gear.Registry;
 
                     result.setHTML('');
