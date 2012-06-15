@@ -451,15 +451,8 @@ exports.example = function(string, blob, done) {
         <script type="text/javascript" src="https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js"></script>
 
         <script type="text/javascript">
-        require(['registry', 'queue', 'gear-lib'], function(registry, queue, lib) {
-            gear = {};
-            gear.Registry = registry.Registry;
-            gear.Queue = queue.Queue;
-            gear.lib = lib;
-        })
-        </script>
+        require(['gear', 'gear-lib'], function(registry, gear, lib) {}); // Preload Gear.js
 
-        <script type="text/javascript">
         YUI().use('event', function(Y) {
             ['foo', 'bar', 'baz'].forEach(function(name) {
                 localStorage[name + '.js'] = 'var ' + name +  ' = function ' + name + '() { console.log("' + name + '"); };';
@@ -496,7 +489,6 @@ exports.example = function(string, blob, done) {
                             log: function(msg) {
                                 if (_console) {_console.log(msg);}
                                 if (result) {
-                                    _console.log(msg);
                                     result.setHTML(result.getHTML() + '<span>&gt;</span> ' + msg + '<br />');
                                 }
                             },
@@ -507,8 +499,8 @@ exports.example = function(string, blob, done) {
                                 }
                             }
                         },
-                        Queue = gear.Queue.bind(this, {registry: new gear.Registry({tasks: gear.lib}), logger: console}),
-                        Registry = gear.Registry;
+                        Registry = require('gear').Registry,
+                        Queue = (require('gear').Queue).bind(this, {registry: new Registry({tasks: require('gear-lib')}), logger: console});
 
                     result.setHTML('');
 
