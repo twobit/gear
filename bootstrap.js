@@ -11,7 +11,7 @@ var path = require('path'),
     gear = require(path.join(process.cwd(), 'index')),
     handlebars = require('./node_modules/gear-lib/node_modules/handlebars');
 
-var tmpl = handlebars.compile(
+var wrap = handlebars.compile(
     "\n\ndefine('{{name}}', ['require', 'exports'{{#modules}}, '{{.}}'{{/modules}}], function(require, exports{{#input}}, {{.}}{{/input}}) {\n\n" +
     "{{{result}}}\n\n" +
     "});\n\n"
@@ -59,7 +59,7 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
             var vars = {result: blob.result, modules: []};
             Object.keys(obj).forEach(function(attr) {vars[attr] = obj[attr];});
             //Object.keys(vars.modules).forEach(function(attr) {vars.paths[attr] = obj[attr];});
-            return tmpl(vars);
+            return wrap(vars);
         }
         return blob.result;
     }})
