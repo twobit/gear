@@ -18,7 +18,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
         </header>
 
         <article>
-            <section name="intro">
+            <section id="intro">
                 <p>Gear.js is an easy to use, simple to extend, and powerful build system. <strong>Chain tasks</strong> together to build projects with ease.</p>
                 
 
@@ -46,7 +46,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
                 </ul>
             </section>
 
-            <section name="installation">
+            <section id="installation">
                 <h2>Installation</h2>
 
                 <h3>Node.js</h3>
@@ -68,7 +68,7 @@ $ npm install gear-lib
 </code></pre></div>
             </section>
 
-            <section name="examples">
+            <section id="examples">
                 <h2>Examples</h2>
 
                 <h3>Execute Tasks On Multiple Items</h3>
@@ -135,7 +135,7 @@ $ npm install gear-lib
 
                 <h3><a href="#custom">Custom Tasks</a></h3>
 
-                <div name="Queue">
+                <div id="Queue">
                     <h3>Queue()</h3>
                     <h3>Queue(options)</h3>
 
@@ -157,7 +157,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="Queue.task">
+                <div id="Queue.task">
                     <h3>Queue.task(name)</h3>
                     <h3>Queue.task(name, options)</h3>
 
@@ -178,7 +178,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="Queue.run">
+                <div id="Queue.run">
                     <h3>Queue.run()</h3>
                     <h3>Queue.run(callback)</h3>
 
@@ -198,7 +198,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="Registry">
+                <div id="Registry">
                     <h3>Registry()</h3>
                     <h3>Registry(options)</h3>
 
@@ -214,7 +214,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="Registry.load">
+                <div id="Registry.load">
                     <h3>Registry.load(options)</h3>
 
                     <p>Load tasks from NPM module, directory, or file.</p>
@@ -232,7 +232,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.read">
+                <div id="tasks.read">
                     <h3>read(name)</h3>
                     <h3>read(options)</h3>
 
@@ -256,7 +256,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.read">
+                <div id="tasks.write">
                     <h3>write(name)</h3>
                     <h3>write(options)</h3>
 
@@ -279,7 +279,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.concat">
+                <div id="tasks.concat">
                     <h3>concat()</h3>
                     <h3>concat(callback)</h3>
 
@@ -301,7 +301,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.inspect">
+                <div id="tasks.inspect">
                     <h3>inspect()</h3>
 
                     <p>Inspects blobs.</p>
@@ -316,7 +316,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.log">
+                <div id="tasks.log">
                     <h3>log(message)</h3>
 
                     <p>Log a message.</p>
@@ -335,7 +335,7 @@ $ npm install gear-lib
                     </div>
                 </div>
 
-                <div name="tasks.tasks">
+                <div id="tasks.tasks">
                     <h3>tasks(workflow)</h3>
 
                     <h4>Arguments</h4>
@@ -367,7 +367,7 @@ new Queue()
                     </div>
                 </div>
 
-                <div name="library">
+                <div id="library">
                     <h3>Library Tasks</h3>
 
                     <p><a href="http://github.com/yahoo/gear-lib">gear-lib</a> contains tasks such as:</p>
@@ -396,7 +396,7 @@ new Queue()
 </code></pre></div>
                 </div>
 
-                <div name="custom">
+                <div id="custom">
                     <h3>Custom Tasks</h3>
 
                     <p>Writing a task is especially easy compared to other Node.js build systems. Tasks operate on simple immutable blobs. The task returns a transformed blob via its callback.</p>
