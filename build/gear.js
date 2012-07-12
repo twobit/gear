@@ -2751,31 +2751,28 @@ define('./blob', ['require', 'exports'], function(require, exports) {
  * http://www.w3.org/TR/FileAPI/#dfn-Blob
  * https://developer.mozilla.org/en/DOM/Blob
  *
- * @param parts {String|Blob|Array} Create new Blob from String/Blob or Array of String/Blob.
+ * @param parts {Buffer|String|Blob|Array} Create new Blob from String/Blob or Array of String/Blob.
  */
 var Blob = exports.Blob = function Blob(parts, properties) {
-    if (parts === undefined) {
-        parts = [];
-    } else {
-        if (!Array.isArray(parts)) {
-            parts = [parts];
-        }
-    }
-
+    parts = typeof parts === 'undefined' ? [] : Array.prototype.concat(parts);
     properties = properties || {};
 
-    var result = '',
+    var result = parts.length ? parts.shift() : '',
         props = {},
         self = this;
 
-    parts.forEach(function(part) {
-        result += part;
-
+    function getProps(part) {
         if (part instanceof Blob) {
             Object.keys(part).forEach(function(attr) {
                 props[attr] = part[attr];
             });
         }
+    }
+
+    getProps(result);
+    parts.forEach(function(part) {
+        result += part;
+        getProps(part);
     });
 
     Object.keys(properties).forEach(function(attr) {
@@ -2798,7 +2795,7 @@ Blob.prototype.toString = function() {
 var readFile = {
     server: function(name, encoding, callback) {
         var fs = require('fs');
-        fs.readFile(name, encoding, function(err, data) {
+        fs.readFile(name, encoding === 'bin' ? undefined : encoding, function(err, data) {
             if (err) {
                 callback(err);
             } else {
@@ -2825,7 +2822,7 @@ var writeFile = {
             Crypto = require('crypto');
         
         function writeFile(filename, b) {
-            fs.writeFile(filename, b.result, function(err) {
+            fs.writeFile(filename, b.result, encoding === 'bin' ? undefined : encoding, function(err) {
                 callback(err, new Blob(b, {name: filename}));
             });
         }
@@ -3238,14 +3235,8 @@ function zip(arr1, arr2) {
     return zipped;
 }
 
-// Turn input into an array even if undefined
 function arrayize(arr) {
-    if (arr === undefined) {
-        arr = [];
-    } else if (!Array.isArray(arr)) {
-        arr = [arr];
-    }
-    return arr;
+    return typeof arr === 'undefined' ? [] : Array.prototype.concat(arr);
 }
 
 /*
