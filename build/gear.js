@@ -3173,13 +3173,13 @@ Registry.prototype = {
     },
 
     _loadDir: function(dirname) {
-        var fs = require('fs'),
-            files = fs.readdirSync(dirname),
-            self = this;
-
         if (!path.existsSync(dirname)) {
             throw new Error('Directory ' + dirname + ' doesn\'t exist');
         }
+        
+        var fs = require('fs'),
+            files = fs.readdirSync(dirname),
+            self = this;
 
         files.forEach(function(filename) {
             self._loadFile(path.join(dirname, filename));
@@ -3229,6 +3229,25 @@ var async = require('async'),
     Registry = require('./registry').Registry,
     Blob = require('./blob').Blob;
 
+// Zip two arrays together ala Python
+function zip(arr1, arr2) {
+    var zipped = [];
+    for (var i = 0; i < Math.min(arr1.length, arr2.length); i++) {
+        zipped.push([arr1[i], arr2[i]]);
+    }
+    return zipped;
+}
+
+// Turn input into an array even if undefined
+function arrayize(arr) {
+    if (arr === undefined) {
+        arr = [];
+    } else if (!Array.isArray(arr)) {
+        arr = [arr];
+    }
+    return arr;
+}
+
 /*
  * Queue
  */
@@ -3259,15 +3278,7 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
     // Task parameters determine how blobs are processed
     switch (task.length) {
         case 2: // Add blobs to queue
-            if (options === undefined) {
-                options = [];
-            } else {
-                if (!Array.isArray(options)) {
-                    options = [options];
-                }
-            }
-
-            async.map(options, task.bind(this), function(err, results) {
+            async.map(arrayize(options), task.bind(this), function(err, results) {
                 done(err, blobs.concat(results));
             });
             break;
@@ -3276,7 +3287,9 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
             if (task.type === 'collect') { // Task can look at all blobs at once
                 task.call(this, options, blobs, done);
             } else if (task.type === 'slice') { // Select up to options.length blobs
-                async.map(blobs.slice(0, Array.isArray(options) ? options.length : 1), task.bind(this, options), done);
+                async.map(zip(arrayize(options), blobs), (function(arr, cb) {
+                    task.call(this, arr[0], arr[1], cb);
+                }).bind(this), done);
             } else { // Transform blob on a per task basis
                 async.map(blobs, task.bind(this, options), done);
             }
