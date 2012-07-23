@@ -2785,16 +2785,35 @@ Blob.prototype.toString = function() {
 };
 
 var readFile = {
-    server: function(name, encoding, callback) {
+    server: function(name, encoding, callback, sync) {
         var fs = require('fs');
-        fs.readFile(name, encoding === 'bin' ? undefined : encoding, function(err, data) {
-            if (err) {
-                callback(err);
-            } else {
-                callback(null, new Blob(data, {name: name}));
-            }
-        });
+
+        if (sync) {
+            readFile.serverSync(name, encoding, callback);
+        } else {
+            fs.readFile(name, encoding === 'bin' ? undefined : encoding, function(err, data) {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, new Blob(data, {name: name}));
+                }
+            });
+        }
     },
+
+    // readFileSync added due to some strange async behavior with readFile
+    serverSync: function(name, encoding, callback) {
+        var fs = require('fs'),
+            data;
+
+        try {
+            data = fs.readFileSync(name, encoding === 'bin' ? undefined : encoding);
+            callback(null, new Blob(data, {name: name}));
+        } catch(e) {
+            callback(e);
+        }
+    },
+
     client: function(name, encoding, callback) {
         if (name in localStorage) {
             callback(null, new Blob(localStorage[name], {name: name}));
@@ -2958,7 +2977,7 @@ var Blob = require('../blob').Blob;
 exports.read = function(options, done) {
     options = (typeof options === 'string') ? {name: options} : options;
     var encoding = options.encoding || 'utf8';
-    Blob.readFile(options.name, encoding, done);
+    Blob.readFile(options.name, encoding, done, options.sync);
 };/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
