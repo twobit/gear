@@ -2034,7 +2034,11 @@ var requirejs, require, define;
 
     //Set up with config info.
     req(cfg);
-}(this));/*global setTimeout: false, console: false */
+}(this));
+
+define('async', ['require', 'exports', 'module'], function(require, exports, module) {
+
+/*global setTimeout: false, console: false */
 (function () {
 
     var async = {};
@@ -2726,6 +2730,14 @@ var requirejs, require, define;
     };
 
 }());
+
+
+});
+
+
+
+define('./blob', ['require', 'exports'], function(require, exports) {
+
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -2757,11 +2769,11 @@ var Blob = exports.Blob = function Blob(parts, properties) {
         }
     }
 
+    getProps(result);
     if (result instanceof Blob) {
         result = result.result;
     }
 
-    getProps(result);
     parts.forEach(function(part) {
         result += part instanceof Blob ? part.result : part;
         getProps(part);
@@ -2868,7 +2880,15 @@ var writeFile = {
     }
 };
 
-Blob.writeFile = Blob.prototype.writeFile = (typeof module === 'undefined') ? writeFile.client : writeFile.server;/*
+Blob.writeFile = Blob.prototype.writeFile = (typeof module === 'undefined') ? writeFile.client : writeFile.server;
+
+});
+
+
+
+define('./tasks/concat', ['require', 'exports'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -2885,7 +2905,15 @@ Blob.writeFile = Blob.prototype.writeFile = (typeof module === 'undefined') ? wr
 exports.concat = function(options, prev, blob, done) {
     options = options || {};
     done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
-};/*
+};
+
+});
+
+
+
+define('./tasks/core', ['require', 'exports', '../blob'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -2959,6 +2987,14 @@ inspect.type = 'collect';
 exports.noop = function(dummy, blob, done) {
     done(null, blob);
 };
+
+
+});
+
+
+
+define('./tasks/read', ['require', 'exports', '../blob'], function(require, exports) {
+
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -2978,7 +3014,15 @@ exports.read = function(options, done) {
     options = (typeof options === 'string') ? {name: options} : options;
     var encoding = options.encoding || 'utf8';
     Blob.readFile(options.name, encoding, done, options.sync);
-};/*
+};
+
+});
+
+
+
+define('./tasks/write', ['require', 'exports'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -2997,7 +3041,15 @@ var write = exports.write = function write(options, blob, done) {
     var encoding = options.encoding || 'utf8';
     blob.writeFile(options.name, blob, encoding, done);
 };
-write.type = 'slice';/*
+write.type = 'slice';
+
+});
+
+
+
+define('./tasks/tasks', ['require', 'exports', 'async'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -3068,7 +3120,15 @@ var tasks = exports.tasks = function tasks(workflow, blobs, done) {
         done(err, results.join ? results.join : []);
     });
 };
-tasks.type = 'collect';/*
+tasks.type = 'collect';
+
+});
+
+
+
+define('./registry', ['require', 'exports', './tasks/concat', './default_tasks'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -3172,7 +3232,15 @@ Registry.prototype = {
         }
         return this._tasks[name];
     }
-};/*
+};
+
+});
+
+
+
+define('./queue', ['require', 'exports', 'async', './registry', './blob'], function(require, exports) {
+
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -3256,7 +3324,11 @@ Queue.prototype.task = function(name, options) {
 
 Queue.prototype.run = function(callback) {
     async.waterfall(this._queue, callback);
-};define('../blob', ['require', 'exports', 'blob'], function(require, exports, blob) {
+};
+
+});
+
+define('../blob', ['require', 'exports', 'blob'], function(require, exports, blob) {
 exports.Blob = blob.Blob;
 });
 
