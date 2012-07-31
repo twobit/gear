@@ -60,5 +60,5 @@ new Queue()
  }).run();
 ```
 
- * [Documentation](http://yahoo.github.com/gear)
+ * [Documentation](http://gearjs.org)
  * [Issues](http://github.com/yahoo/gear/issues)
