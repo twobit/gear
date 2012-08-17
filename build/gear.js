@@ -2841,6 +2841,7 @@ var writeFile = {
     server: function(name, blob, encoding, callback) {
         var fs = require('fs'),
             path = require('path'),
+            nodeExists = fs.exists || path.exists,
             mkdirp = require('mkdirp').mkdirp,
             Crypto = require('crypto');
         
@@ -2859,7 +2860,7 @@ var writeFile = {
             name = name.replace('{checksum}', checksum.digest('hex'));
         }
 
-        path.exists(dirname, function(exists) {
+        nodeExists(dirname, function(exists) {
             if (!exists) {
                 mkdirp(dirname, '0755', function(err) {
                     if (err) {
@@ -2881,6 +2882,7 @@ var writeFile = {
 };
 
 Blob.writeFile = Blob.prototype.writeFile = (typeof module === 'undefined') ? writeFile.client : writeFile.server;
+
 
 });
 
@@ -3134,7 +3136,9 @@ define('./registry', ['require', 'exports', './tasks/concat', './default_tasks']
  * See the accompanying LICENSE file for terms.
  */
 if (typeof module !== 'undefined') {
-    var path = require('path');
+    var fs = require('fs'),
+        path = require('path'),
+        existsSync = fs.existsSync || path.existsSync;
 }
 else {
     var default_tasks = require('./default_tasks');
@@ -3193,7 +3197,7 @@ Registry.prototype = {
     },
 
     _loadDir: function(dirname) {
-        if (!path.existsSync(dirname)) {
+        if (!existsSync(dirname)) {
             throw new Error('Directory ' + dirname + ' doesn\'t exist');
         }
         
@@ -3211,7 +3215,7 @@ Registry.prototype = {
             return;
         }
 
-        if (!path.existsSync(filename)) {
+        if (!existsSync(filename)) {
             throw new Error('File ' + filename + ' doesn\'t exist');
         }
 
@@ -3233,6 +3237,7 @@ Registry.prototype = {
         return this._tasks[name];
     }
 };
+
 
 });
 

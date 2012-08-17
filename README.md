@@ -1,16 +1,17 @@
 # Gear.js
 
-## Task-Based Build System
+## Build System for Node.js and the Browser
 
-Gear.js is a scriptable build system using simple tasks that act like a sequence of piped commands.
+Gear.js is an easy to use, simple to extend, and powerful build system. Chain tasks together to build projects with ease.
 
-Features include:
- * Runs in Node and the browser.
+Features:
+
  * Basic building blocks that can be combined to perform complex builds.
  * Tasks are simply defined and keep system internals to a minimum.
  * Asynchronous execution.
  * Extensible task loading via NPM, file, or directory.
  * Advanced flow control for complex task execution.
+ * Runs in Node.js and the browser.
 
 ## Installation
 
