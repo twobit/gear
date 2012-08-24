@@ -2757,15 +2757,15 @@ define('./blob', ['require', 'exports'], function(require, exports) {
  * @param parts {Buffer|String|Blob|Array} Create new Blob from Buffer/String/Blob or Array of Buffer/String/Blob.
  */
 
-function mergeProps(object, props) {
-    Object.keys(props).forEach(function(prop) {
-        object[prop] = props[prop];
-    });
-}
-
 var Blob = exports.Blob = function Blob(parts, properties) {
     parts = typeof parts === 'undefined' ? [] : Array.prototype.concat(parts);
     properties = properties || {};
+
+    function mergeProps(object, props) {
+        Object.keys(props).forEach(function(prop) {
+            object[prop] = props[prop];
+        });
+    }
 
     var result = parts.length ? parts.shift() : '',
         props = {},
