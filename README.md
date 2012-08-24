@@ -13,6 +13,8 @@ Features:
  * Advanced flow control for complex task execution.
  * Runs in Node.js and the browser.
 
+[![Build Status](https://secure.travis-ci.org/twobit/gear.png)](http://travis-ci.org/twobit/gear)
+
 ## Installation
 
 To get the most out of Gear.js, you will want to install [gear-lib](/yahoo/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
