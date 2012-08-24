@@ -4,7 +4,6 @@ bootstrap:
 	node bootstrap.js
 
 test:
-	./node_modules/.bin/mocha \
-		--require should
+	npm test
 
 .PHONY: test

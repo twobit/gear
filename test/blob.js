@@ -27,5 +27,17 @@ describe('Blob', function() {
                 });
             });
         });
+
+        it('should merge properties', function() {
+            var res = new Blob([
+                new Blob('abc', {name: 'foo', b1: true, arr: [1], result: 'xyz'}),
+                new Blob('def', {name: 'bar', b2: false, arr: [2]})
+            ]);
+
+            res.result.should.equal('abcdef');
+            res.name.should.equal('bar');
+            res.b1.should.equal(true);
+            res.b2.should.equal(false);
+        });
     });
 });

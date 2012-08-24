@@ -2745,14 +2745,24 @@ define('./blob', ['require', 'exports'], function(require, exports) {
  */
 
 /*
- * Blob
+ * Blob - Immutable data object. Contains a property bag as well as a private result property.
+ * Any properties in the property bag are merged, while result is concatenated. Result can be
+ * Buffer or String. Immutability is necessary due to Blobs being able to be parallel
+ * processed.
  *
  * Loosely based on W3C Blob:
  * http://www.w3.org/TR/FileAPI/#dfn-Blob
  * https://developer.mozilla.org/en/DOM/Blob
  *
- * @param parts {Buffer|String|Blob|Array} Create new Blob from String/Blob or Array of String/Blob.
+ * @param parts {Buffer|String|Blob|Array} Create new Blob from Buffer/String/Blob or Array of Buffer/String/Blob.
  */
+
+function mergeProps(object, props) {
+    Object.keys(props).forEach(function(prop) {
+        object[prop] = props[prop];
+    });
+}
+
 var Blob = exports.Blob = function Blob(parts, properties) {
     parts = typeof parts === 'undefined' ? [] : Array.prototype.concat(parts);
     properties = properties || {};
@@ -2761,35 +2771,30 @@ var Blob = exports.Blob = function Blob(parts, properties) {
         props = {},
         self = this;
 
-    function getProps(part) {
-        if (part instanceof Blob) {
-            Object.keys(part).forEach(function(attr) {
-                props[attr] = part[attr];
-            });
-        }
-    }
-
-    getProps(result);
     if (result instanceof Blob) {
+        mergeProps(props, result);
         result = result.result;
     }
 
     parts.forEach(function(part) {
-        result += part instanceof Blob ? part.result : part;
-        getProps(part);
-    });
-
-    Object.keys(properties).forEach(function(attr) {
-        props[attr] = properties[attr];
-    });
-
-    Object.keys(props).forEach(function(attr) {
-        if (attr !== 'result') {
-            Object.defineProperty(self, attr, {enumerable: true, value: props[attr]});
+        if (part instanceof Blob) {
+            mergeProps(props, part);
+            result += part.result;
+        } else {
+            result += part;
         }
     });
 
+    mergeProps(props, properties);
+
+    // Define immutable properties
+    Object.keys(props).forEach(function(prop) {
+        if (prop !== 'result') {
+            Object.defineProperty(self, prop, {enumerable: true, value: props[prop]});
+        }
+    });
     Object.defineProperty(this, 'result', {value: result});
+    Object.seal(this);
 };
 
 Blob.prototype.toString = function() {
@@ -2875,6 +2880,7 @@ var writeFile = {
             }
         });
     },
+
     client: function(name, blob, encoding, callback) {
         localStorage[name] = blob.result;
         callback(null, new blob.constructor(blob, {name: name}));
@@ -3301,27 +3307,27 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
         type = task.type ? task.type : types[task.length];
 
     switch (type) {
-        case 'append': // Add blobs to queue
+        case 'append': // Concats new blobs to existing queue
             async.map(arrayize(options), task.bind(this), function(err, results) {
                 done(err, blobs.concat(results));
             });
             break;
 
-        case 'collect': // Task can look at all blobs at once
+        case 'collect': // Task can inspect entire queue
             task.call(this, options, blobs, done);
             break;
 
-        case 'slice': // Select up to options.length blobs
+        case 'slice': // Slice options.length blobs from queue
             async.map(zip(arrayize(options), blobs), (function(arr, cb) {
                 task.call(this, arr[0], arr[1], cb);
             }).bind(this), done);
             break;
 
-        case 'map': // Transform blob on a per task basis
+        case 'map': // Task transforms one blob at a time
             async.map(blobs, task.bind(this, options), done);
             break;
 
-        case 'reduce': // Reduce blobs operating on a per task basis
+        case 'reduce': // Merges blobs from left to right
             async.reduce(blobs, new Blob(), task.bind(this, options), function(err, results) {
                 done(err, [results]);
             });

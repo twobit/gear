@@ -8,6 +8,9 @@
   "repository": {"type": "git", "url": "http://github.com/yahoo/gear.git"},
   "bugs": {"url": "http://github.com/yahoo/gear/issues"},
   "main": "index",
+  "scripts": {
+      "test": "mocha --require should"
+  },
   "dependencies": {
       "async": "0.1.x",
       "mkdirp": "0.3.x"
