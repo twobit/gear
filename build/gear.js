@@ -2794,7 +2794,9 @@ var Blob = exports.Blob = function Blob(parts, properties) {
         }
     });
     Object.defineProperty(this, 'result', {value: result});
-    Object.seal(this);
+    // v8 performance of seal is not good :(
+    // http://jsperf.com/freeze-vs-seal-vs-normal/3
+    // Object.seal(this);
 };
 
 Blob.prototype.toString = function() {
