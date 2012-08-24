@@ -1,7 +1,7 @@
 {
   "name": "gear",
-  "version": "0.7.12",
-  "description": "Gear.js - Task-based build system.",
+  "version": "0.7.13",
+  "description": "Gear.js - Build System for Node.js and the Browser",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
   "homepage": "http://yahoo.github.com/gear/",

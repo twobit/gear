@@ -3254,7 +3254,7 @@ var async = require('async'),
     Registry = require('./registry').Registry,
     Blob = require('./blob').Blob;
 
-// Zip two arrays together ala Python
+// Zip two arrays together a la Python
 function zip(arr1, arr2) {
     var zipped = [];
     for (var i = 0; i < Math.min(arr1.length, arr2.length); i++) {
@@ -3292,33 +3292,43 @@ Queue.prototype._log = function(message) {
 };
 
 Queue.prototype._dispatch = function(name, options, blobs, done) {
-    var task = this._registry.task(name);
+    var task = this._registry.task(name),
+        types = { // Allow task type to be inferred based on task params
+            2: 'append',
+            3: 'map',
+            4: 'reduce'
+        },
+        type = task.type ? task.type : types[task.length];
 
-    // Task parameters determine how blobs are processed
-    switch (task.length) {
-        case 2: // Add blobs to queue
+    switch (type) {
+        case 'append': // Add blobs to queue
             async.map(arrayize(options), task.bind(this), function(err, results) {
                 done(err, blobs.concat(results));
             });
             break;
 
-        case 3:
-            if (task.type === 'collect') { // Task can look at all blobs at once
-                task.call(this, options, blobs, done);
-            } else if (task.type === 'slice') { // Select up to options.length blobs
-                async.map(zip(arrayize(options), blobs), (function(arr, cb) {
-                    task.call(this, arr[0], arr[1], cb);
-                }).bind(this), done);
-            } else { // Transform blob on a per task basis
-                async.map(blobs, task.bind(this, options), done);
-            }
+        case 'collect': // Task can look at all blobs at once
+            task.call(this, options, blobs, done);
             break;
 
-        case 4: // Reduce blobs operating on a per task basis
+        case 'slice': // Select up to options.length blobs
+            async.map(zip(arrayize(options), blobs), (function(arr, cb) {
+                task.call(this, arr[0], arr[1], cb);
+            }).bind(this), done);
+            break;
+
+        case 'map': // Transform blob on a per task basis
+            async.map(blobs, task.bind(this, options), done);
+            break;
+
+        case 'reduce': // Reduce blobs operating on a per task basis
             async.reduce(blobs, new Blob(), task.bind(this, options), function(err, results) {
                 done(err, [results]);
             });
             break;
+
+        default:
+            throw new Error('Task "' + name + '" has unknown type. Add a type property to the task function.');
     }
 };
 
