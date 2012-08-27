@@ -3148,7 +3148,7 @@ if (typeof module !== 'undefined') {
         path = require('path'),
         existsSync = fs.existsSync || path.existsSync;
 }
-else {
+else { // Client side default tasks
     var default_tasks = require('./default_tasks');
 }
 
@@ -3178,7 +3178,7 @@ var Registry = exports.Registry = function Registry(options) {
 
 Registry.prototype = {
     /*
-     * Load tasks from NPM, directory, or file.
+     * Load tasks from NPM, directory, file, or object.
      */
     load: function(options) {
         options = options || {};
@@ -3276,23 +3276,27 @@ function arrayize(arr) {
 }
 
 /*
- * Queue
+ * Queue - Perform async operations on array of immutable Blobs.
  */
 var Queue = exports.Queue = function Queue(options) {
     var self = this;
     options = options || {};
     this._logger = options.logger || console;
     this._registry = options.registry || new Registry();
-    this._queue = [
-        function(callback) {
-            callback(null, []);
-        }
-    ];
+    this._clear();
 
     // Add registry tasks
     this._registry.tasks.forEach(function(name) {
         self[name] = self.task.bind(self, name);
     });
+};
+
+Queue.prototype._clear = function() {
+    this._queue = [
+        function(callback) {
+            callback(null, []);
+        }
+    ];
 };
 
 Queue.prototype._log = function(message) {
