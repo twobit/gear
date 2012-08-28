@@ -4,7 +4,8 @@ var should = require('should'),
     fixtures = {
         file: {name: 'test/fixtures/test1.js'},
         files: [{name: 'test/fixtures/test1.js'}, {name: 'test/fixtures/test2.js'}],
-        missing_file: {name: 'test/fixtures/missing_file.js'}
+        missing_file: {name: 'test/fixtures/missing_file.js'},
+        sentinel: 'ABOOORT'
     };
 
 describe('Queue', function() {
@@ -43,6 +44,19 @@ describe('Queue', function() {
                 .concat()
                 .run(function(err, results) {
                     should.exist(err);
+                    done();
+                });
+        });
+
+        it('should be able to abort', function(done) {
+            new gear.Queue()
+                .read(fixtures.files)
+                .test({callback: function(blob) {
+                    return fixtures.sentinel;
+                }})
+                .concat()
+                .run(function(err, results) {
+                    err.should.equal(fixtures.sentinel);
                     done();
                 });
         });

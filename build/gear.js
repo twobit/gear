@@ -2943,6 +2943,20 @@ exports.load = function(string, done) {
 };
 
 /**
+ * Test Blobs, abort if callback returns non-null.
+ *
+ * @param options {Object} Options for task.
+ * @param options.callback {Function} Callback for testing blob
+ * @param blob {Object} Current blob.
+ * @param done {Function} Callback on task completion.
+ */
+var test = exports.test = function(options, blob, done) {
+    options = options || {};
+    done(options.callback ? options.callback(blob) : null);
+};
+test.type = 'each';
+
+/**
  * Gets a blob.
  *
  * @param index {Integer} Index of blobs.
@@ -3327,6 +3341,12 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
             async.map(zip(arrayize(options), blobs), (function(arr, cb) {
                 task.call(this, arr[0], arr[1], cb);
             }).bind(this), done);
+            break;
+
+        case 'each': // Allow task to abort immediately
+            async.forEach(blobs, task.bind(this, options), function(err) {
+                done(err, blobs);
+            });
             break;
 
         case 'map': // Task transforms one blob at a time
