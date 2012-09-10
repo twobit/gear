@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.7.16",
+  "version": "0.8.1",
   "description": "Gear.js - Build System for Node.js and the Browser",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],

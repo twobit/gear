@@ -56,7 +56,7 @@ describe('Queue', function() {
                 }})
                 .concat()
                 .run(function(err, results) {
-                    err.should.equal(fixtures.sentinel);
+                    err.error.should.equal(fixtures.sentinel);
                     done();
                 });
         });
