@@ -3326,7 +3326,7 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
         },
         type = task.type ? task.type : types[task.length];
 
-    // Wrap error with task name
+    // Wrap error with task name and possibly other diagnostics
     function doneWrap(err, res) {
         if (err) {
             err = {task: name, error: err};
