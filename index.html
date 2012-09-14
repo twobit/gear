@@ -53,7 +53,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
                 <p>To get the most out of Gear.js, install <a href="http://github.com/yahoo/gear-lib">gear-lib</a> which contains tasks for linting, minifying, and deploying JS/CSS assets.</p>
 <div class="highlight"><pre><code class="bash">$ npm install gear gear-lib</code></pre></div>
 
-                <p>Usage (localStorage is used as a simple filesystem for read/write tasks)</p>
+                <p>Usage</p>
 
                 <div class="highlight">
                     <pre><code class="javascript">var gear = require('gear');
@@ -72,7 +72,7 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})}).log('test!')
 &lt;script type=&quot;text/javascript&quot; src=&quot;https://github.com/yahoo/gear-lib/raw/master/build/gear-lib.js&quot;&gt;&lt;/script&gt;
 </code></pre></div>
 
-                <p>Usage</p>
+                <p>Usage (localStorage is used as a simple filesystem for read/write tasks)</p>
 
                 <div class="highlight">
                     <pre><code class="javascript">require(['gear', 'gear-lib'], function(gear, lib) {
