@@ -2131,7 +2131,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                 else {
                     completed += 1;
                     if (completed === arr.length) {
-                        callback();
+                        callback(null);
                     }
                 }
             });
@@ -2153,7 +2153,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                 else {
                     completed += 1;
                     if (completed === arr.length) {
-                        callback();
+                        callback(null);
                     }
                     else {
                         iterate();
@@ -2163,41 +2163,41 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         };
         iterate();
     };
-    
+
     async.forEachLimit = function (arr, limit, iterator, callback) {
         callback = callback || function () {};
         if (!arr.length || limit <= 0) {
-            return callback(); 
+            return callback();
         }
         var completed = 0;
         var started = 0;
         var running = 0;
-        
+
         (function replenish () {
-          if (completed === arr.length) {
-              return callback();
-          }
-          
-          while (running < limit && started < arr.length) {
-            iterator(arr[started], function (err) {
-              if (err) {
-                  callback(err);
-                  callback = function () {};
-              }
-              else {
-                  completed += 1;
-                  running -= 1;
-                  if (completed === arr.length) {
-                      callback();
-                  }
-                  else {
-                      replenish();
-                  }
-              }
-            });
-            started += 1;
-            running += 1;
-          }
+            if (completed === arr.length) {
+                return callback();
+            }
+
+            while (running < limit && started < arr.length) {
+                started += 1;
+                running += 1;
+                iterator(arr[started - 1], function (err) {
+                    if (err) {
+                        callback(err);
+                        callback = function () {};
+                    }
+                    else {
+                        completed += 1;
+                        running -= 1;
+                        if (completed === arr.length) {
+                            callback();
+                        }
+                        else {
+                            replenish();
+                        }
+                    }
+                });
+            }
         })();
     };
 
@@ -2440,7 +2440,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             var ready = function () {
                 return _reduce(requires, function (a, x) {
                     return (a && results.hasOwnProperty(x));
-                }, true);
+                }, true) && !results.hasOwnProperty(k);
             };
             if (ready()) {
                 task[task.length - 1](taskCallback, results);
@@ -2726,7 +2726,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
     async.unmemoize = function (fn) {
       return function () {
         return (fn.unmemoized || fn).apply(null, arguments);
-      }
+      };
     };
 
 }());
