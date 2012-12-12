@@ -22,7 +22,7 @@ describe('Registry', function() {
         }*/);
         
         
-        it.skip('should load files'/*, function() {
+        it('should load files'/*, function() {
             var registry = new Registry();
             
             registry.load({ filename : "./test/fixtures/test-tasks/index.js" });
