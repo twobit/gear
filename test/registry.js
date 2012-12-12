@@ -13,20 +13,21 @@ describe('Registry', function() {
             registry.tasks.should.include('glob');
         });
         
-        it.skip('should load directories', function() {
+        it('should load directories'/*, function() {
             var registry = new Registry();
             
             registry.load({ dirname : "./test/fixtures/test-tasks" });
             
             registry.tasks.should.include('fooga');
-        });
+        }*/);
         
-        it.skip('should load files', function() {
+        
+        it.skip('should load files'/*, function() {
             var registry = new Registry();
             
             registry.load({ filename : "./test/fixtures/test-tasks/index.js" });
             
             registry.tasks.should.include('fooga');
-        });
+        }*/);
     });
 });
