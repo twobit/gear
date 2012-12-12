@@ -3212,6 +3212,8 @@ Registry.prototype = {
         if (options.tasks) {
             this._loadTasks(options.tasks);
         }
+        
+        return this;
     },
 
     _loadModule: function(name) {
@@ -3359,6 +3361,10 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
 
         case 'map': // Task transforms one blob at a time
             async.map(blobs, task.bind(this, options), doneWrap);
+            break;
+    
+        case 'syncmap': // Task transforms one blob at a time until done is called.
+            async.mapSeries(blobs, task.bind(this, options), doneWrap);
             break;
 
         case 'reduce': // Merges blobs from left to right
