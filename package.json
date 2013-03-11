@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Gear.js - Build System for Node.js and the Browser",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
@@ -12,12 +12,14 @@
       "test": "mocha --require should"
   },
   "dependencies": {
-      "async": "0.1.x",
+      "async": "0.2.x",
       "mkdirp": "0.3.x"
   },
   "devDependencies": {
-      "should": "1.2.x",
-      "mocha": "1.7.x",
+      "should": "*",
+      "mocha": "*",
+      "mocha-istanbul": "*",
+      "istanbul": "*",
       "gear-lib": ">= 0.8.x"
   }
 }

@@ -1,5 +1,6 @@
-var should = require('should'),
-    read = require('../lib/tasks/read').read,
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+    should = require('should'),
+    read = require(lib + 'tasks/read').read,
     fixtures = {
         filename: 'test/fixtures/test1.js',
         file: {name: 'test/fixtures/test1.js'},

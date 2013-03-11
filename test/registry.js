@@ -1,4 +1,5 @@
-var Registry = require('../lib/registry').Registry,
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+    Registry = require(lib + 'registry').Registry,
     path = require('path'),
     fixtures = {
         dirname: path.join(process.cwd(), "test/fixtures/test-tasks"),

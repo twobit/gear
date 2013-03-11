@@ -1,7 +1,8 @@
-var should = require('should'),
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+    should = require('should'),
     path = require('path'),
-    gear = require(path.join(process.cwd(), './index')),
-    tasks = require('../lib/tasks/tasks').tasks,
+    gear = require('..'),
+    tasks = require(lib + 'tasks/tasks').tasks,
     fixtures = {
         files: [{name: 'test/fixtures/test1.js'}],
         missing_files: [{name: 'test/fixtures/missing_file.js'}],
@@ -44,5 +45,5 @@ describe('tasks()', function() {
         });
     });
 
-    it('should accept existing data');
+    // it('should accept existing data');
 });

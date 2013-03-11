@@ -1,6 +1,7 @@
-var should = require('should'),
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+    should = require('should'),
     path = require('path'),
-    gear = require(path.join(process.cwd(), './index')),
+    gear = require('..'),
     fixtures = {
         file: {name: 'test/fixtures/test1.js'},
         files: [{name: 'test/fixtures/test1.js'}, {name: 'test/fixtures/test2.js'}],
@@ -71,5 +72,5 @@ describe('Queue', function() {
         });
     });
 
-    it('should execute task callback');
+    // it('should execute task callback');
 });

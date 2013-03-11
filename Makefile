@@ -1,4 +1,6 @@
-all: bootstrap test
+BIN = ./node_modules/.bin
+
+all: bootstrap test coverage
 
 bootstrap:
 	node bootstrap.js
@@ -6,10 +8,16 @@ bootstrap:
 test:
 	npm test
 
-test-cov: lib-cov
-	@GEAR_COV=1 mocha --require should --reporter html-cov > coverage.html
+coverage: lib-cov
+	@COVER=1 $(BIN)/mocha --require should --reporter mocha-istanbul
 
 lib-cov:
-	@jscoverage lib lib-cov
+	@$(BIN)/istanbul instrument --output lib-cov --no-compact --variable global.__coverage__ lib
+
+clean: clean-coverage
+
+clean-coverage:
+	-rm -rf lib-cov
+	-rm -rf html-report
 
 .PHONY: test

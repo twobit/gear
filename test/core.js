@@ -1,6 +1,7 @@
-var should = require('should'),
-    Blob = require('../lib/blob').Blob,
-    test = require('../lib/tasks/core').test,
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+    should = require('should'),
+    Blob = require(lib + 'blob').Blob,
+    test = require(lib + 'tasks/core').test,
     fixtures = {
         blob: new Blob('HELLO'),
         result: 'HELLO'

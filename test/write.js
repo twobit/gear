@@ -1,7 +1,7 @@
-var path = require('path'),
+var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
     fs = require('fs'),
-    Blob = require('../lib/blob').Blob,
-    write = require('../lib/tasks/write').write,
+    Blob = require(lib + 'blob').Blob,
+    write = require(lib + 'tasks/write').write,
     fixtures = {
         filename: 'testing/write.txt',
         filename2: 'testing/write2.txt',
@@ -11,7 +11,7 @@ var path = require('path'),
     };
 
 function remove(filename) {
-    if (path.existsSync(filename)) {
+    if (fs.existsSync(filename)) {
         fs.unlinkSync(filename);
     }
 }
@@ -20,7 +20,7 @@ describe('write()', function() {
     it('should write file', function(done) {
         remove(fixtures.filename);
         write(fixtures.filename, fixtures.blob, function(err, blob) {
-            path.existsSync(fixtures.filename).should.equal(true);
+            fs.existsSync(fixtures.filename).should.equal(true);
             done(err);
         });
     });
@@ -28,7 +28,7 @@ describe('write()', function() {
     it('should write file with options', function(done) {
         remove(fixtures.filename);
         write({name: fixtures.filename2}, fixtures.blob, function(err, blob) {
-            path.existsSync(fixtures.filename2).should.equal(true);
+            fs.existsSync(fixtures.filename2).should.equal(true);
             done(err);
         });
     });
@@ -36,7 +36,7 @@ describe('write()', function() {
     it('should replace {checksum} in filename', function(done) {
         remove(fixtures.checksum_replaced);
         write({name: fixtures.checksum}, fixtures.blob, function(err, blob) {
-            path.existsSync(fixtures.checksum_replaced).should.equal(true);
+            fs.existsSync(fixtures.checksum_replaced).should.equal(true);
             done(err);
         });
     });

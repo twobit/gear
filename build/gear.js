@@ -2038,20 +2038,17 @@ var requirejs, require, define;
 
 define('async', ['require', 'exports', 'module'], function(require, exports, module) {
 
-/*global setTimeout: false, console: false */
+/*global setImmediate: false, setTimeout: false, console: false */
 (function () {
 
     var async = {};
 
     // global on the server, window in the browser
-    var root = this,
-        previous_async = root.async;
+    var root, previous_async;
 
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = async;
-    }
-    else {
-        root.async = async;
+    root = this;
+    if (root != null) {
+      previous_async = root.async;
     }
 
     async.noConflict = function () {
@@ -2059,9 +2056,18 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         return async;
     };
 
+    function only_once(fn) {
+        var called = false;
+        return function() {
+            if (called) throw new Error("Callback was already called.");
+            called = true;
+            fn.apply(root, arguments);
+        }
+    }
+
     //// cross-browser compatiblity functions ////
 
-    var _forEach = function (arr, iterator) {
+    var _each = function (arr, iterator) {
         if (arr.forEach) {
             return arr.forEach(iterator);
         }
@@ -2075,7 +2081,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             return arr.map(iterator);
         }
         var results = [];
-        _forEach(arr, function (x, i, a) {
+        _each(arr, function (x, i, a) {
             results.push(iterator(x, i, a));
         });
         return results;
@@ -2085,7 +2091,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         if (arr.reduce) {
             return arr.reduce(iterator, memo);
         }
-        _forEach(arr, function (x, i, a) {
+        _each(arr, function (x, i, a) {
             memo = iterator(memo, x, i, a);
         });
         return memo;
@@ -2108,43 +2114,52 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
 
     //// nextTick implementation with browser-compatible fallback ////
     if (typeof process === 'undefined' || !(process.nextTick)) {
-        async.nextTick = function (fn) {
-            setTimeout(fn, 0);
-        };
+        if (typeof setImmediate === 'function') {
+            async.nextTick = function (fn) {
+                setImmediate(fn);
+            };
+        }
+        else {
+            async.nextTick = function (fn) {
+                setTimeout(fn, 0);
+            };
+        }
     }
     else {
         async.nextTick = process.nextTick;
     }
 
-    async.forEach = function (arr, iterator, callback) {
+    async.each = function (arr, iterator, callback) {
         callback = callback || function () {};
         if (!arr.length) {
             return callback();
         }
         var completed = 0;
-        _forEach(arr, function (x) {
-            iterator(x, function (err) {
+        _each(arr, function (x) {
+            iterator(x, only_once(function (err) {
                 if (err) {
                     callback(err);
                     callback = function () {};
                 }
                 else {
                     completed += 1;
-                    if (completed === arr.length) {
+                    if (completed >= arr.length) {
                         callback(null);
                     }
                 }
-            });
+            }));
         });
     };
+    async.forEach = async.each;
 
-    async.forEachSeries = function (arr, iterator, callback) {
+    async.eachSeries = function (arr, iterator, callback) {
         callback = callback || function () {};
         if (!arr.length) {
             return callback();
         }
         var completed = 0;
         var iterate = function () {
+            var sync = true;
             iterator(arr[completed], function (err) {
                 if (err) {
                     callback(err);
@@ -2152,66 +2167,88 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                 }
                 else {
                     completed += 1;
-                    if (completed === arr.length) {
+                    if (completed >= arr.length) {
                         callback(null);
                     }
                     else {
-                        iterate();
+                        if (sync) {
+                            async.nextTick(iterate);
+                        }
+                        else {
+                            iterate();
+                        }
                     }
                 }
             });
+            sync = false;
         };
         iterate();
     };
+    async.forEachSeries = async.eachSeries;
 
-    async.forEachLimit = function (arr, limit, iterator, callback) {
-        callback = callback || function () {};
-        if (!arr.length || limit <= 0) {
-            return callback();
-        }
-        var completed = 0;
-        var started = 0;
-        var running = 0;
+    async.eachLimit = function (arr, limit, iterator, callback) {
+        var fn = _eachLimit(limit);
+        fn.apply(null, [arr, iterator, callback]);
+    };
+    async.forEachLimit = async.eachLimit;
 
-        (function replenish () {
-            if (completed === arr.length) {
+    var _eachLimit = function (limit) {
+
+        return function (arr, iterator, callback) {
+            callback = callback || function () {};
+            if (!arr.length || limit <= 0) {
                 return callback();
             }
+            var completed = 0;
+            var started = 0;
+            var running = 0;
 
-            while (running < limit && started < arr.length) {
-                started += 1;
-                running += 1;
-                iterator(arr[started - 1], function (err) {
-                    if (err) {
-                        callback(err);
-                        callback = function () {};
-                    }
-                    else {
-                        completed += 1;
-                        running -= 1;
-                        if (completed === arr.length) {
-                            callback();
+            (function replenish () {
+                if (completed >= arr.length) {
+                    return callback();
+                }
+
+                while (running < limit && started < arr.length) {
+                    started += 1;
+                    running += 1;
+                    iterator(arr[started - 1], function (err) {
+                        if (err) {
+                            callback(err);
+                            callback = function () {};
                         }
                         else {
-                            replenish();
+                            completed += 1;
+                            running -= 1;
+                            if (completed >= arr.length) {
+                                callback();
+                            }
+                            else {
+                                replenish();
+                            }
                         }
-                    }
-                });
-            }
-        })();
+                    });
+                }
+            })();
+        };
     };
 
 
     var doParallel = function (fn) {
         return function () {
             var args = Array.prototype.slice.call(arguments);
-            return fn.apply(null, [async.forEach].concat(args));
+            return fn.apply(null, [async.each].concat(args));
+        };
+    };
+    var doParallelLimit = function(limit, fn) {
+        return function () {
+            var args = Array.prototype.slice.call(arguments);
+            return fn.apply(null, [_eachLimit(limit)].concat(args));
         };
     };
     var doSeries = function (fn) {
         return function () {
             var args = Array.prototype.slice.call(arguments);
-            return fn.apply(null, [async.forEachSeries].concat(args));
+            return fn.apply(null, [async.eachSeries].concat(args));
         };
     };
 
@@ -2232,12 +2269,18 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
     };
     async.map = doParallel(_asyncMap);
     async.mapSeries = doSeries(_asyncMap);
+    async.mapLimit = function (arr, limit, iterator, callback) {
+        return _mapLimit(limit)(arr, iterator, callback);
+    };
 
+    var _mapLimit = function(limit) {
+        return doParallelLimit(limit, _asyncMap);
+    };
 
     // reduce only has a series version, as doing reduce in parallel won't
     // work in many situations.
     async.reduce = function (arr, memo, iterator, callback) {
-        async.forEachSeries(arr, function (x, callback) {
+        async.eachSeries(arr, function (x, callback) {
             iterator(memo, x, function (err, v) {
                 memo = v;
                 callback(err);
@@ -2328,7 +2371,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
     async.detectSeries = doSeries(_detect);
 
     async.some = function (arr, iterator, main_callback) {
-        async.forEach(arr, function (x, callback) {
+        async.each(arr, function (x, callback) {
             iterator(x, function (v) {
                 if (v) {
                     main_callback(true);
@@ -2344,7 +2387,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
     async.any = async.some;
 
     async.every = function (arr, iterator, main_callback) {
-        async.forEach(arr, function (x, callback) {
+        async.each(arr, function (x, callback) {
             iterator(x, function (v) {
                 if (!v) {
                     main_callback(false);
@@ -2407,7 +2450,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             }
         };
         var taskComplete = function () {
-            _forEach(listeners.slice(0), function (fn) {
+            _each(listeners.slice(0), function (fn) {
                 fn();
             });
         };
@@ -2419,21 +2462,26 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             }
         });
 
-        _forEach(keys, function (k) {
+        _each(keys, function (k) {
             var task = (tasks[k] instanceof Function) ? [tasks[k]]: tasks[k];
             var taskCallback = function (err) {
+                var args = Array.prototype.slice.call(arguments, 1);
+                if (args.length <= 1) {
+                    args = args[0];
+                }
                 if (err) {
-                    callback(err);
+                    var safeResults = {};
+                    _each(_keys(results), function(rkey) {
+                        safeResults[rkey] = results[rkey];
+                    });
+                    safeResults[k] = args;
+                    callback(err, safeResults);
                     // stop subsequent errors hitting callback multiple times
                     callback = function () {};
                 }
                 else {
-                    var args = Array.prototype.slice.call(arguments, 1);
-                    if (args.length <= 1) {
-                        args = args[0];
-                    }
                     results[k] = args;
-                    taskComplete();
+                    async.nextTick(taskComplete);
                 }
             };
             var requires = task.slice(0, Math.abs(task.length - 1)) || [];
@@ -2465,7 +2513,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         var wrapIterator = function (iterator) {
             return function (err) {
                 if (err) {
-                    callback(err);
+                    callback.apply(null, arguments);
                     callback = function () {};
                 }
                 else {
@@ -2486,10 +2534,10 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         wrapIterator(async.iterator(tasks))();
     };
 
-    async.parallel = function (tasks, callback) {
+    var _parallel = function(eachfn, tasks, callback) {
         callback = callback || function () {};
         if (tasks.constructor === Array) {
-            async.map(tasks, function (fn, callback) {
+            eachfn.map(tasks, function (fn, callback) {
                 if (fn) {
                     fn(function (err) {
                         var args = Array.prototype.slice.call(arguments, 1);
@@ -2503,7 +2551,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         }
         else {
             var results = {};
-            async.forEach(_keys(tasks), function (k, callback) {
+            eachfn.each(_keys(tasks), function (k, callback) {
                 tasks[k](function (err) {
                     var args = Array.prototype.slice.call(arguments, 1);
                     if (args.length <= 1) {
@@ -2516,6 +2564,14 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                 callback(err, results);
             });
         }
+    };
+
+    async.parallel = function (tasks, callback) {
+        _parallel({ map: async.map, each: async.each }, tasks, callback);
+    };
+
+    async.parallelLimit = function(tasks, limit, callback) {
+        _parallel({ map: _mapLimit(limit), each: _eachLimit(limit) }, tasks, callback);
     };
 
     async.series = function (tasks, callback) {
@@ -2535,7 +2591,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         }
         else {
             var results = {};
-            async.forEachSeries(_keys(tasks), function (k, callback) {
+            async.eachSeries(_keys(tasks), function (k, callback) {
                 tasks[k](function (err) {
                     var args = Array.prototype.slice.call(arguments, 1);
                     if (args.length <= 1) {
@@ -2591,33 +2647,123 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
 
     async.whilst = function (test, iterator, callback) {
         if (test()) {
+            var sync = true;
             iterator(function (err) {
                 if (err) {
                     return callback(err);
                 }
-                async.whilst(test, iterator, callback);
+                if (sync) {
+                    async.nextTick(function () {
+                        async.whilst(test, iterator, callback);
+                    });
+                }
+                else {
+                    async.whilst(test, iterator, callback);
+                }
             });
+            sync = false;
         }
         else {
             callback();
         }
+    };
+
+    async.doWhilst = function (iterator, test, callback) {
+        var sync = true;
+        iterator(function (err) {
+            if (err) {
+                return callback(err);
+            }
+            if (test()) {
+                if (sync) {
+                    async.nextTick(function () {
+                        async.doWhilst(iterator, test, callback);
+                    });
+                }
+                else {
+                    async.doWhilst(iterator, test, callback);
+                }
+            }
+            else {
+                callback();
+            }
+        });
+        sync = false;
     };
 
     async.until = function (test, iterator, callback) {
         if (!test()) {
+            var sync = true;
             iterator(function (err) {
                 if (err) {
                     return callback(err);
                 }
-                async.until(test, iterator, callback);
+                if (sync) {
+                    async.nextTick(function () {
+                        async.until(test, iterator, callback);
+                    });
+                }
+                else {
+                    async.until(test, iterator, callback);
+                }
             });
+            sync = false;
         }
         else {
             callback();
         }
     };
 
+    async.doUntil = function (iterator, test, callback) {
+        var sync = true;
+        iterator(function (err) {
+            if (err) {
+                return callback(err);
+            }
+            if (!test()) {
+                if (sync) {
+                    async.nextTick(function () {
+                        async.doUntil(iterator, test, callback);
+                    });
+                }
+                else {
+                    async.doUntil(iterator, test, callback);
+                }
+            }
+            else {
+                callback();
+            }
+        });
+        sync = false;
+    };
+
     async.queue = function (worker, concurrency) {
+        if (concurrency === undefined) {
+            concurrency = 1;
+        }
+        function _insert(q, data, pos, callback) {
+          if(data.constructor !== Array) {
+              data = [data];
+          }
+          _each(data, function(task) {
+              var item = {
+                  data: task,
+                  callback: typeof callback === 'function' ? callback : null
+              };
+
+              if (pos) {
+                q.tasks.unshift(item);
+              } else {
+                q.tasks.push(item);
+              }
+
+              if (q.saturated && q.tasks.length === concurrency) {
+                  q.saturated();
+              }
+              async.nextTick(q.process);
+          });
+        }
+
         var workers = 0;
         var q = {
             tasks: [],
@@ -2626,33 +2772,42 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             empty: null,
             drain: null,
             push: function (data, callback) {
-                if(data.constructor !== Array) {
-                    data = [data];
-                }
-                _forEach(data, function(task) {
-                    q.tasks.push({
-                        data: task,
-                        callback: typeof callback === 'function' ? callback : null
-                    });
-                    if (q.saturated && q.tasks.length == concurrency) {
-                        q.saturated();
-                    }
-                    async.nextTick(q.process);
-                });
+              _insert(q, data, false, callback);
+            },
+            unshift: function (data, callback) {
+              _insert(q, data, true, callback);
             },
             process: function () {
                 if (workers < q.concurrency && q.tasks.length) {
                     var task = q.tasks.shift();
-                    if(q.empty && q.tasks.length == 0) q.empty();
+                    if (q.empty && q.tasks.length === 0) {
+                        q.empty();
+                    }
                     workers += 1;
-                    worker(task.data, function () {
+                    var sync = true;
+                    var next = function () {
                         workers -= 1;
                         if (task.callback) {
                             task.callback.apply(task, arguments);
                         }
-                        if(q.drain && q.tasks.length + workers == 0) q.drain();
+                        if (q.drain && q.tasks.length + workers === 0) {
+                            q.drain();
+                        }
                         q.process();
+                    };
+                    var cb = only_once(function () {
+                        var cbArgs = arguments;
+
+                        if (sync) {
+                            async.nextTick(function () {
+                                next.apply(null, cbArgs);
+                            });
+                        } else {
+                            next.apply(null, arguments);
+                        }
                     });
+                    worker(task.data, cb);
+                    sync = false;
                 }
             },
             length: function () {
@@ -2663,6 +2818,71 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
             }
         };
         return q;
+    };
+
+    async.cargo = function (worker, payload) {
+        var working     = false,
+            tasks       = [];
+
+        var cargo = {
+            tasks: tasks,
+            payload: payload,
+            saturated: null,
+            empty: null,
+            drain: null,
+            push: function (data, callback) {
+                if(data.constructor !== Array) {
+                    data = [data];
+                }
+                _each(data, function(task) {
+                    tasks.push({
+                        data: task,
+                        callback: typeof callback === 'function' ? callback : null
+                    });
+                    if (cargo.saturated && tasks.length === payload) {
+                        cargo.saturated();
+                    }
+                });
+                async.nextTick(cargo.process);
+            },
+            process: function process() {
+                if (working) return;
+                if (tasks.length === 0) {
+                    if(cargo.drain) cargo.drain();
+                    return;
+                }
+
+                var ts = typeof payload === 'number'
+                            ? tasks.splice(0, payload)
+                            : tasks.splice(0);
+
+                var ds = _map(ts, function (task) {
+                    return task.data;
+                });
+
+                if(cargo.empty) cargo.empty();
+                working = true;
+                worker(ds, function () {
+                    working = false;
+
+                    var args = arguments;
+                    _each(ts, function (data) {
+                        if (data.callback) {
+                            data.callback.apply(null, args);
+                        }
+                    });
+
+                    process();
+                });
+            },
+            length: function () {
+                return tasks.length;
+            },
+            running: function () {
+                return working;
+            }
+        };
+        return cargo;
     };
 
     var _console_fn = function (name) {
@@ -2677,7 +2897,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                         }
                     }
                     else if (console[name]) {
-                        _forEach(args, function (x) {
+                        _each(args, function (x) {
                             console[name](x);
                         });
                     }
@@ -2719,6 +2939,7 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
                 }]));
             }
         };
+        memoized.memo = memo;
         memoized.unmemoized = fn;
         return memoized;
     };
@@ -2728,6 +2949,75 @@ define('async', ['require', 'exports', 'module'], function(require, exports, mod
         return (fn.unmemoized || fn).apply(null, arguments);
       };
     };
+
+    async.times = function (count, iterator, callback) {
+        var counter = [];
+        for (var i = 0; i < count; i++) {
+            counter.push(i);
+        }
+        return async.map(counter, iterator, callback);
+    };
+
+    async.timesSeries = function (count, iterator, callback) {
+        var counter = [];
+        for (var i = 0; i < count; i++) {
+            counter.push(i);
+        }
+        return async.mapSeries(counter, iterator, callback);
+    };
+
+    async.compose = function (/* functions... */) {
+        var fns = Array.prototype.reverse.call(arguments);
+        return function () {
+            var that = this;
+            var args = Array.prototype.slice.call(arguments);
+            var callback = args.pop();
+            async.reduce(fns, args, function (newargs, fn, cb) {
+                fn.apply(that, newargs.concat([function () {
+                    var err = arguments[0];
+                    var nextargs = Array.prototype.slice.call(arguments, 1);
+                    cb(err, nextargs);
+                }]))
+            },
+            function (err, results) {
+                callback.apply(that, [err].concat(results));
+            });
+        };
+    };
+
+    async.applyEach = function (fns /*args...*/) {
+        var go = function () {
+            var that = this;
+            var args = Array.prototype.slice.call(arguments);
+            var callback = args.pop();
+            return async.each(fns, function (fn, cb) {
+                fn.apply(that, args.concat([cb]));
+            },
+            callback);
+        };
+        if (arguments.length > 1) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            return go.apply(this, args);
+        }
+        else {
+            return go;
+        }
+    };
+
+    // AMD / RequireJS
+    if (typeof define !== 'undefined' && define.amd) {
+        define([], function () {
+            return async;
+        });
+    }
+    // Node.js
+    else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = async;
+    }
+    // included directly via <script> tag
+    else {
+        root.async = async;
+    }
 
 }());
 
