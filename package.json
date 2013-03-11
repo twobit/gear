@@ -12,7 +12,7 @@
       "test": "mocha --require should"
   },
   "dependencies": {
-      "async": "0.1.x",
+      "async": "0.2.x",
       "mkdirp": "0.3.x"
   },
   "devDependencies": {

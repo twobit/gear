@@ -30,7 +30,7 @@ var path = require('path'),
     ),
     files = {
         'vendor/require.js': {},
-        'node_modules/async/lib/async.js': {name: 'async', modules: ['module'], input: ['module']},
+        'vendor/async.js': {},
         'lib/blob.js': {name: './blob'},
         'lib/tasks/concat.js': {name: './tasks/concat', task: true},
         'lib/tasks/core.js': {name: './tasks/core', modules: ['../blob'], task: true},
