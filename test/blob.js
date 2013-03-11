@@ -1,6 +1,8 @@
 var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
     Blob = require(lib + 'blob').Blob,
     fs = require('fs'),
+    path = require('path'),
+    nodeExistsSync = fs.existsSync || path.existsSync,
     Crypto = require('crypto'),
     fixtures = {
         input: 'test/fixtures/image.png',
@@ -22,7 +24,7 @@ describe('Blob', function() {
             Blob.readFile(fixtures.input, 'bin', function(err, blob) {
                 Blob.writeFile(fixtures.output, blob, 'bin', function() {
                     var file = fixtures.output.replace('{checksum}', checksum.digest('hex'));
-                    fs.existsSync(file).should.equal(true);
+                    nodeExistsSync(file).should.equal(true);
                     done();
                 });
             });
