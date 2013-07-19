@@ -1,4 +1,4 @@
-var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
     should = require('should'),
     path = require('path'),
     gear = require('..'),

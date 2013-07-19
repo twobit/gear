@@ -1,4 +1,4 @@
-var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
     should = require('should'),
     Blob = require(lib + 'blob').Blob,
     concat = require(lib + 'tasks/concat').concat,

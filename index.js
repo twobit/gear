@@ -4,7 +4,7 @@
  * See the accompanying LICENSE file for terms.
  */
 
-var lib = process.env.COVER ? './lib-cov/' : './lib/';
+var lib = process.env.GEAR_COVER ? './lib-cov/' : './lib/';
 
 exports.Registry = require(lib + 'registry').Registry;
 exports.Queue = require(lib + 'queue').Queue;

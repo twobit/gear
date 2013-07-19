@@ -1,4 +1,4 @@
-var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
     fs = require('fs'),
     path = require('path'),
     nodeExistsSync = fs.existsSync || path.existsSync,

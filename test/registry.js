@@ -1,4 +1,4 @@
-var lib = process.env.COVER ? '../lib-cov/' : '../lib/',
+var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
     Registry = require(lib + 'registry').Registry,
     path = require('path'),
     fixtures = {
