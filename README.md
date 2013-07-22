@@ -15,6 +15,8 @@ Features:
 
 [![Build Status](https://secure.travis-ci.org/twobit/gear.png)](http://travis-ci.org/twobit/gear)
 
+[![NPM](https://nodei.co/npm/gear.png?downloads=true)](https://nodei.co/npm/gear/)
+
 ## Installation
 
 To get the most out of Gear.js, you will want to install [gear-lib](/yahoo/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
