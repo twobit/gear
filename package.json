@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "description": "Gear.js - Build System for Node.js and the Browser",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
@@ -8,6 +8,7 @@
   "repository": {"type": "git", "url": "http://github.com/yahoo/gear.git"},
   "bugs": {"url": "http://github.com/yahoo/gear/issues"},
   "main": "index",
+  "bin": "./bin/gear.js",
   "scripts": {
       "test": "mocha --require should"
   },
