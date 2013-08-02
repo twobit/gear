@@ -506,7 +506,7 @@ console.log(b3.result + ' - ' + b3.name);
     css_min:   {requires: 'css', task: 'cssminify'},
     css_write: {requires: 'css_min', task: ['write', 'xyz.min.css']}
 
-    done:  {requires: ['js_write', 'css_write']}
+    join:  {requires: ['js_write', 'css_write']}
 }
 </code><code class="result"></code></pre>
                     </div>
