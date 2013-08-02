@@ -154,6 +154,7 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})}).log('test!')
                 <h3><a href="#library">Library Tasks</a></h3>
 
                 <h3><a href="#custom">Custom Tasks</a></h3>
+                <h3><a href="#cli">CLI</a></h3>
 
                 <div id="Queue">
                     <h3>Queue()</h3>
@@ -483,6 +484,53 @@ var b3 = new Blob(b2, {name: 'TEST'});
 console.log(b3.result + ' - ' + b3.name);
 </code><code class="result"></code></pre>
                     </div>
+                </div>
+
+
+                <div id="cli">
+                    <h3>CLI</h3>
+
+                    <p>It's possible to execute a <a href="#tasks.tasks">tasks workflow</a> from the command line.</p>
+
+                    <p>Create a file named <strong>Gearfile</strong> in your project directory. You can include executable Javascript in this file as long as it evaluates to an expression.</p>
+
+                    <div class="highlight">
+                        <pre><code class="code javascript">// Gearfile
+{
+    js:        {task: ['read', ['foo.js', 'bar.js', 'baz.js']]},
+    js_concat: {requires: 'js', task: 'concat'},
+    js_min:    {requires: 'js_concat', task: 'jsminify'}
+    js_write:  {requires: 'js_min', task: ['write', 'foobarbaz.min.js']}
+
+    css:       {task: ['read', 'xyz.css']},
+    css_min:   {requires: 'css', task: 'cssminify'},
+    css_write: {requires: 'css_min', task: ['write', 'xyz.min.css']}
+
+    done:  {requires: ['js_write', 'css_write']}
+}
+</code><code class="result"></code></pre>
+                    </div>
+
+                    <p>Then run the gear command:</p>
+                    <div class="highlight"><pre><code class="bash">$ gear</code></pre></div>
+
+                    <p>If you have any require paths you will need to use an absolute path like so:</p>
+
+
+                    <div class="highlight">
+                        <pre><code class="code javascript">// Sample Gearfile
+(function() {
+    var path = require('path'),
+        handlebars = require(path.join(process.cwd(), 'node_modules/handlebars')),
+        template = handlebars.compile('&lt;h1&gt;{{msg}}&lt;h1&gt;');
+
+    return {
+        log:     {task: ['log', template({msg: 'Hello, world!'})]},
+        join:    {requires: 'log'}
+    };
+})();
+</code><code class="result"></code></pre>
+                    </div>                    
                 </div>
             </section>
 
