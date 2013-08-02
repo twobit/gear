@@ -3,7 +3,7 @@
     
     var path = require('path'),
         gear = require(path.join(process.cwd(), 'index')),
-        handlebars = require('../node_modules/gear-lib/node_modules/handlebars'),
+        handlebars = require(path.join(process.cwd(), './node_modules/gear-lib/node_modules/handlebars')),
         wrap = handlebars.compile(
             "\n\ndefine('{{name}}', ['require', 'exports'{{#modules}}, '{{.}}'{{/modules}}], function(require, exports{{#input}}, {{.}}{{/input}}) {\n\n" +
             "{{{result}}}\n\n" +

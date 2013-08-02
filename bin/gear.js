@@ -8,6 +8,7 @@
  */ 
 var gear = require('../index'),
     vm = require('vm'),
+    path = require('path'),
     fs = require('fs'),
     filename = 'Gearfile';
 
@@ -27,7 +28,7 @@ try {
     return 1;
 }
 
-new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
+new gear.Queue({registry: new gear.Registry({module: path.join(__dirname, '../node_modules/gear-lib')})})
     .tasks(tasks)
     .run(function(err, res) {
         if (err) {
