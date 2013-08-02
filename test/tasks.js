@@ -45,5 +45,7 @@ describe('tasks()', function() {
         });
     });
 
-    // it('should accept existing data');
+    it('should handle empty object', function() {
+        new gear.Queue().tasks({}).run();
+    });
 });

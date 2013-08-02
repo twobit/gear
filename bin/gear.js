@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* Gear task runner. Executes Gearfile using a tasks workflow.
  * See http://gearjs.org/#tasks.tasks
  *
@@ -6,18 +8,33 @@
  */ 
 var gear = require('../index'),
     vm = require('vm'),
-    fs = require('fs');
+    fs = require('fs'),
+    filename = 'Gearfile';
 
-var tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync('Gearfile') + '; tasks;', {
-    require: require,
-    process: process,
-    console: console
-});
+if (!fs.existsSync(filename)) {
+    notify(filename + ' not found');
+    return 1;
+}
+
+try {
+    var tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync(filename) + '; tasks;', {
+        require: require,
+        process: process,
+        console: console
+    });
+} catch(e) {
+    notify(e);
+    return 1;
+}
 
 new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
     .tasks(tasks)
     .run(function(err, res) {
         if (err) {
-            console.log(err);
+            notify(err);
         }
     });
+
+function notify(msg) {
+    console.error('gear: ' + msg);
+}
