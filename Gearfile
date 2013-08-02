@@ -1,8 +1,5 @@
-/*
- * Bootstraps browser based Gear.js
- */
- (function() {
-    console.log('Building browser based bootstrap');
+(function() {
+    console.log('Building gear for the browser');
     
     var path = require('path'),
         gear = require(path.join(process.cwd(), 'index')),

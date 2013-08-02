@@ -1,8 +1,8 @@
 BIN = ./node_modules/.bin
 
-all: bootstrap test coverage
+all: browser test coverage
 
-bootstrap:
+browser:
 	node bin/gear.js
 
 test:
