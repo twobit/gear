@@ -20,7 +20,7 @@ if (!existsSync(filename)) {
 }
 
 if (!existsSync(gearlib)) { // Gear may be globally installed
-    gearlib = '../../' + gearlib;
+    gearlib = path.join(__dirname, '../../../node_modules/gear-lib');
 }
 
 try {
