@@ -506,7 +506,7 @@ console.log(b3.result + ' - ' + b3.name);
 
                     <p>It's possible to execute a <a href="#tasks.tasks">tasks workflow</a> from the command line.</p>
 
-                    <p>Create a file named <strong>Gearfile</strong> in your project directory. You can include executable Javascript in this file as long as it evaluates to a valid workflow.</p>
+                    <p>Create a file named <strong>Gearfile</strong> in your project directory. You can include executable Javascript which evaluates to a valid workflow.</p>
 
                     <div class="highlight">
                         <pre><code class="code javascript">// Gearfile
@@ -544,7 +544,18 @@ console.log(b3.result + ' - ' + b3.name);
     };
 })();
 </code><code class="result"></code></pre>
-                    </div>                    
+                    </div>
+
+                    <p>By not returning a workflow you can run a queue in the normal way. The gear object is automatically included in the context.</p>
+
+                    <div class="highlight">
+                        <pre><code class="code javascript">(function() {
+    new gear.Queue()
+        .log('Hello, Gearfile!')
+        .run();
+})();
+</code><code class="result"></code></pre>
+                    </div>
                 </div>
             </section>
 
