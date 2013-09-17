@@ -3198,16 +3198,29 @@ define('./tasks/core', ['require', 'exports', '../blob'], function(require, expo
 
 var Blob = require('../blob').Blob;
 
+function loadfn() {
+    return function(string, done) {
+        done(null, new Blob(string));
+    };
+}
+
 /**
- * Add a blob string.
+ * Append a blob string.
  *
  * @param index {Integer} Index of blobs.
  * @param blobs {Array} Incoming blobs.
  * @param done {Function} Callback on task completion.
  */
-exports.load = function(string, done) {
-    done(null, new Blob(string));
-};
+exports.append = exports.load = loadfn();
+
+/**
+ * Prepend a blob string before all other blobs.
+ *
+ * @param string {String} the string to prepend.
+ * @param done {Function} Callback on task completion.
+ */
+var prepend = exports.prepend = loadfn();
+prepend.type = 'prepend';
 
 /**
  * Test Blobs, abort if callback returns non-null.
@@ -3293,6 +3306,14 @@ define('./tasks/read', ['require', 'exports', '../blob'], function(require, expo
  */
 var Blob = require('../blob').Blob;
 
+function readfn() {
+    return function(options, done) {
+        options = (typeof options === 'string') ? {name: options} : options;
+        var encoding = options.encoding || 'utf8';
+        Blob.readFile(options.name, encoding, done, options.sync);
+    };
+}
+
 /**
  * Appends file contents onto queue.
  *
@@ -3301,11 +3322,18 @@ var Blob = require('../blob').Blob;
  * @param options.encoding {String} File encoding.
  * @param done {Function} Callback on task completion.
  */
-exports.read = function(options, done) {
-    options = (typeof options === 'string') ? {name: options} : options;
-    var encoding = options.encoding || 'utf8';
-    Blob.readFile(options.name, encoding, done, options.sync);
-};
+exports.read = readfn();
+
+/**
+ * Prepends file contents to the queue.
+ *
+ * @param options {Object} File options or filename.
+ * @param options.name {String} Filename to read.
+ * @param options.encoding {String} File encoding.
+ * @param done {Function} Callback on task completion.
+ */
+var readBefore = exports.readBefore = readfn();
+readBefore.type = 'prepend';
 
 });
 
@@ -3610,6 +3638,12 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
             });
             break;
 
+        case 'prepend': // Prepends new blobs to existing queue
+            async.map(arrayize(options), task.bind(this), function(err, results) {
+                doneWrap(err, results.concat(blobs));
+            });
+            break;
+
         case 'collect': // Task can inspect entire queue
             task.call(this, options, blobs, doneWrap);
             break;
@@ -3653,6 +3687,7 @@ Queue.prototype.task = function(name, options) {
 Queue.prototype.run = function(callback) {
     async.waterfall(this._queue, callback);
 };
+
 
 });
 
