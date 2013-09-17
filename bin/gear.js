@@ -27,20 +27,23 @@ try {
     var tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync(filename) + '; tasks;', {
         require: require,
         process: process,
-        console: console
+        console: console,
+        gear: gear
     });
 } catch(e) {
     notify(e);
     return 1;
 }
 
-new gear.Queue({registry: new gear.Registry({module: gearlib})})
-    .tasks(tasks)
-    .run(function(err, res) {
-        if (err) {
-            notify(err);
-        }
-    });
+if (tasks) {
+    new gear.Queue({registry: new gear.Registry({module: gearlib})})
+        .tasks(tasks)
+        .run(function(err, res) {
+            if (err) {
+                notify(err);
+            }
+        });
+}
 
 function notify(msg) {
     console.error('gear: ', msg);
