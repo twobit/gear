@@ -37,5 +37,5 @@ new gear.Queue({registry: new gear.Registry({module: path.join(__dirname, '../no
     });
 
 function notify(msg) {
-    console.error('gear: ' + msg);
+    console.error('gear: ', msg);
 }
