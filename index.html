@@ -462,6 +462,20 @@ exports.example = function(string, blob, done) {
     .run();
 </code></pre></div>
 
+
+                    <h4>Inline Custom Task</h4>
+
+<div class="highlight"><pre><code class="javascript">var tasks = {
+    example: function(string, blob, done) {
+        done(null, new blob.constructor(string));
+    };
+};
+
+new Queue({registry: new Registry({tasks: tasks})})
+    .example('EXAMPLE')
+    .run();
+</code></pre></div>
+
                     <h4>Working With Blobs</h4>
 
                     <p>Blobs are loosely based on the <a href="http://www.w3.org/TR/FileAPI/#dfn-Blob">W3C Blob</a>.</p>
