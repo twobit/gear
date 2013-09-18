@@ -11,16 +11,11 @@ var gear = require('../index'),
     path = require('path'),
     fs = require('fs'),
     filename = 'Gearfile',
-    existsSync = fs.existsSync || path.existsSync, // 0.6 compat
-    gearlib = path.join(__dirname, '../node_modules/gear-lib');
+    existsSync = fs.existsSync || path.existsSync; // 0.6 compat
 
 if (!existsSync(filename)) {
     notify(filename + ' not found');
     return 1;
-}
-
-if (!existsSync(gearlib)) { // Gear may be globally installed
-    gearlib = path.join(__dirname, '../../../node_modules/gear-lib');
 }
 
 try {
@@ -36,7 +31,7 @@ try {
 }
 
 if (tasks) {
-    new gear.Queue({registry: new gear.Registry({module: gearlib})})
+    new gear.Queue()
         .tasks(tasks)
         .run(function(err, res) {
             if (err) {
