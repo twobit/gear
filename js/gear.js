@@ -3198,16 +3198,29 @@ define('./tasks/core', ['require', 'exports', '../blob'], function(require, expo
 
 var Blob = require('../blob').Blob;
 
+function loadfn() {
+    return function(string, done) {
+        done(null, new Blob(string));
+    };
+}
+
 /**
- * Add a blob string.
+ * Append a blob string.
  *
  * @param index {Integer} Index of blobs.
  * @param blobs {Array} Incoming blobs.
  * @param done {Function} Callback on task completion.
  */
-exports.load = function(string, done) {
-    done(null, new Blob(string));
-};
+exports.append = exports.load = loadfn();
+
+/**
+ * Prepend a blob string before all other blobs.
+ *
+ * @param string {String} the string to prepend.
+ * @param done {Function} Callback on task completion.
+ */
+var prepend = exports.prepend = loadfn();
+prepend.type = 'prepend';
 
 /**
  * Test Blobs, abort if callback returns non-null.
@@ -3293,6 +3306,14 @@ define('./tasks/read', ['require', 'exports', '../blob'], function(require, expo
  */
 var Blob = require('../blob').Blob;
 
+function readfn() {
+    return function(options, done) {
+        options = (typeof options === 'string') ? {name: options} : options;
+        var encoding = options.encoding || 'utf8';
+        Blob.readFile(options.name, encoding, done, options.sync);
+    };
+}
+
 /**
  * Appends file contents onto queue.
  *
@@ -3301,11 +3322,18 @@ var Blob = require('../blob').Blob;
  * @param options.encoding {String} File encoding.
  * @param done {Function} Callback on task completion.
  */
-exports.read = function(options, done) {
-    options = (typeof options === 'string') ? {name: options} : options;
-    var encoding = options.encoding || 'utf8';
-    Blob.readFile(options.name, encoding, done, options.sync);
-};
+exports.read = readfn();
+
+/**
+ * Prepends file contents to the queue.
+ *
+ * @param options {Object} File options or filename.
+ * @param options.name {String} Filename to read.
+ * @param options.encoding {String} File encoding.
+ * @param done {Function} Callback on task completion.
+ */
+var readBefore = exports.readBefore = readfn();
+readBefore.type = 'prepend';
 
 });
 
@@ -3443,8 +3471,7 @@ var Registry = exports.Registry = function Registry(options) {
     // Load default tasks
     if (typeof __dirname !== 'undefined') {
         this.load({dirname: __dirname + '/tasks'});
-    }
-    else if (typeof default_tasks !== 'undefined') {
+    } else if (typeof default_tasks !== 'undefined') {
         this.load({tasks: default_tasks});
     }
 
@@ -3464,53 +3491,68 @@ Registry.prototype = {
     load: function(options) {
         options = options || {};
 
-        if (options.module) {
-            this._loadModule(options.module);
+        var module = options.module,
+            dirname = options.dirname,
+            filename = options.filename,
+            tasks = options.tasks;
+
+        if (module) {
+            if (!this._loadModule(module)) {
+                throw new Error('Module ' + module + ' doesn\'t exist');
+            }
         }
 
-        if (options.dirname) {
-            this._loadDir(options.dirname);
+        if (dirname) {
+            if (!this._loadDir(dirname)) {
+                throw new Error('Directory ' + dirname + ' doesn\'t exist');
+            }
         }
 
-        if (options.filename) {
-            this._loadFile(options.filename);
+        if (filename) {
+            if (!this._loadFile(filename)) {
+                throw new Error('File ' + filename + ' doesn\'t exist');
+            }
         }
 
-        if (options.tasks) {
-            this._loadTasks(options.tasks);
+        if (tasks) {
+            if (!this._loadTasks(tasks)) {
+                throw new Error('Failed to load tasks');
+            }
         }
         
         return this;
     },
 
     _loadModule: function(name) {
-        this._loadDir(path.resolve('node_modules', name, 'lib'));
+        var module = require ? require(name) : null;
+
+        if (module) {
+            return this._loadTasks(module);
+        }
+
+        return this._loadDir(path.resolve('node_modules', name, 'lib'));
     },
 
     _loadDir: function(dirname) {
-        if (!existsSync(dirname)) {
-            throw new Error('Directory ' + dirname + ' doesn\'t exist');
-        }
+        if (!existsSync(dirname)) {return false;}
         
         var fs = require('fs'),
             files = fs.readdirSync(dirname),
             self = this;
 
         files.forEach(function(filename) {
-            self._loadFile(path.join(dirname, filename));
+            var name = path.join(dirname, filename);
+            if (path.extname(name) !== '.js') {return;}
+            self._loadFile(name);
         });
+
+        return true;
     },
 
     _loadFile: function(filename) {
-        if (path.extname(filename) !== '.js') {
-            return;
-        }
+        if (!existsSync(filename)) {return false;}
 
-        if (!existsSync(filename)) {
-            throw new Error('File ' + filename + ' doesn\'t exist');
-        }
-
-        this._loadTasks(require(filename));
+        return this._loadTasks(require(filename));
     },
 
     _loadTasks: function(tasks) {
@@ -3519,12 +3561,15 @@ Registry.prototype = {
         for (name in tasks) {
             this._tasks[name] = tasks[name];
         }
+
+        return true;
     },
 
     task: function(name) {
         if (!(name in this._tasks)) {
             throw new Error('Task ' + name + ' doesn\'t exist');
         }
+
         return this._tasks[name];
     }
 };
@@ -3610,6 +3655,12 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
             });
             break;
 
+        case 'prepend': // Prepends new blobs to existing queue
+            async.map(arrayize(options), task.bind(this), function(err, results) {
+                doneWrap(err, results.concat(blobs));
+            });
+            break;
+
         case 'collect': // Task can inspect entire queue
             task.call(this, options, blobs, doneWrap);
             break;
@@ -3653,6 +3704,7 @@ Queue.prototype.task = function(name, options) {
 Queue.prototype.run = function(callback) {
     async.waterfall(this._queue, callback);
 };
+
 
 });
 
