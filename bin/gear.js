@@ -31,7 +31,7 @@ try {
 }
 
 if (tasks) {
-    new gear.Queue()
+    new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})})
         .tasks(tasks)
         .run(function(err, res) {
             if (err) {
