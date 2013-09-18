@@ -19,7 +19,7 @@ Features:
 
 ## Installation
 
-To get the most out of Gear.js, you will want to install [gear-lib](/yahoo/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
+To get the most out of Gear.js, you will want to install [gear-lib](http://github.com/yahoo/gear-lib) which contains tasks for linting, minifying, and deploying JS/CSS assets.
 
 ```bash
 $ npm install gear gear-lib
