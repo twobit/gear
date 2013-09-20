@@ -3610,7 +3610,13 @@ var Queue = exports.Queue = function Queue(options) {
     var self = this;
     options = options || {};
     this._logger = options.logger || console;
-    this._registry = options.registry || new Registry();
+
+    if (typeof options.registry === 'string') {
+        this._registry = new Registry({module: options.registry});
+    } else {
+        this._registry = options.registry || new Registry();    
+    }
+    
     this._clear();
 
     // Add registry tasks
