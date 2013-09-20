@@ -57,6 +57,9 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
 
                 <div class="highlight">
                     <pre><code class="javascript">var gear = require('gear');
+new gear.Queue({registry: 'gear-lib'}).log('test!').run();
+
+// Equivalent to creating a registry object with module parameter
 new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})}).log('test!').run();
 </code><code class="result"></code></pre>
                 </div>
