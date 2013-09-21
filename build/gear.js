@@ -3524,10 +3524,10 @@ Registry.prototype = {
     },
 
     _loadModule: function(name) {
-        var module = require ? require(name) : null;
-
-        if (module) {
-            return this._loadTasks(module);
+        if (require) {
+            try {
+                return this._loadTasks(require(name));
+            } catch (err) {}
         }
 
         return this._loadDir(path.resolve('node_modules', name, 'lib'));

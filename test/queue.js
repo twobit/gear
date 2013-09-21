@@ -6,7 +6,8 @@ var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
         file: {name: 'test/fixtures/test1.js'},
         files: [{name: 'test/fixtures/test1.js'}, {name: 'test/fixtures/test2.js'}],
         missing_file: {name: 'test/fixtures/missing_file.js'},
-        sentinel: 'ABOOORT'
+        sentinel: 'ABOOORT',
+        missing_module: '!@&#*^&@'
     };
 
 describe('Queue', function() {
@@ -84,6 +85,27 @@ describe('Queue', function() {
                 .run(function(err, results) {
                     done(err);
                 });
+        });
+
+        it('should allow registry strings to be passed', function(done) {
+            new gear.Queue({registry: 'gear-lib'})
+                .read(fixtures.files)
+                .jslint()
+                .run(function(err, results) {
+                    done(err);
+                });
+        });
+
+        it('should throw an exception for registry error', function(done) {
+            try {
+                new gear.Queue({registry: fixtures.missing_module})
+                    .read(fixtures.files)
+                    .jslint()
+                    .run(function(err, results) {});
+            } catch(err) {
+                err.message.should.equal('Module ' + fixtures.missing_module + ' doesn\'t exist');
+                done();
+            }
         });
     });
 
