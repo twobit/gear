@@ -3297,6 +3297,74 @@ exports.noop = function(dummy, blob, done) {
 
 
 
+define('./tasks/replace', ['require', 'exports'], function(require, exports) {
+
+/*
+ * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
+ * Copyrights licensed under the New BSD License.
+ * See the accompanying LICENSE file for terms.
+ */
+/**
+ * Replace with regular expresion.
+ *
+ * @param options {Object} RegEx options.
+ * @param blob {Object} Incoming blob.
+ * @param done {Function} Callback on task completion.
+ */
+exports.replace = function(items, blob, done) {
+    var output = blob.result;
+
+    if (!Array.isArray(items)) {
+        items = [items];
+    }
+
+    items.forEach(function (params) {
+        var replace  = params.replace || '',
+            flags = params.flags || 'mg',
+            regex = params.regex instanceof RegExp ? params.regex : new RegExp(params.regex, flags);
+
+        output = output.replace(regex, replace);
+    });
+
+    done(null, new blob.constructor(output, blob));
+};
+
+});
+
+
+
+define('./tasks/stamp', ['require', 'exports', '../blob'], function(require, exports) {
+
+/*
+ * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
+ * Copyrights licensed under the New BSD License.
+ * See the accompanying LICENSE file for terms.
+ */
+/**
+ * Stamp blob with prefix or postfix string.
+ *
+ * @param options {Object} Task options.
+ * @param options.prefix {String} Prefix string.
+ * @param options.postfix {String} Postfix string.
+ * @param options.callback {Function} Callback can return text to injext between pre/postfix.
+ * @param blob {Object} Incoming blob.
+ * @param done {Function} Callback on task completion.
+ */
+exports.stamp = function(options, blob, done) {
+    options = options || {};
+    options.prefix = options.prefix || '';
+    options.postfix = options.postfix || '';
+
+    var result = options.callback ? options.callback(blob) : blob.result,
+        stamped = options.prefix + result + options.postfix;
+
+    done(null, new blob.constructor(stamped, blob));
+};
+
+});
+
+
+
 define('./tasks/read', ['require', 'exports', '../blob'], function(require, exports) {
 
 /*
@@ -3524,10 +3592,10 @@ Registry.prototype = {
     },
 
     _loadModule: function(name) {
-        var module = require ? require(name) : null;
-
-        if (module) {
-            return this._loadTasks(module);
+        if (require) {
+            try {
+                return this._loadTasks(require(name));
+            } catch (err) {}
         }
 
         return this._loadDir(path.resolve('node_modules', name, 'lib'));
@@ -3610,7 +3678,13 @@ var Queue = exports.Queue = function Queue(options) {
     var self = this;
     options = options || {};
     this._logger = options.logger || console;
-    this._registry = options.registry || new Registry();
+
+    if (typeof options.registry === 'string') {
+        this._registry = new Registry({module: options.registry});
+    } else {
+        this._registry = options.registry || new Registry();
+    }
+
     this._clear();
 
     // Add registry tasks
@@ -3680,7 +3754,7 @@ Queue.prototype._dispatch = function(name, options, blobs, done) {
         case 'map': // Task transforms one blob at a time
             async.map(blobs, task.bind(this, options), doneWrap);
             break;
-    
+
         case 'syncmap': // Task transforms one blob at a time until done is called.
             async.mapSeries(blobs, task.bind(this, options), doneWrap);
             break;
@@ -3702,7 +3776,8 @@ Queue.prototype.task = function(name, options) {
 };
 
 Queue.prototype.run = function(callback) {
-    async.waterfall(this._queue, callback);
+    var self = this;
+    async.waterfall(this._queue, callback || function(err, res) {if (err) {self._log(err);}});
 };
 
 
@@ -3712,9 +3787,9 @@ define('../blob', ['require', 'exports', 'blob'], function(require, exports, blo
 exports.Blob = blob.Blob;
 });
 
-define('./default_tasks', ['require', 'exports', './tasks/concat', './tasks/core', './tasks/read', './tasks/write', './tasks/tasks'], function(require, exports) {
+define('./default_tasks', ['require', 'exports', './tasks/concat', './tasks/core', './tasks/replace', './tasks/stamp', './tasks/read', './tasks/write', './tasks/tasks'], function(require, exports) {
 var tasks = [];
-tasks.push(require('./tasks/concat'));tasks.push(require('./tasks/core'));tasks.push(require('./tasks/read'));tasks.push(require('./tasks/write'));tasks.push(require('./tasks/tasks'));
+tasks.push(require('./tasks/concat'));tasks.push(require('./tasks/core'));tasks.push(require('./tasks/replace'));tasks.push(require('./tasks/stamp'));tasks.push(require('./tasks/read'));tasks.push(require('./tasks/write'));tasks.push(require('./tasks/tasks'));
 tasks.forEach(function(mod) {for (var task in mod) {exports[task] = mod[task];}});
 });
 

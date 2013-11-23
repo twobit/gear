@@ -20,7 +20,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
         <article>
             <section id="intro">
                 <p>Gear.js is an easy to use, simple to extend, and powerful build system. <strong>Chain tasks</strong> together to build projects with ease.</p>
-                
+
 
                 <div class="highlight">
                     <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
@@ -150,6 +150,7 @@ new gear.Queue({registry: new gear.Registry({module: 'gear-lib'})}).log('test!')
                     <li><a href="#tasks.concat">concat</a></li>
                     <li><a href="#tasks.inspect">inspect</a></li>
                     <li><a href="#tasks.log">log</a></li>
+                    <li><a href="#tasks.replace">replace</a></li>
                     <li><a href="#tasks.tasks">tasks</a></li>
                 </ul>
 
@@ -375,6 +376,30 @@ new gear.Queue({registry: registry})
     .run();</code><code class="result"></code></pre>
                     </div>
                 </div>
+
+                <div id="tasks.replace">
+                    <h3>replace(options)</h3>
+
+                    <p>Replace strings using RegExp.</p>
+
+                    <h4>Arguments</h4>
+                    <ul>
+                      <li>options.regex - RegExp object or string.</li>
+                      <li>options.flags - RegExp flags if using string.</li>
+                      <li>options.replace - Replacement string.</li>
+                    </ul>
+
+                    <div class="highlight">
+                        <button type="button"><span class="run">Run</span><span class="clear">Clear</span></button>
+
+                        <pre><code class="code javascript">new Queue()
+    .read('foo.js')
+    .inspect()
+    .replace({regex: /Y.log\(.+?\);?/mg, replace: ''})
+    .replace({regex: "console.log\\(.+?\\);?", replace: '', flags: 'mg'}) // Using string
+    .inspect()
+    .run();</code><code class="result"></code></pre>
+                    </div>
 
                 <div id="tasks.tasks">
                     <h3>tasks(workflow)</h3>

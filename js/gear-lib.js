@@ -24135,7 +24135,8 @@ define('cssminify', ['require', 'exports', 'less'], function(require, exports) {
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
  */
-var less = require('less');
+var less = require('less'),
+    dirname = typeof module === 'undefined' ? function(s) {return s;} : require('path').dirname; // Browser compat
 
 /**
  * Minify CSS. Also compiles LESS stylesheets.
@@ -24147,7 +24148,7 @@ var less = require('less');
 exports.cssminify = exports.less = function(options, blob, done) {
     options = options || {};
 
-    var parser = new less.Parser();
+    var parser = new less.Parser({paths: [dirname(blob.name)]});
 
     // Need to make sure to compress since we pass options directly through to Less
     if (options.compress === undefined && options.yuicompress === undefined) {
@@ -24158,10 +24159,15 @@ exports.cssminify = exports.less = function(options, blob, done) {
         if (err) {
             done(err);
         } else {
-            done(null, new blob.constructor(tree.toCSS(options), blob));
+            try {
+                done(null, new blob.constructor(tree.toCSS(options), blob));
+            } catch (exc) {
+                done(exc);
+            }
         }
     });
 };
+
 
 });
 
@@ -24303,77 +24309,9 @@ exports.handlebars = function(vars, blob, done) {
 
 });
 
-
-
-define('gear-replace', ['require', 'exports'], function(require, exports) {
-
-/*
- * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
- * Copyrights licensed under the New BSD License.
- * See the accompanying LICENSE file for terms.
- */
-/**
- * Replace with regular expresion.
- *
- * @param options {Object} RegEx options.
- * @param blob {Object} Incoming blob.
- * @param done {Function} Callback on task completion.
- */
-exports.replace = function(items, blob, done) {
-    var output = blob.result;
-
-    if (!Array.isArray(items)) {
-        items = [items];
-    }
-
-    items.forEach(function (params) {
-        var replace  = params.replace || '',
-            flags = params.flags || 'mg',
-            regex = params.regex instanceof RegExp ? params.regex : new RegExp(params.regex, flags);
-
-        output = output.replace(regex, replace);
-    });
-
-    done(null, new blob.constructor(output, blob));
-};
-
-});
-
-
-
-define('gear-stamp', ['require', 'exports'], function(require, exports) {
-
-/*
- * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
- * Copyrights licensed under the New BSD License.
- * See the accompanying LICENSE file for terms.
- */
-/**
- * Stamp blob with prefix or postfix string.
- *
- * @param options {Object} Task options.
- * @param options.prefix {String} Prefix string.
- * @param options.postfix {String} Postfix string.
- * @param options.callback {Function} Callback can return text to injext between pre/postfix.
- * @param blob {Object} Incoming blob.
- * @param done {Function} Callback on task completion.
- */
-exports.stamp = function(options, blob, done) {
-    options = options || {};
-    options.prefix = options.prefix || '';
-    options.postfix = options.postfix || '';
-
-    var result = options.callback ? options.callback(blob) : blob.result,
-        stamped = options.prefix + result + options.postfix;
-
-    done(null, new blob.constructor(stamped, blob));
-};
-
-});
-
-define('gear-lib', ['require', 'exports', 'gear-csslint', 'cssminify', 'gear-jslint', 'jsminify', 'gear-handlebars', 'gear-replace', 'gear-stamp'], function(require, exports) {
+define('gear-lib', ['require', 'exports', 'gear-csslint', 'cssminify', 'gear-jslint', 'jsminify', 'gear-handlebars'], function(require, exports) {
 var tasks = [];
-tasks.push(require('gear-csslint'));tasks.push(require('cssminify'));tasks.push(require('gear-jslint'));tasks.push(require('jsminify'));tasks.push(require('gear-handlebars'));tasks.push(require('gear-replace'));tasks.push(require('gear-stamp'));
+tasks.push(require('gear-csslint'));tasks.push(require('cssminify'));tasks.push(require('gear-jslint'));tasks.push(require('jsminify'));tasks.push(require('gear-handlebars'));
 tasks.forEach(function(mod) {for (var task in mod) {exports[task] = mod[task];}});
 });
 
