@@ -1,6 +1,6 @@
 (function() {
     console.log('Building gear for the browser');
-    
+
     var path = require('path'),
         handlebars = require(path.join(process.cwd(), './node_modules/gear-lib/node_modules/handlebars')),
         wrap = handlebars.compile(
@@ -27,6 +27,8 @@
             'lib/blob.js': {name: './blob'},
             'lib/tasks/concat.js': {name: './tasks/concat', task: true},
             'lib/tasks/core.js': {name: './tasks/core', modules: ['../blob'], task: true},
+            'lib/tasks/replace.js': {name: './tasks/replace', task: true},
+            'lib/tasks/stamp.js': {name: './tasks/stamp', task: true},
             'lib/tasks/read.js': {name: './tasks/read', modules: ['../blob'], task: true},
             'lib/tasks/write.js': {name: './tasks/write', task: true},
             'lib/tasks/tasks.js': {name: './tasks/tasks', modules: ['async'], task: true},
