@@ -1,18 +1,23 @@
 var lib = process.env.GEAR_COVER ? '../lib-cov/' : '../lib/',
+    vm = require('vm'),
     Blob = require(lib + 'blob').Blob,
     replace = require(lib + 'tasks/replace').replace,
     fixtures = {
         js: new Blob("function (x) { Y.log('REMOVEME');}"),
         replaced: "function (x) { }",
-        object: {
+        string: {
 			regex: "Y.log\\(.+?\\);?",
 			replace: '',
 			flags: 'mg'
         },
-        string:  {
+        object:  {
             regex: /Y.log\(.+?\);?/mg,
             replace: ''
-        }
+        },
+		vmObject: {
+		    regex: vm.runInNewContext('/Y.log\\(.+?\\);?/mg'),
+            replace: ''
+		}
     };
 
 describe('replace()', function() {
@@ -29,4 +34,12 @@ describe('replace()', function() {
             done(err);
         });
     });
+
+    it('should use regexp objects in command line mode', function(done) {
+        replace(fixtures.vmObject, fixtures.js, function(err, res) {
+            res.result.should.equal(fixtures.replaced);
+            done(err);
+        });
+    });
+
 });
