@@ -24,7 +24,7 @@ try {
         process: process,
         console: console,
         gear: gear
-    });
+    }, filename, true);
 } catch(e) {
     notify(e);
     return 1;
