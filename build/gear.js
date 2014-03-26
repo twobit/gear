@@ -3320,8 +3320,8 @@ exports.replace = function(items, blob, done) {
 
     items.forEach(function (params) {
         var replace  = params.replace || '',
-            flags = params.flags || 'mg',
-            regex = params.regex instanceof RegExp ? params.regex : new RegExp(params.regex, flags);
+            flags = (params.flags !== undefined) ? params.flags : 'mg',
+            regex = (typeof params.regex === 'string') ? new RegExp(params.regex, flags) : params.regex;
 
         output = output.replace(regex, replace);
     });
