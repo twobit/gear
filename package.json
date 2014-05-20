@@ -10,17 +10,18 @@
   "main": "index",
   "bin": "./bin/gear.js",
   "scripts": {
-      "test": "mocha --require should"
+    "test": "mocha --require should"
   },
   "dependencies": {
-      "async": "0.2.x",
-      "mkdirp": "0.3.x"
+    "async": "0.2.x",
+    "mkdirp": "0.3.x",
+    "liftoff": "0.10.x"
   },
   "devDependencies": {
-      "should": "*",
-      "mocha": "*",
-      "mocha-istanbul": "*",
-      "istanbul": "*",
-      "gear-lib": ">= 0.9.x"
+    "should": "*",
+    "mocha": "*",
+    "mocha-istanbul": "*",
+    "istanbul": "*",
+    "gear-lib": ">= 0.9.x"
   }
 }
