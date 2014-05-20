@@ -9,6 +9,7 @@
   "bugs": {"url": "http://github.com/yahoo/gear/issues"},
   "main": "index",
   "bin": "./bin/gear.js",
+  "engines": {"node": ">=0.10.0"},
   "scripts": {
     "test": "mocha --require should"
   },
