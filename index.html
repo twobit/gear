@@ -28,7 +28,7 @@ allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20p
 <pre><code class="code javascript">new Queue()
     .read('foo.js')
     .inspect()
-    .jslint()
+    .jshint()
     .jsminify()
     .write('foo.min.js')
     .inspect()
@@ -439,7 +439,7 @@ new Queue()
                     <p><a href="http://github.com/yahoo/gear-lib">gear-lib</a> contains tasks such as:</p>
 
                     <ul>
-                        <li>jslint</li>
+                        <li>jshint</li>
                         <li>jsminify</li>
                         <li>csslint</li>
                         <li>cssminify</li>
@@ -609,36 +609,14 @@ console.log(b3.result + ' - ' + b3.name);
         <script type="text/javascript">hljs.initHighlightingOnLoad();</script>
 
         <script type="text/javascript" src="http://yui.yahooapis.com/combo?3.5.1/build/yui/yui-min.js"></script>
-        <script type="text/javascript" src="js/gear.js"></script>
-        <script type="text/javascript" src="js/gear-lib.js"></script>
+        <script type="text/javascript" src="js/gear.min.js"></script>
+        <script type="text/javascript" src="js/gear-lib.min.js"></script>
 
         <script type="text/javascript">
-        require(['gear', 'gear-lib'], function(registry, gear, lib) {}); // Preload Gear.js
-
         YUI().use('event', 'event-move', function(Y) {
             ['foo', 'bar', 'baz'].forEach(function(name) {
                 localStorage[name + '.js'] = 'var ' + name +  ' = function ' + name + '() { console.log("' + name + '"); };';
             });
-
-            /*
-            Y.one('#files').on('change', function(e) {
-                var raw_files = e.currentTarget.getDOMNode().files;
-
-                Array.prototype.forEach.call(raw_files, function(file) {
-                    var reader = new FileReader();
-
-                    reader.onload = function(e) {
-                        localStorage[file.name] = e.target.result;
-                        files.push(file.name);
-                    };
-
-                    reader.onerror = function(e) {
-                        alert("Can't read local files");
-                    };
-
-                    reader.readAsBinaryString(file);
-                });
-            });*/
 
             Y.all('.highlight button').on('gesturemovestart', function(e) {
                 var example = e.currentTarget.get('parentNode');
@@ -661,10 +639,10 @@ console.log(b3.result + ' - ' + b3.name);
                                 }
                             }
                         },
-                        gear = require('gear'),
+                        gear = Gear,
                         Registry = gear.Registry,
                         Blob = gear.Blob,
-                        Queue = (gear.Queue).bind(this, {registry: new Registry({tasks: require('gear-lib')}), logger: console});
+                        Queue = (gear.Queue).bind(this, {registry: new Registry({tasks: GearLib}), logger: console});
 
                     result.setHTML('');
 
