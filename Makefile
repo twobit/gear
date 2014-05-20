@@ -3,8 +3,8 @@ BIN = ./node_modules/.bin
 all: browser test coverage
 
 browser:
-	browserify lib/index.js -s Gear -o build/gear.js
-	node bin/gear.js
+	-$(BIN)/browserify lib/index.js -s Gear -o build/gear.js
+	-@node bin/gear.js
 
 test:
 	npm test
