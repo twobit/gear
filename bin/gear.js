@@ -30,7 +30,7 @@ var GearCLI = new Liftoff({
 GearCLI.launch(function(env) {
     // Loads a local install of gear. Falls back to the global install.
     var gear = require(env.modulePath || '../index');
-    if(process.cwd !== env.configBase) {
+    if(process.cwd() !== env.configBase) {
         process.chdir(env.configBase);
     }
 
