@@ -1,6 +1,85 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Gear=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 (function (process){
 /*
+ * Util
+ * Provides methods to read JSON and JSON with comments (JSONC) files easily.
+ */
+
+/* jshint node: true, browser: true */
+var readSync = process.browser ? readLocal : _dereq_('fs').readFileSync;
+
+function readLocal(name) {
+    return localStorage[name];
+}
+
+function readJSON(filename) {
+    return JSON.parse(readSync(filename)+'');
+}
+
+function readJSONC(filename) {
+    return JSON.parse(JSONMinify(readSync(filename)+''));
+}
+
+// From https://github.com/getify/JSON.minify
+function JSONMinify(json) {
+	var tokenizer = /"|(\/\*)|(\*\/)|(\/\/)|\n|\r/g,
+	in_string = false,
+	in_multiline_comment = false,
+	in_singleline_comment = false,
+	tmp, tmp2, new_str = [], ns = 0, from = 0, lc, rc;
+
+	tokenizer.lastIndex = 0;
+
+    /* jshint boss: true */
+	while (tmp = tokenizer.exec(json)) {
+		lc = RegExp.leftContext;
+		rc = RegExp.rightContext;
+		if (!in_multiline_comment && !in_singleline_comment) {
+			tmp2 = lc.substring(from);
+			if (!in_string) {
+				tmp2 = tmp2.replace(/(\n|\r|\s)*/g,"");
+			}
+			new_str[ns++] = tmp2;
+		}
+		from = tokenizer.lastIndex;
+
+		if (tmp[0] == "\"" && !in_multiline_comment && !in_singleline_comment) {
+			tmp2 = lc.match(/(\\)*$/);
+			if (!in_string || !tmp2 || (tmp2[0].length % 2) === 0) {	// start of string with ", or unescaped " character found to end string
+			in_string = !in_string;
+			}
+			from--; // include " character in next catch
+			rc = json.substring(from);
+		}
+		else if (tmp[0] == "/*" && !in_string && !in_multiline_comment && !in_singleline_comment) {
+			in_multiline_comment = true;
+		}
+		else if (tmp[0] == "*/" && !in_string && in_multiline_comment && !in_singleline_comment) {
+			in_multiline_comment = false;
+		}
+		else if (tmp[0] == "//" && !in_string && !in_multiline_comment && !in_singleline_comment) {
+			in_singleline_comment = true;
+		}
+		else if ((tmp[0] == "\n" || tmp[0] == "\r") && !in_string && !in_multiline_comment && in_singleline_comment) {
+			in_singleline_comment = false;
+		}
+		else if (!in_multiline_comment && !in_singleline_comment && !(/\n|\r|\s/.test(tmp[0]))) {
+			new_str[ns++] = tmp[0];
+		}
+	}
+	new_str[ns++] = rc;
+	return new_str.join("");
+}
+
+module.exports = {
+    readJSON: readJSON,
+    readJSONC: readJSONC
+};
+
+}).call(this,_dereq_("FWaASH"))
+},{"FWaASH":26,"fs":15}],2:[function(_dereq_,module,exports){
+(function (process){
+/*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
  * See the accompanying LICENSE file for terms.
@@ -154,15 +233,16 @@ var writeFile = {
 Blob.writeFile = Blob.prototype.writeFile = process.browser ? writeFile.client : writeFile.server;
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":25,"crypto":19,"fs":14,"mkdirp":26,"path":24}],2:[function(_dereq_,module,exports){
+},{"FWaASH":26,"crypto":20,"fs":15,"mkdirp":27,"path":25}],3:[function(_dereq_,module,exports){
 module.exports = {
   Registry: _dereq_('./registry').Registry,
   Blob: _dereq_('./blob').Blob,
   Queue: _dereq_('./queue').Queue,
+  Util: _dereq_('./Util'),
   tasks: _dereq_('./tasks')
 };
 
-},{"./blob":1,"./queue":3,"./registry":4,"./tasks":7}],3:[function(_dereq_,module,exports){
+},{"./Util":1,"./blob":2,"./queue":4,"./registry":5,"./tasks":8}],4:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -294,7 +374,7 @@ Queue.prototype.run = function(callback) {
     async.waterfall(this._queue, callback || function(err, res) {if (err) {self._log(err);}});
 };
 
-},{"./blob":1,"./registry":4,"async":13}],4:[function(_dereq_,module,exports){
+},{"./blob":2,"./registry":5,"async":14}],5:[function(_dereq_,module,exports){
 (function (process,__dirname){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
@@ -413,7 +493,7 @@ Registry.prototype = {
 };
 
 }).call(this,_dereq_("FWaASH"),"/")
-},{"./tasks":7,"FWaASH":25,"fs":14,"path":24}],5:[function(_dereq_,module,exports){
+},{"./tasks":8,"FWaASH":26,"fs":15,"path":25}],6:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -432,7 +512,7 @@ exports.concat = function(options, prev, blob, done) {
     options = options || {};
     done(null, new blob.constructor([prev, options.callback ? options.callback(blob) : blob]));
 };
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -535,7 +615,7 @@ exports.noop = function(dummy, blob, done) {
     done(null, blob);
 };
 
-},{"../blob":1}],7:[function(_dereq_,module,exports){
+},{"../blob":2}],8:[function(_dereq_,module,exports){
 var Tasks = {
   write: _dereq_('./write').write,
   tasks: _dereq_('./tasks').tasks,
@@ -555,7 +635,7 @@ addTasks(_dereq_('./read'));
 
 module.exports = Tasks;
 
-},{"./concat":5,"./core":6,"./read":8,"./replace":9,"./stamp":10,"./tasks":11,"./write":12}],8:[function(_dereq_,module,exports){
+},{"./concat":6,"./core":7,"./read":9,"./replace":10,"./stamp":11,"./tasks":12,"./write":13}],9:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -591,7 +671,7 @@ exports.read = readfn();
  */
 var readBefore = exports.readBefore = readfn();
 readBefore.type = 'prepend';
-},{"../blob":1}],9:[function(_dereq_,module,exports){
+},{"../blob":2}],10:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -621,7 +701,7 @@ exports.replace = function(items, blob, done) {
 
     done(null, new blob.constructor(output, blob));
 };
-},{}],10:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -647,7 +727,7 @@ exports.stamp = function(options, blob, done) {
 
     done(null, new blob.constructor(stamped, blob));
 };
-},{}],11:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -720,7 +800,7 @@ var tasks = exports.tasks = function tasks(workflow, blobs, done) {
     });
 };
 tasks.type = 'collect';
-},{"async":13}],12:[function(_dereq_,module,exports){
+},{"async":14}],13:[function(_dereq_,module,exports){
 /*
  * Copyright (c) 2011-2012, Yahoo! Inc.  All rights reserved.
  * Copyrights licensed under the New BSD License.
@@ -741,7 +821,7 @@ var write = exports.write = function write(options, blob, done) {
     blob.writeFile(options.name, blob, encoding, done);
 };
 write.type = 'slice';
-},{}],13:[function(_dereq_,module,exports){
+},{}],14:[function(_dereq_,module,exports){
 (function (process){
 /*!
  * async
@@ -1803,9 +1883,9 @@ write.type = 'slice';
 }());
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":25}],14:[function(_dereq_,module,exports){
+},{"FWaASH":26}],15:[function(_dereq_,module,exports){
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2956,7 +3036,7 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-},{"base64-js":16,"ieee754":17}],16:[function(_dereq_,module,exports){
+},{"base64-js":17,"ieee754":18}],17:[function(_dereq_,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -3078,7 +3158,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],17:[function(_dereq_,module,exports){
+},{}],18:[function(_dereq_,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -3164,7 +3244,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],18:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 var Buffer = _dereq_('buffer').Buffer;
 var intSize = 4;
 var zeroBuffer = new Buffer(intSize); zeroBuffer.fill(0);
@@ -3201,7 +3281,7 @@ function hash(buf, fn, hashSize, bigEndian) {
 
 module.exports = { hash: hash };
 
-},{"buffer":15}],19:[function(_dereq_,module,exports){
+},{"buffer":16}],20:[function(_dereq_,module,exports){
 var Buffer = _dereq_('buffer').Buffer
 var sha = _dereq_('./sha')
 var sha256 = _dereq_('./sha256')
@@ -3300,7 +3380,7 @@ each(['createCredentials'
   }
 })
 
-},{"./md5":20,"./rng":21,"./sha":22,"./sha256":23,"buffer":15}],20:[function(_dereq_,module,exports){
+},{"./md5":21,"./rng":22,"./sha":23,"./sha256":24,"buffer":16}],21:[function(_dereq_,module,exports){
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -3465,7 +3545,7 @@ module.exports = function md5(buf) {
   return helpers.hash(buf, core_md5, 16);
 };
 
-},{"./helpers":18}],21:[function(_dereq_,module,exports){
+},{"./helpers":19}],22:[function(_dereq_,module,exports){
 // Original code adapted from Robert Kieffer.
 // details at https://github.com/broofa/node-uuid
 (function() {
@@ -3498,7 +3578,7 @@ module.exports = function md5(buf) {
 
 }())
 
-},{}],22:[function(_dereq_,module,exports){
+},{}],23:[function(_dereq_,module,exports){
 /*
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
  * in FIPS PUB 180-1
@@ -3601,7 +3681,7 @@ module.exports = function sha1(buf) {
   return helpers.hash(buf, core_sha1, 20, true);
 };
 
-},{"./helpers":18}],23:[function(_dereq_,module,exports){
+},{"./helpers":19}],24:[function(_dereq_,module,exports){
 
 /**
  * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
@@ -3682,7 +3762,7 @@ module.exports = function sha256(buf) {
   return helpers.hash(buf, core_sha256, 32, true);
 };
 
-},{"./helpers":18}],24:[function(_dereq_,module,exports){
+},{"./helpers":19}],25:[function(_dereq_,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3910,7 +3990,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":25}],25:[function(_dereq_,module,exports){
+},{"FWaASH":26}],26:[function(_dereq_,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -3975,7 +4055,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],26:[function(_dereq_,module,exports){
+},{}],27:[function(_dereq_,module,exports){
 (function (process){
 var path = _dereq_('path');
 var fs = _dereq_('fs');
@@ -4076,6 +4156,6 @@ mkdirP.sync = function sync (p, opts, made) {
 };
 
 }).call(this,_dereq_("FWaASH"))
-},{"FWaASH":25,"fs":14,"path":24}]},{},[2])
-(2)
+},{"FWaASH":26,"fs":15,"path":25}]},{},[3])
+(3)
 });
