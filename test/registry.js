@@ -10,35 +10,35 @@ describe('Registry', function() {
     describe('load()', function() {
         it('should load modules', function() {
             var registry = new Registry();
-            
+
             registry.load({module: 'gear-lib'});
-            
-            registry.tasks.should.include('csslint');
-            registry.tasks.should.include('jslint');
-            registry.tasks.should.include('s3');
-            registry.tasks.should.include('glob');
+
+            registry.tasks.should.containEql('csslint');
+            registry.tasks.should.containEql('jslint');
+            registry.tasks.should.containEql('s3');
+            registry.tasks.should.containEql('glob');
         });
-        
+
         it('should load directories', function() {
             var registry = new Registry();
-            
+
             registry.load({dirname: fixtures.dirname});
-            
-            registry.tasks.should.include('fooga');
+
+            registry.tasks.should.containEql('fooga');
         });
-        
-        
+
+
         it('should load files', function() {
             var registry = new Registry();
-            
+
             registry.load({filename: fixtures.filename});
-            
-            registry.tasks.should.include('fooga');
+
+            registry.tasks.should.containEql('fooga');
         });
 
         it('should allow for chaining #load', function() {
             var registry = new Registry();
-            
+
             registry.load({
                 tasks : {
                     fooga : function() {}
