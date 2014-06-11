@@ -34,8 +34,8 @@ GearCLI.launch({
     }, function(env) {
     // Loads a local install of gear. Falls back to the global install.
     var gear = require(env.modulePath || '../index');
-    if(process.cwd !== env.cwd) {
-        process.chdir(env.cwd);
+    if(process.cwd() !== env.configBase) {
+        process.chdir(env.configBase);
     }
 
     if (!env.configPath) {
@@ -45,7 +45,7 @@ GearCLI.launch({
 
     var tasks;
     try {
-        tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync(filename) + '; tasks;', {
+        tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync(env.configPath) + '; tasks;', {
             require: require,
             process: process,
             console: console,
