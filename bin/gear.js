@@ -16,7 +16,8 @@ var Liftoff = require('liftoff'),
     path = require('path'),
     fs = require('fs'),
     filename = 'Gearfile',
-    existsSync = fs.existsSync || path.existsSync; // 0.6 compat
+    existsSync = fs.existsSync,
+    argv = require('minimist')(process.argv.slice(2));
 
 var GearCLI = new Liftoff({
     name: 'Gear',
@@ -27,7 +28,10 @@ var GearCLI = new Liftoff({
     }
 });
 
-GearCLI.launch(function(env) {
+GearCLI.launch({
+        cwd: argv.cwd,
+        configPath: argv.Gearfile
+    }, function(env) {
     // Loads a local install of gear. Falls back to the global install.
     var gear = require(env.modulePath || '../index');
     if(process.cwd !== env.cwd) {
@@ -62,7 +66,6 @@ GearCLI.launch(function(env) {
             });
     }
 });
-
 
 function notify(msg) {
     console.error('gear: ', msg);

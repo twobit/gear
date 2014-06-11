@@ -743,6 +743,14 @@ var write = exports.write = function write(options, blob, done) {
 write.type = 'slice';
 },{}],13:[function(_dereq_,module,exports){
 (function (process){
+/*!
+ * async
+ * https://github.com/caolan/async
+ *
+ * Copyright 2010-2014 Caolan McMahon
+ * Released under the MIT license
+ */
+/*jshint onevar: false, indent:4 */
 /*global setImmediate: false, setTimeout: false, console: false */
 (function () {
 
@@ -771,6 +779,12 @@ write.type = 'slice';
     }
 
     //// cross-browser compatiblity functions ////
+
+    var _toString = Object.prototype.toString;
+
+    var _isArray = Array.isArray || function (obj) {
+        return _toString.call(obj) === '[object Array]';
+    };
 
     var _each = function (arr, iterator) {
         if (arr.forEach) {
@@ -853,19 +867,20 @@ write.type = 'slice';
         }
         var completed = 0;
         _each(arr, function (x) {
-            iterator(x, only_once(function (err) {
-                if (err) {
-                    callback(err);
-                    callback = function () {};
-                }
-                else {
-                    completed += 1;
-                    if (completed >= arr.length) {
-                        callback(null);
-                    }
-                }
-            }));
+            iterator(x, only_once(done) );
         });
+        function done(err) {
+          if (err) {
+              callback(err);
+              callback = function () {};
+          }
+          else {
+              completed += 1;
+              if (completed >= arr.length) {
+                  callback();
+              }
+          }
+        }
     };
     async.forEach = async.each;
 
@@ -884,7 +899,7 @@ write.type = 'slice';
                 else {
                     completed += 1;
                     if (completed >= arr.length) {
-                        callback(null);
+                        callback();
                     }
                     else {
                         iterate();
@@ -964,18 +979,26 @@ write.type = 'slice';
 
 
     var _asyncMap = function (eachfn, arr, iterator, callback) {
-        var results = [];
         arr = _map(arr, function (x, i) {
             return {index: i, value: x};
         });
-        eachfn(arr, function (x, callback) {
-            iterator(x.value, function (err, v) {
-                results[x.index] = v;
-                callback(err);
+        if (!callback) {
+            eachfn(arr, function (x, callback) {
+                iterator(x.value, function (err) {
+                    callback(err);
+                });
             });
-        }, function (err) {
-            callback(err, results);
-        });
+        } else {
+            var results = [];
+            eachfn(arr, function (x, callback) {
+                iterator(x.value, function (err, v) {
+                    results[x.index] = v;
+                    callback(err);
+                });
+            }, function (err) {
+                callback(err, results);
+            });
+        }
     };
     async.map = doParallel(_asyncMap);
     async.mapSeries = doSeries(_asyncMap);
@@ -1141,8 +1164,9 @@ write.type = 'slice';
     async.auto = function (tasks, callback) {
         callback = callback || function () {};
         var keys = _keys(tasks);
-        if (!keys.length) {
-            return callback(null);
+        var remainingTasks = keys.length
+        if (!remainingTasks) {
+            return callback();
         }
 
         var results = {};
@@ -1160,20 +1184,24 @@ write.type = 'slice';
             }
         };
         var taskComplete = function () {
+            remainingTasks--
             _each(listeners.slice(0), function (fn) {
                 fn();
             });
         };
 
         addListener(function () {
-            if (_keys(results).length === keys.length) {
-                callback(null, results);
+            if (!remainingTasks) {
+                var theCallback = callback;
+                // prevent final callback from calling itself if it errors
                 callback = function () {};
+
+                theCallback(null, results);
             }
         });
 
         _each(keys, function (k) {
-            var task = (tasks[k] instanceof Function) ? [tasks[k]]: tasks[k];
+            var task = _isArray(tasks[k]) ? tasks[k]: [tasks[k]];
             var taskCallback = function (err) {
                 var args = Array.prototype.slice.call(arguments, 1);
                 if (args.length <= 1) {
@@ -1215,9 +1243,40 @@ write.type = 'slice';
         });
     };
 
+    async.retry = function(times, task, callback) {
+        var DEFAULT_TIMES = 5;
+        var attempts = [];
+        // Use defaults if times not passed
+        if (typeof times === 'function') {
+            callback = task;
+            task = times;
+            times = DEFAULT_TIMES;
+        }
+        // Make sure times is a number
+        times = parseInt(times, 10) || DEFAULT_TIMES;
+        var wrappedTask = function(wrappedCallback, wrappedResults) {
+            var retryAttempt = function(task, finalAttempt) {
+                return function(seriesCallback) {
+                    task(function(err, result){
+                        seriesCallback(!err || finalAttempt, {err: err, result: result});
+                    }, wrappedResults);
+                };
+            };
+            while (times) {
+                attempts.push(retryAttempt(task, !(times-=1)));
+            }
+            async.series(attempts, function(done, data){
+                data = data[data.length - 1];
+                (wrappedCallback || callback)(data.err, data.result);
+            });
+        }
+        // If a callback is passed, run this as a controll flow
+        return callback ? wrappedTask() : wrappedTask
+    };
+
     async.waterfall = function (tasks, callback) {
         callback = callback || function () {};
-        if (tasks.constructor !== Array) {
+        if (!_isArray(tasks)) {
           var err = new Error('First argument to waterfall must be an array of functions');
           return callback(err);
         }
@@ -1250,7 +1309,7 @@ write.type = 'slice';
 
     var _parallel = function(eachfn, tasks, callback) {
         callback = callback || function () {};
-        if (tasks.constructor === Array) {
+        if (_isArray(tasks)) {
             eachfn.map(tasks, function (fn, callback) {
                 if (fn) {
                     fn(function (err) {
@@ -1290,7 +1349,7 @@ write.type = 'slice';
 
     async.series = function (tasks, callback) {
         callback = callback || function () {};
-        if (tasks.constructor === Array) {
+        if (_isArray(tasks)) {
             async.mapSeries(tasks, function (fn, callback) {
                 if (fn) {
                     fn(function (err) {
@@ -1378,7 +1437,8 @@ write.type = 'slice';
             if (err) {
                 return callback(err);
             }
-            if (test()) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            if (test.apply(null, args)) {
                 async.doWhilst(iterator, test, callback);
             }
             else {
@@ -1406,7 +1466,8 @@ write.type = 'slice';
             if (err) {
                 return callback(err);
             }
-            if (!test()) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            if (!test.apply(null, args)) {
                 async.doUntil(iterator, test, callback);
             }
             else {
@@ -1420,8 +1481,19 @@ write.type = 'slice';
             concurrency = 1;
         }
         function _insert(q, data, pos, callback) {
-          if(data.constructor !== Array) {
+          if (!q.started){
+            q.started = true;
+          }
+          if (!_isArray(data)) {
               data = [data];
+          }
+          if(data.length == 0) {
+             // call drain immediately if there are no tasks
+             return async.setImmediate(function() {
+                 if (q.drain) {
+                     q.drain();
+                 }
+             });
           }
           _each(data, function(task) {
               var item = {
@@ -1435,7 +1507,7 @@ write.type = 'slice';
                 q.tasks.push(item);
               }
 
-              if (q.saturated && q.tasks.length === concurrency) {
+              if (q.saturated && q.tasks.length === q.concurrency) {
                   q.saturated();
               }
               async.setImmediate(q.process);
@@ -1449,14 +1521,20 @@ write.type = 'slice';
             saturated: null,
             empty: null,
             drain: null,
+            started: false,
+            paused: false,
             push: function (data, callback) {
               _insert(q, data, false, callback);
+            },
+            kill: function () {
+              q.drain = null;
+              q.tasks = [];
             },
             unshift: function (data, callback) {
               _insert(q, data, true, callback);
             },
             process: function () {
-                if (workers < q.concurrency && q.tasks.length) {
+                if (!q.paused && workers < q.concurrency && q.tasks.length) {
                     var task = q.tasks.shift();
                     if (q.empty && q.tasks.length === 0) {
                         q.empty();
@@ -1481,6 +1559,19 @@ write.type = 'slice';
             },
             running: function () {
                 return workers;
+            },
+            idle: function() {
+                return q.tasks.length + workers === 0;
+            },
+            pause: function () {
+                if (q.paused === true) { return; }
+                q.paused = true;
+                q.process();
+            },
+            resume: function () {
+                if (q.paused === false) { return; }
+                q.paused = false;
+                q.process();
             }
         };
         return q;
@@ -1496,8 +1587,9 @@ write.type = 'slice';
             saturated: null,
             empty: null,
             drain: null,
+            drained: true,
             push: function (data, callback) {
-                if(data.constructor !== Array) {
+                if (!_isArray(data)) {
                     data = [data];
                 }
                 _each(data, function(task) {
@@ -1505,6 +1597,7 @@ write.type = 'slice';
                         data: task,
                         callback: typeof callback === 'function' ? callback : null
                     });
+                    cargo.drained = false;
                     if (cargo.saturated && tasks.length === payload) {
                         cargo.saturated();
                     }
@@ -1514,13 +1607,14 @@ write.type = 'slice';
             process: function process() {
                 if (working) return;
                 if (tasks.length === 0) {
-                    if(cargo.drain) cargo.drain();
+                    if(cargo.drain && !cargo.drained) cargo.drain();
+                    cargo.drained = true;
                     return;
                 }
 
                 var ts = typeof payload === 'number'
                             ? tasks.splice(0, payload)
-                            : tasks.splice(0);
+                            : tasks.splice(0, tasks.length);
 
                 var ds = _map(ts, function (task) {
                     return task.data;
@@ -1588,7 +1682,9 @@ write.type = 'slice';
             var callback = args.pop();
             var key = hasher.apply(null, args);
             if (key in memo) {
-                callback.apply(null, memo[key]);
+                async.nextTick(function () {
+                    callback.apply(null, memo[key]);
+                });
             }
             else if (key in queues) {
                 queues[key].push(callback);
@@ -1632,8 +1728,8 @@ write.type = 'slice';
         return async.mapSeries(counter, iterator, callback);
     };
 
-    async.compose = function (/* functions... */) {
-        var fns = Array.prototype.reverse.call(arguments);
+    async.seq = function (/* functions... */) {
+        var fns = arguments;
         return function () {
             var that = this;
             var args = Array.prototype.slice.call(arguments);
@@ -1649,6 +1745,10 @@ write.type = 'slice';
                 callback.apply(that, [err].concat(results));
             });
         };
+    };
+
+    async.compose = function (/* functions... */) {
+      return async.seq.apply(null, Array.prototype.reverse.call(arguments));
     };
 
     var _applyEach = function (eachfn, fns /*args...*/) {
@@ -1685,15 +1785,15 @@ write.type = 'slice';
         next();
     };
 
+    // Node.js
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = async;
+    }
     // AMD / RequireJS
-    if (typeof define !== 'undefined' && define.amd) {
+    else if (typeof define !== 'undefined' && define.amd) {
         define([], function () {
             return async;
         });
-    }
-    // Node.js
-    else if (typeof module !== 'undefined' && module.exports) {
-        module.exports = async;
     }
     // included directly via <script> tag
     else {
@@ -1798,11 +1898,12 @@ function Buffer (subject, encoding, noZero) {
     buf._set(subject)
   } else if (isArrayish(subject)) {
     // Treat array-ish objects as a byte array
-    for (i = 0; i < length; i++) {
-      if (Buffer.isBuffer(subject))
+    if (Buffer.isBuffer(subject)) {
+      for (i = 0; i < length; i++)
         buf[i] = subject.readUInt8(i)
-      else
-        buf[i] = subject[i]
+    } else {
+      for (i = 0; i < length; i++)
+        buf[i] = ((subject[i] % 256) + 256) % 256
     }
   } else if (type === 'string') {
     buf.write(subject, 0, encoding)
@@ -2865,7 +2966,6 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
     ? Uint8Array
     : Array
 
-	var ZERO   = '0'.charCodeAt(0)
 	var PLUS   = '+'.charCodeAt(0)
 	var SLASH  = '/'.charCodeAt(0)
 	var NUMBER = '0'.charCodeAt(0)
@@ -2974,9 +3074,9 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 		return output
 	}
 
-	module.exports.toByteArray = b64ToByteArray
-	module.exports.fromByteArray = uint8ToBase64
-}())
+	exports.toByteArray = b64ToByteArray
+	exports.fromByteArray = uint8ToBase64
+}(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 },{}],17:[function(_dereq_,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
@@ -3882,27 +3982,36 @@ var fs = _dereq_('fs');
 
 module.exports = mkdirP.mkdirp = mkdirP.mkdirP = mkdirP;
 
-function mkdirP (p, mode, f, made) {
-    if (typeof mode === 'function' || mode === undefined) {
-        f = mode;
+function mkdirP (p, opts, f, made) {
+    if (typeof opts === 'function') {
+        f = opts;
+        opts = {};
+    }
+    else if (!opts || typeof opts !== 'object') {
+        opts = { mode: opts };
+    }
+    
+    var mode = opts.mode;
+    var xfs = opts.fs || fs;
+    
+    if (mode === undefined) {
         mode = 0777 & (~process.umask());
     }
     if (!made) made = null;
-
+    
     var cb = f || function () {};
-    if (typeof mode === 'string') mode = parseInt(mode, 8);
     p = path.resolve(p);
-
-    fs.mkdir(p, mode, function (er) {
+    
+    xfs.mkdir(p, mode, function (er) {
         if (!er) {
             made = made || p;
             return cb(null, made);
         }
         switch (er.code) {
             case 'ENOENT':
-                mkdirP(path.dirname(p), mode, function (er, made) {
+                mkdirP(path.dirname(p), opts, function (er, made) {
                     if (er) cb(er, made);
-                    else mkdirP(p, mode, cb, made);
+                    else mkdirP(p, opts, cb, made);
                 });
                 break;
 
@@ -3910,7 +4019,7 @@ function mkdirP (p, mode, f, made) {
             // there already.  If so, then hooray!  If not, then something
             // is borked.
             default:
-                fs.stat(p, function (er2, stat) {
+                xfs.stat(p, function (er2, stat) {
                     // if the stat fails, then that's super weird.
                     // let the original error be the failure reason.
                     if (er2 || !stat.isDirectory()) cb(er, made)
@@ -3921,24 +4030,30 @@ function mkdirP (p, mode, f, made) {
     });
 }
 
-mkdirP.sync = function sync (p, mode, made) {
+mkdirP.sync = function sync (p, opts, made) {
+    if (!opts || typeof opts !== 'object') {
+        opts = { mode: opts };
+    }
+    
+    var mode = opts.mode;
+    var xfs = opts.fs || fs;
+    
     if (mode === undefined) {
         mode = 0777 & (~process.umask());
     }
     if (!made) made = null;
 
-    if (typeof mode === 'string') mode = parseInt(mode, 8);
     p = path.resolve(p);
 
     try {
-        fs.mkdirSync(p, mode);
+        xfs.mkdirSync(p, mode);
         made = made || p;
     }
     catch (err0) {
         switch (err0.code) {
             case 'ENOENT' :
-                made = sync(path.dirname(p), mode, made);
-                sync(p, mode, made);
+                made = sync(path.dirname(p), opts, made);
+                sync(p, opts, made);
                 break;
 
             // In the case of any other error, just see if there's a dir
@@ -3947,7 +4062,7 @@ mkdirP.sync = function sync (p, mode, made) {
             default:
                 var stat;
                 try {
-                    stat = fs.statSync(p);
+                    stat = xfs.statSync(p);
                 }
                 catch (err1) {
                     throw err0;
