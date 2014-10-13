@@ -47,6 +47,11 @@ GearCLI.launch({
         process.chdir(env.configBase);
     }
 
+    if (argv.v || argv.version) {
+        var pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json')) + '');
+        console.log('gear version ' + pkg.version);
+    }
+
     if (!env.configPath) {
         notify(filename + ' not found');
         process.exit(1);
