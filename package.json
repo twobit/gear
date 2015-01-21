@@ -1,6 +1,6 @@
 {
   "name": "gear",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Gear.js - Build System for Node.js and the Browser",
   "author": "Stephen Murphy <stephen@hypernaut.com>",
   "keywords": ["task", "build"],
@@ -16,7 +16,7 @@
   "dependencies": {
     "async": "0.8.x",
     "mkdirp": "0.5.x",
-    "liftoff": "0.11.x",
+    "liftoff": "2.0.x",
     "minimist": "0.1.x"
   },
   "devDependencies": {
