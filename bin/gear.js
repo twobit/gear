@@ -28,6 +28,15 @@ var GearCLI = new Liftoff({
     }
 });
 
+function stripStartingComments(s) {
+    var s2;
+    while (s2 !== s) {
+        s2 = s;
+        s = s2.replace(/^(\s+|\/\/.*|\/\*[^]*?\*\/)/, '');
+    }
+    return s;
+}
+
 GearCLI.launch({
         cwd: argv.cwd,
         configPath: argv.Gearfile
@@ -38,14 +47,25 @@ GearCLI.launch({
         process.chdir(env.configBase);
     }
 
+    if (argv.v || argv.version) {
+        var pkg = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json')) + '');
+        console.log('gear version ' + pkg.version);
+    }
+
     if (!env.configPath) {
         notify(filename + ' not found');
         process.exit(1);
     }
 
     var tasks;
+    var gearfile = fs.readFileSync(env.configPath) + '';
+
     try {
-        tasks = vm.runInNewContext('var tasks = ' + fs.readFileSync(env.configPath) + '; tasks;', {
+        // workaround for a bug which makes runInNewContext unable to evaluate an object literal.
+        var script = (stripStartingComments(gearfile).charAt(0) === '{') ?
+            '(' + gearfile + ')' :
+            gearfile;
+        tasks = vm.runInNewContext(script, {
             require: require,
             process: process,
             console: console,

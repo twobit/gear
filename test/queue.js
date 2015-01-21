@@ -107,6 +107,26 @@ describe('Queue', function() {
                 done();
             }
         });
+
+        it('should allow queues to be run in sequence', function(done) {
+            var q1 = new gear.Queue()
+                        .append('hello')
+                        .append('world!');
+            var q2 = new gear.Queue()
+                        .append('HELLO')
+                        .append('WORLD!');
+            new gear.Queue()
+                .series(q1, q2)
+                .run(function(err, results) {
+                    results.should.have.length(4);
+                    results[0].result.should.equal('hello');
+                    results[1].result.should.equal('world!');
+                    results[2].result.should.equal('HELLO');
+                    results[3].result.should.equal('WORLD!');
+                    done(err);
+                });
+        });
+
     });
 
     describe('run', function() {
