@@ -17,7 +17,7 @@
     "async": "0.8.x",
     "mkdirp": "0.5.x",
     "liftoff": "2.0.x",
-    "minimist": "0.1.x"
+    "minimist": "1.2.x"
   },
   "devDependencies": {
     "browserify": "*",
